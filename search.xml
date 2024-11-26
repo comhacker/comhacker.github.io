@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>PE</title>
+    <url>/2024/11/26/PE/</url>
+    <content><![CDATA[<p>wp</p>
+<span id="more"></span>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;helow world&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="/2024/11/26/PE/a.png" class="" title="a">
+
+]]></content>
+      <tags>
+        <tag>Reverse</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2024/11/16/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2024/11/26/%E6%96%B0%E5%BB%BA%20%E6%96%87%E6%9C%AC%E6%96%87%E6%A1%A3/</url>
+    <content><![CDATA[<p><img src="/2024/11/26/%E6%96%B0%E5%BB%BA%20%E6%96%87%E6%9C%AC%E6%96%87%E6%A1%A3/image-20241126114827909.png" alt="image-20241126114827909"></p>
+<p>fsdgjsdikgjoispdfgjois</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>逆向第六次培训</title>
+    <url>/2024/11/26/%E9%80%86%E5%90%91%E7%AC%AC%E5%85%AD%E6%AC%A1%E5%9F%B9%E8%AE%AD/</url>
+    <content><![CDATA[<h1 id="逆向第六次培训"><a href="#逆向第六次培训" class="headerlink" title="逆向第六次培训"></a>逆向第六次培训</h1><p>培训目录：</p>
+<ol>
+<li>RC4加密</li>
+<li>动态调试</li>
+<li></li>
+</ol>
+<h2 id="一、RC4加密："><a href="#一、RC4加密：" class="headerlink" title="一、RC4加密："></a>一、RC4加密：</h2><h4 id="加密流程："><a href="#加密流程：" class="headerlink" title="加密流程："></a>加密流程：</h4><p><em><strong>1、s表和k表的初始化：</strong></em></p>
+<p><code>for (i = 0; i&lt;256; i++)     &#123;         s[i] = i;         k[i] = key[i%Len];     &#125;</code></p>
+<p><em><strong>2、s表和k表的置换：</strong></em></p>
+<p><code>for (i = 0; i&lt;256; i++)     &#123;         j = (j + s[i] + k[i]) % 256;         tmp = s[i];         s[i] = s[j];//交换s[i]和s[j]         s[j] = tmp;     &#125;</code></p>
+<p><em><strong>3、生成密钥流、异或：</strong></em></p>
+<p><code>for (k = 0; k&lt;Len; k++)     &#123;         i = (i + 1) % 256;         j = (j + s[i]) % 256;         tmp = s[i];         s[i] = s[j];//交换s[x]和s[y]         s[j] = tmp;         t = (s[i] + s[j]) % 256;         Data[k] ^= s[t];     &#125;</code></p>
+<p><em><strong>总代码为：</strong></em></p>
+<p><code>#include&lt;stdio.h&gt;</code><br><code>#include&lt;string.h&gt;</code><br><code>/*初始化函数*/</code><br><code>void rc4_init(unsigned char*s, unsigned char*key, unsigned long Len)</code><br><code>&#123;</code><br>    <code>int i = 0, j = 0;</code><br>    <code>char k[256] = &#123; 0 &#125;;</code><br>    <code>unsigned char tmp = 0;</code><br>    <code>for (i = 0; i&lt;256; i++)</code><br>    <code>&#123;</code><br>        <code>s[i] = i;</code><br>        <code>k[i] = key[i%Len];</code><br>    <code>&#125;</code><br>    <code>for (i = 0; i&lt;256; i++)</code><br>    <code>&#123;</code><br>        <code>j = (j + s[i] + k[i]) % 256;</code><br>        <code>tmp = s[i];</code><br>        <code>s[i] = s[j];//交换s[i]和s[j]</code><br>        <code>s[j] = tmp;</code><br>    <code>&#125;</code><br><code>&#125;</code><br><code>/*加解密*/</code><br><code>void rc4_crypt(unsigned char*s, unsigned char*Data, unsigned long Len)</code><br><code>&#123;</code><br>    <code>int i = 0, j = 0, t = 0;</code><br>    <code>unsigned long k = 0;</code><br>    <code>unsigned char tmp;</code><br>    <code>for (k = 0; k&lt;Len; k++)</code><br>    <code>&#123;</code><br>        <code>i = (i + 1) % 256;</code><br>        <code>j = (j + s[i]) % 256;</code><br>        <code>tmp = s[i];</code><br>        <code>s[i] = s[j];//交换s[x]和s[y]</code><br>        <code>s[j] = tmp;</code><br>        <code>t = (s[i] + s[j]) % 256;</code><br>        <code>Data[k] ^= s[t];</code><br>    <code>&#125;</code><br><code>&#125;</code></p>
+<p><code>int main()</code><br><code>&#123;</code><br>    <code>unsigned char flag[]=</code><br>    <code>&#123;</code><br>          <code>0x8a,0x87,0xaf,0x7f,0x8c,0x59,0xdc,0xf3,0xa7,</code><br>         <code>0xd3,0x7a,0xa3,0x10,0x9d,0xa8,0x9e,0xad</code><br>    <code>&#125;;</code><br>    <code>unsigned char key[]=&quot;helloworld&quot;;</code><br>    <code>unsigned  char s[256]=&#123;0&#125;;</code><br>    <code>rc4_init(s,key,10);    //第三位是key长度</code><br>    <code>rc4_crypt(s,flag,17);  //第三位是s长度</code><br>    <code>int i;</code><br>    <code>for(i=0;i&lt;17;i++)&#123;</code><br>        <code>printf(&quot;%c&quot;,flag[i]);</code><br>    <code>&#125;</code><br><code>&#125;</code></p>
+<h4 id="RC4加密特点："><a href="#RC4加密特点：" class="headerlink" title="RC4加密特点："></a>RC4加密特点：</h4><p>对称性。即加解密共用一套key和代码。一次加密后再进行加密会回到第一次加密前（两次加密等于没加密）。</p>
+<h4 id="变种RC4："><a href="#变种RC4：" class="headerlink" title="变种RC4："></a>变种RC4：</h4><p>一般而言，是把最后一步异或魔改，魔改为：<br><code>Data[k] += s[t];</code>等，不同魔改需要对解密代码进行不同的调整。</p>
+<h2 id="二、动态调试："><a href="#二、动态调试：" class="headerlink" title="二、动态调试："></a>二、动态调试：</h2><p>步骤：</p>
+<ol>
+<li><p>设断点：点击伪代码左边的蓝色圆圈，下断点成功后这一行会变红</p>
+<p><img src="/2024/11/26/%E9%80%86%E5%90%91%E7%AC%AC%E5%85%AD%E6%AC%A1%E5%9F%B9%E8%AE%AD/image-20241123175518251.png" alt="image-20241123175518251"></p>
+</li>
+<li><p>选择调试器：</p>
+</li>
+</ol>
+<p><img src="/2024/11/26/%E9%80%86%E5%90%91%E7%AC%AC%E5%85%AD%E6%AC%A1%E5%9F%B9%E8%AE%AD/image-20241123175447324.png" alt="image-20241123175447324"></p>
+<p>没选调试器之前是显示No debugger,点击这个No debugger：</p>
+<p><img src="/2024/11/26/%E9%80%86%E5%90%91%E7%AC%AC%E5%85%AD%E6%AC%A1%E5%9F%B9%E8%AE%AD/image-20241123164907326.png" alt="image-20241123164907326"></p>
+<p>本地调试选Local windows debbugger</p>
+<p><img src="/2024/11/26/%E9%80%86%E5%90%91%E7%AC%AC%E5%85%AD%E6%AC%A1%E5%9F%B9%E8%AE%AD/image-20241123165010213.png" alt="image-20241123165010213"></p>
+<p>3.开始调试：选完调试器后左边的三角形会变绿，这个就是调试按钮，点击这个按钮开始调试。</p>
+<p>点击开始调试后，代码会运行到断点停下（如果运行到断点前有输入函数，则会在输入函数处停下，等待你输入），此时你可以点击变量来查看变量的值。</p>
+<p><img src="/2024/11/26/%E9%80%86%E5%90%91%E7%AC%AC%E5%85%AD%E6%AC%A1%E5%9F%B9%E8%AE%AD/image-20241123175609214.png" alt="image-20241123175609214"></p>
+]]></content>
+  </entry>
+</search>
