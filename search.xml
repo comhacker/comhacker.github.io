@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>ESP定律脱壳</title>
+    <url>/posts/43303/</url>
+    <content><![CDATA[<hr>
+<span id="more"></span>
+
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>加壳是利用特殊的算法事先对程序源代码进行压缩，并向程序里面注入解压的代码，这段解压代码会先于源代码执行。在程序执行时，会自动将原始代码进行解压，然后跳转到原程序的入口点，继续执行原程序。而在执行完解压过程后需要将栈恢复到解压前的状态，即ESP会回到解压前的位置，因此，我们可以通过判断ESP是否回到初始位置来判断程序是否已经达到入口点（OEP）。</p>
+<p>接下来以脱upx壳为例：</p>
+<p>程序源代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">int main() &#123;</span><br><span class="line">	char s[] = &quot;ek`fz`abcdefg|&quot;;</span><br><span class="line">	char input[15];</span><br><span class="line">	int i;</span><br><span class="line">	printf(&quot;请输入你的flag:\n&quot;);</span><br><span class="line">	scanf(&quot;%14s&quot;, input,sizeof(input));</span><br><span class="line">	for (i = 0; i &lt; 14; i++)</span><br><span class="line">		input[i] -= 1;</span><br><span class="line">	if (!strcmp(input, s))</span><br><span class="line">		printf(&quot;right!&quot;);</span><br><span class="line">	else</span><br><span class="line">		printf(&quot;wrong!&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h1><p>一共分为三步：</p>
+<ol>
+<li>寻找OEP</li>
+<li>dump出初步的脱壳程序</li>
+<li>修复程序</li>
+</ol>
+<h2 id="寻找OEP"><a href="#寻找OEP" class="headerlink" title="寻找OEP"></a>寻找OEP</h2><p>使用xdbg打开</p>
+<img src="/posts/43303/image-20241206232732823.png" class="" title="image-20241206232732823">
+
+<p>可以看到开始就是pushad指令，这个指令是将所有寄存器都压入栈。</p>
+<p>一般的壳都会在开始时进行压栈，然后在解压结束时进行出栈。</p>
+<p>此时按F8单步步过，可以看到右边的ESP发生了变化</p>
+<img src="/posts/43303/image-20241206232654462.png" class="" title="image-20241206232654462">
+
+<p>点击右边ESP，按右键，选内存窗口中转到，内存1</p>
+<img src="/posts/43303/image-20241206232906388.png" class="" title="image-20241206232906388">
+
+<p>此时左下角的内存窗口已经转移到ESP的位置</p>
+<img src="/posts/43303/image-20241206233019638.png" class="" title="image-20241206233019638">
+
+<p>选定第一个字节，按右键，断点，硬件访问，接下来三个里面随便选一个</p>
+<img src="/posts/43303/image-20241206233108832.png" class="" title="image-20241206233108832">
+
+<p>此时下好了断点，按F9让程序一直运行直到碰到断点处</p>
+]]></content>
+      <tags>
+        <tag>Reverse</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>函数调用过程</title>
     <url>/posts/24481/</url>
     <content><![CDATA[<hr>
@@ -74,6 +114,53 @@
       </categories>
       <tags>
         <tag>汇编</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>国城杯wp</title>
+    <url>/posts/8147/</url>
+    <content><![CDATA[<hr>
+<span id="more"></span>
+
+<h2 id="Crush’s-secret"><a href="#Crush’s-secret" class="headerlink" title="Crush’s secret"></a>Crush’s secret</h2><p>有SMC，动调</p>
+<img src="/posts/8147/image-20241207135656066.png" class="" title="image-20241207135656066">
+
+<p>把它的主要逻辑简化一下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void encode(unsigned int *a1, int a2,unsigned int* a3)   </span><br><span class="line">&#123;</span><br><span class="line">  int v3; // eax</span><br><span class="line">  int v4; // edx</span><br><span class="line">  int v5; // edx</span><br><span class="line">  int v7; // [esp+D4h] [ebp-44h]</span><br><span class="line">  int v8; // [esp+E0h] [ebp-38h]</span><br><span class="line">  unsigned int i; // [esp+ECh] [ebp-2Ch]</span><br><span class="line">  unsigned int v10; // [esp+F8h] [ebp-20h]</span><br><span class="line">  unsigned int v11; // [esp+104h] [ebp-14h]</span><br><span class="line"></span><br><span class="line">    v8 = 32;</span><br><span class="line">    v10 = 0;</span><br><span class="line">    do   //32次循环</span><br><span class="line">    &#123;</span><br><span class="line">      v10 -= 0x61C88647;</span><br><span class="line">      v7 = (v10 &gt;&gt; 2) &amp; 3;</span><br><span class="line">      a1[0] += (((a1[1] ^ a3[v7 ^ 0 &amp; 3]) + (a1[1] ^ v10)) ^ (((16 * a1[1]) ^ (a1[1] &gt;&gt; 3))+ ((4 *a1[1]) ^ (a1[1] &gt;&gt; 5))));</span><br><span class="line">      a1[1] += (((a1[0] ^ a3[v7 ^ 1 &amp; 3]) + (a1[0] ^ v10)) ^ (((16 * a1[0]) ^ (a1[0] &gt;&gt; 3))+ ((4 *a1[0]) ^ (a1[0] &gt;&gt; 5))));</span><br><span class="line">      --v8;</span><br><span class="line">    &#125;</span><br><span class="line">    while ( v8 );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是密文</p>
+<img src="/posts/8147/image-20241207135840979.png" class="" title="image-20241207135840979">
+
+<p>这是密钥：</p>
+<img src="/posts/8147/image-20241207140402515.png" class="" title="image-20241207140402515">
+
+<p>写脚本解密：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;stdint.h&gt;</span><br><span class="line">void decode(unsigned int *a1, int a2,unsigned int* a3)   //a1=data,a3=key</span><br><span class="line">&#123;</span><br><span class="line">  int v3; // eax</span><br><span class="line">  int v4; // edx</span><br><span class="line">  int v5; // edx</span><br><span class="line">  int v7; // [esp+D4h] [ebp-44h]</span><br><span class="line">  int v8; // [esp+E0h] [ebp-38h]</span><br><span class="line">  unsigned int i; // [esp+ECh] [ebp-2Ch]</span><br><span class="line">  unsigned int v10; // [esp+F8h] [ebp-20h]</span><br><span class="line">  unsigned int v11; // [esp+104h] [ebp-14h]</span><br><span class="line"></span><br><span class="line">    v8 = 32;</span><br><span class="line">    v10 = 0;</span><br><span class="line">    do   //32次循环</span><br><span class="line">    &#123;</span><br><span class="line">      v10 -= 0x61C88647;</span><br><span class="line">      v7 = (v10 &gt;&gt; 2) &amp; 3;</span><br><span class="line">      a1[0] += (((a1[1] ^ a3[v7 ^ 0 &amp; 3]) + (a1[1] ^ v10)) ^ (((16 * a1[1]) ^ (a1[1] &gt;&gt; 3))+ ((4 *a1[1]) ^ (a1[1] &gt;&gt; 5))));</span><br><span class="line">      a1[1] += (((a1[0] ^ a3[v7 ^ 1 &amp; 3]) + (a1[0] ^ v10)) ^ (((16 * a1[0]) ^ (a1[0] &gt;&gt; 3))+ ((4 *a1[0]) ^ (a1[0] &gt;&gt; 5))));</span><br><span class="line">      --v8;</span><br><span class="line">    &#125;</span><br><span class="line">    while ( v8 );</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">    unsigned int data[]=&#123;0xf31419a2,0x2f193025,0x6e995655,0x75d355fe,0x42e6b4e8,0xf97e03e,0x9f4676d0,0x2488d889,0x8e5cf3d7,0x18c58297,0x2652c22c,0x912ccd2b&#125;;</span><br><span class="line">    unsigned int key[]=&#123;0x5201314,0x52013140,0x5201314,0x52013140&#125;;</span><br><span class="line">    int i;</span><br><span class="line">    for(i=0;i&lt;6;i++)&#123;</span><br><span class="line">        decode(&amp;data[i*2],2,key);</span><br><span class="line">    &#125;</span><br><span class="line">    for(i=0;i&lt;12;i++)&#123;</span><br><span class="line">        printf(&quot;%#x,&quot;,data[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;  //D0g3xGC&#123;The_wind_stops_at_autumn_water_and_I_stop_at_you&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="/posts/8147/image-20241207140839246.png" class="" title="image-20241207140839246">
+
+<h2 id="round"><a href="#round" class="headerlink" title="round"></a>round</h2><p>安卓题，前面半段是魔改的base64加密，解密出来的结果是round_and</p>
+<p>后面半段只能用爆破法来解。但是它前一个字符加密的结果会影响到下一个加密，所以必须采用逐个破解法。</p>
+<p>本来一开始想各种方法出了前几个字符”_rounD“，但是后面的可能性太多了，没办法一个一个试，于是想用12个循环来暴力破解（）。</p>
+<p>12个字符，每个字符有127种可能，就是127的12次方，上亿种可能了，再加上每一种情况都要调用round函数进行判断，结果很明显，代码写出来了但是运行不出结果。在尝试很多方法后无功而反。</p>
+<p>最后，在看了其他师傅wp后才搞清楚怎么写爆破脚本。</p>
+<p>这是其他师傅的脚本：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">def makebox(s):                             # 构建数组盒</span><br><span class="line">    iArr = [1023 - i for i in range(1024)]</span><br><span class="line">    for i in range(1024):</span><br><span class="line">        iArr[i] = iArr[i] ^ ord(s[i % 12])</span><br><span class="line">    return iArr</span><br><span class="line"></span><br><span class="line">box = makebox(&quot;c9m1bRmfY5Wk&quot;)</span><br><span class="line"></span><br><span class="line">def round(iArr, str):                   # 加密函数</span><br><span class="line">    length = len(str)</span><br><span class="line">    iArr2 = [0 for _ in range(length)]</span><br><span class="line">    iArr3 = [352, 646, 752, 882, 65, 0, 122, 0, 0, 7, 350, 360]</span><br><span class="line">    i = 33</span><br><span class="line">    for i2 in range(0, length):</span><br><span class="line">        charAt = ord(str[i2])</span><br><span class="line">        for _ in range(0, 32):</span><br><span class="line">            i4 = (iArr[i] ^ charAt) % 5</span><br><span class="line">            if i4 == 0:</span><br><span class="line">                charAt = (charAt + iArr[i]) % 1024</span><br><span class="line">                i = (i + charAt) % 1024</span><br><span class="line">            elif i4 == 1:</span><br><span class="line">                charAt = ((charAt - iArr[i]) % 1024 + 1024) % 1024  # 确保结果非负</span><br><span class="line">                i = (i + charAt) % 1024</span><br><span class="line">            elif i4 == 2:</span><br><span class="line">                charAt = (charAt ^ iArr[i]) % 1024</span><br><span class="line">                i = (i + charAt) % 1024</span><br><span class="line">            elif i4 == 3:</span><br><span class="line">                charAt = (charAt &gt;&gt; 3) % 1024</span><br><span class="line">                i = (i + charAt) % 1024</span><br><span class="line">            elif i4 == 4:</span><br><span class="line">                charAt = (charAt &lt;&lt; 3) % 1024</span><br><span class="line">                i = (i + charAt) % 1024</span><br><span class="line">        iArr2[i2] = charAt</span><br><span class="line">    return iArr2</span><br><span class="line"></span><br><span class="line">import string</span><br><span class="line">dic = string.ascii_letters + &#x27;_&#x27;            # 创建一个由大小写字母和下划线组成的字典，字符串元素由这里取</span><br><span class="line"></span><br><span class="line">iArr3 = [352, 646, 752, 882, 65, 0, 122, 0, 0, 7, 350, 360]</span><br><span class="line"></span><br><span class="line"># 使用缓存来存储中间结果</span><br><span class="line">cache = &#123;&#125;      # 字典，用来排除已经尝试过的字符串</span><br><span class="line"></span><br><span class="line">def dfs(idx, ans):          # 关键递归函数</span><br><span class="line">    if idx == len(iArr3):       # 长度达到指定值则代表找到了符合条件的</span><br><span class="line">        print(ans)  # 找到符合条件的字符串</span><br><span class="line">        return True</span><br><span class="line">    for i in dic:         #在字符数组里面找字符</span><br><span class="line">        new_ans = ans + i      # 这里一定要用一个新的字符串来承接，因为后面的步骤可能会改变字符串</span><br><span class="line">        if new_ans not in cache:     # 判断是否是尝试过的字符串</span><br><span class="line">            cache[new_ans] = round(box, new_ans)    # 没尝试过则加入字典</span><br><span class="line">        res = cache[new_ans]        # 取出经过加密后的字符串</span><br><span class="line">        if res[-1] == iArr3[idx]:       # 如果相同则继续判断下一位</span><br><span class="line">            if dfs(idx + 1, new_ans):</span><br><span class="line">                return True</span><br><span class="line">    return False</span><br><span class="line"></span><br><span class="line">if not dfs(0, &#x27;&#x27;):</span><br><span class="line">    print(&quot;No solution found&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>他是利用了虽然前一个字符会影响后一个字符，但是后一个字符不会影响前一个字符这一特点（因为在对每个字符进行加密时，i的值会不断变化），这里使用了DFS算法，递归调用，比我之前12个循环好在：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1、代码简短，易理解</span><br><span class="line">2、进行了剪枝，提前排除不可能满足条件的字符串</span><br></pre></td></tr></table></figure>
+
+<p>于是他的这段代码可以在几秒内快速运行出一个结果“_rounD_we_go”。</p>
+<p>在理解了这位师傅脚本的主要逻辑后，我自己写了一个脚本，主要方法还是一样的，只不过稍微修改，让他把所有结果都运行出来：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">int data[]=&#123;352, 646, 752, 882, 65, 0, 122, 0, 0, 7, 350, 360&#125;;</span><br><span class="line">int arr[1024];char flag[13]=&quot;&quot;;</span><br><span class="line">void makebox(char *s)&#123;</span><br><span class="line">    int  i;</span><br><span class="line">    for(i=0;i&lt;1024;i++)&#123;</span><br><span class="line">      arr[i]=1023-i;</span><br><span class="line">      arr[i]^=s[i%12];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">char *Round(int *result,char *s,int len)&#123;</span><br><span class="line">    int a=33;</span><br><span class="line">    int i2,i3,i4,num2,j;</span><br><span class="line">    int at;int i;int num,rip;</span><br><span class="line">    for(i=0;i&lt;len;i++)&#123;</span><br><span class="line">        at=s[i];</span><br><span class="line">        for(i3=0;i3&lt;32;i3++)&#123;</span><br><span class="line">            i4=((arr[a]^at)%5+5)%5;</span><br><span class="line">            if(i4==0) &#123;num=(at+arr[a])%1024;rip=(a+num)%1024;&#125;</span><br><span class="line">            if(i4==1) &#123;num=((at-arr[a])%1024+1024)%1024;rip=(a+num)%1024;&#125;</span><br><span class="line">            if(i4==2) &#123;num=((at^arr[a])%1024+1024)%1024;rip=(a+num)%1024;&#125;</span><br><span class="line">            if(i4==3) &#123;num=(at&gt;&gt;3)%1024;rip=(a+num)%1024;&#125;</span><br><span class="line">            if(i4==4) &#123;num=(at&lt;&lt;3)%1024;rip=(a+num)%1024;&#125;</span><br><span class="line">            at=num;a=rip;</span><br><span class="line">        &#125;</span><br><span class="line">        result[i]=at;</span><br><span class="line">    &#125;</span><br><span class="line">    return s;</span><br><span class="line">&#125;</span><br><span class="line">void DSF(int len)&#123;</span><br><span class="line">    if(len==12)&#123;printf(&quot;%s\n&quot;,flag);return;&#125;</span><br><span class="line">    int i;char temp[13];</span><br><span class="line">    int result[13];</span><br><span class="line">    for(i=33;i&lt;127;i++)&#123;</span><br><span class="line">        strcpy(temp,flag);</span><br><span class="line">        temp[len]=(char)i;</span><br><span class="line">        Round(result,temp,len+1);</span><br><span class="line">        if(result[len]==data[len]) &#123;flag[len]=(char)i;DSF(len+1);&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">    char s[]=&quot;c9m1bRmfY5Wk&quot;;</span><br><span class="line">    makebox(s);</span><br><span class="line">    DSF(0);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个脚本会把所有满足结果的字符串打印出来：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">_roun2t$e_%o</span><br><span class="line">_roun2t$e_`o</span><br><span class="line">_roun2t$e_go</span><br><span class="line">_roun7t$e_%o</span><br><span class="line">_roun7t$e_`o</span><br><span class="line">_roun7t$e_go</span><br><span class="line">_roun&lt;&#x27;-n4TO</span><br><span class="line">_rounD_EJ4TO</span><br><span class="line">_rounD_PCi?O</span><br><span class="line">_rounD_\Ci?O</span><br><span class="line">_rounD_we_%o</span><br><span class="line">_rounD_we_`o</span><br><span class="line">_rounD_we_go</span><br></pre></td></tr></table></figure>
+
+<p>在里面挑一个最正常的“_rounD_we_go”与前半段组成flag：D0g3xGC{round_and_rounD_we_go}</p>
+]]></content>
+      <tags>
+        <tag>wp</tag>
       </tags>
   </entry>
   <entry>

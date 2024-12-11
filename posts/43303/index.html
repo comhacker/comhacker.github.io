@@ -22,17 +22,24 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="位卑未敢忘忧国，事定犹须待阖棺">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Blog">
-<meta property="og:url" content="http://example.com/tags/wp/index.html">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="ESP定律脱壳">
+<meta property="og:url" content="http://example.com/posts/43303/index.html">
 <meta property="og:site_name" content="Blog">
-<meta property="og:description" content="位卑未敢忘忧国，事定犹须待阖棺">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241206232732823.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241206232654462.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241206232906388.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241206233019638.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241206233108832.png">
+<meta property="article:published_time" content="2024-12-06T14:51:40.000Z">
+<meta property="article:modified_time" content="2024-12-11T12:39:07.419Z">
 <meta property="article:author" content="comhacker">
+<meta property="article:tag" content="Reverse">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/43303/image-20241206232732823.png">
 
-<link rel="canonical" href="http://example.com/tags/wp/">
+<link rel="canonical" href="http://example.com/posts/43303/">
 
 
 <script id="page-configurations">
@@ -40,12 +47,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: wp | Blog</title>
+  <title>ESP定律脱壳 | Blog</title>
   
 
 
@@ -181,71 +188,125 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">wp
-          <small>标签</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/43303/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ESP定律脱壳
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-12-06 22:51:40" itemprop="dateCreated datePublished" datetime="2024-12-06T22:51:40+08:00">2024-12-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-12-11 20:39:07" itemprop="dateModified" datetime="2024-12-11T20:39:07+08:00">2024-12-11</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2024</span>
+        <hr>
+<span id="more"></span>
+
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>加壳是利用特殊的算法事先对程序源代码进行压缩，并向程序里面注入解压的代码，这段解压代码会先于源代码执行。在程序执行时，会自动将原始代码进行解压，然后跳转到原程序的入口点，继续执行原程序。而在执行完解压过程后需要将栈恢复到解压前的状态，即ESP会回到解压前的位置，因此，我们可以通过判断ESP是否回到初始位置来判断程序是否已经达到入口点（OEP）。</p>
+<p>接下来以脱upx壳为例：</p>
+<p>程序源代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">int main() &#123;</span><br><span class="line">	char s[] = &quot;ek`fz`abcdefg|&quot;;</span><br><span class="line">	char input[15];</span><br><span class="line">	int i;</span><br><span class="line">	printf(&quot;请输入你的flag:\n&quot;);</span><br><span class="line">	scanf(&quot;%14s&quot;, input,sizeof(input));</span><br><span class="line">	for (i = 0; i &lt; 14; i++)</span><br><span class="line">		input[i] -= 1;</span><br><span class="line">	if (!strcmp(input, s))</span><br><span class="line">		printf(&quot;right!&quot;);</span><br><span class="line">	else</span><br><span class="line">		printf(&quot;wrong!&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h1><p>一共分为三步：</p>
+<ol>
+<li>寻找OEP</li>
+<li>dump出初步的脱壳程序</li>
+<li>修复程序</li>
+</ol>
+<h2 id="寻找OEP"><a href="#寻找OEP" class="headerlink" title="寻找OEP"></a>寻找OEP</h2><p>使用xdbg打开</p>
+<img src="/posts/43303/image-20241206232732823.png" class="" title="image-20241206232732823">
+
+<p>可以看到开始就是pushad指令，这个指令是将所有寄存器都压入栈。</p>
+<p>一般的壳都会在开始时进行压栈，然后在解压结束时进行出栈。</p>
+<p>此时按F8单步步过，可以看到右边的ESP发生了变化</p>
+<img src="/posts/43303/image-20241206232654462.png" class="" title="image-20241206232654462">
+
+<p>点击右边ESP，按右键，选内存窗口中转到，内存1</p>
+<img src="/posts/43303/image-20241206232906388.png" class="" title="image-20241206232906388">
+
+<p>此时左下角的内存窗口已经转移到ESP的位置</p>
+<img src="/posts/43303/image-20241206233019638.png" class="" title="image-20241206233019638">
+
+<p>选定第一个字节，按右键，断点，硬件访问，接下来三个里面随便选一个</p>
+<img src="/posts/43303/image-20241206233108832.png" class="" title="image-20241206233108832">
+
+<p>此时下好了断点，按F9让程序一直运行直到碰到断点处</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2024-12-11T22:51:40+08:00"
-              content="2024-12-11">
-          12-11
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Reverse/" rel="tag"><i class="fa fa-tag"></i> Reverse</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/8147/" itemprop="url">
-            <span itemprop="name">国城杯wp</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2024-12-03T20:49:52+08:00"
-              content="2024-12-03">
-          12-03
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/posts/46980/" itemprop="url">
-            <span itemprop="name">蜀道山wp</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
     </div>
   </div>
-  
-  
-  
 
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/24481/" rel="prev" title="函数调用过程">
+      <i class="fa fa-chevron-left"></i> 函数调用过程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/8147/" rel="next" title="国城杯wp">
+      国城杯wp <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
@@ -298,6 +359,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">操作方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BB%E6%89%BEOEP"><span class="nav-number">2.1.</span> <span class="nav-text">寻找OEP</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
