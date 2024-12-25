@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="楚慧杯2024wp">
+<meta property="og:url" content="http://example.com/posts/64455/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/64455/image-20241220172142353.png">
+<meta property="og:image" content="http://example.com/posts/64455/image-20241220172212964.png">
+<meta property="og:image" content="http://example.com/posts/64455/image-20241220173902805.png">
+<meta property="og:image" content="http://example.com/posts/64455/image-20241220174051218.png">
+<meta property="og:image" content="http://example.com/posts/64455/image-20241220174323830.png">
+<meta property="og:image" content="http://example.com/posts/64455/image-20241220174442323.png">
+<meta property="og:image" content="http://example.com/posts/64455/image-20241220174500667.png">
+<meta property="article:published_time" content="2024-12-20T09:17:48.000Z">
+<meta property="article:modified_time" content="2024-12-23T08:44:20.504Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="wp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/64455/image-20241220172142353.png">
+
+<link rel="canonical" href="http://example.com/posts/64455/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>楚慧杯2024wp | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/64455/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          楚慧杯2024wp
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-12-20 17:17:48" itemprop="dateCreated datePublished" datetime="2024-12-20T17:17:48+08:00">2024-12-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-12-23 16:44:20" itemprop="dateModified" datetime="2024-12-23T16:44:20+08:00">2024-12-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<span id="more"></span>
+
+<h2 id="go-bytes"><a href="#go-bytes" class="headerlink" title="go_bytes"></a>go_bytes</h2><p>第一段加密代码：</p>
+<img src="/posts/64455/image-20241220172142353.png" class="" title="image-20241220172142353">
+
+<p>第二段加密代码：</p>
+<img src="/posts/64455/image-20241220172212964.png" class="" title="image-20241220172212964">
+
+<p>主要逻辑可以简化为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;stdint.h&gt;</span><br><span class="line">int main()&#123;</span><br><span class="line">    int i;unsigned char v5[40];</span><br><span class="line">    unsigned int data[]=&#123;0x22b9,0xc9f8,0x8c89,0xff18,0x1439,0x4e0a,0x2a8b,0x7cb,0xbdeb,0xfaab,</span><br><span class="line">                0x3ffb,0x784b,0x9f1e,0x4feb,0x4d0b,0xd08e,0x38bb,0xcbae,0xd2ce,0x913e,</span><br><span class="line">                0xa6b,0xf03b,0x507b,0x398b,0x93de,0x3cce,0x459e,0x4abe,0x553e,0x316e,</span><br><span class="line">                0x33be,0x42fe,0xcece,0x4dde,0x982b,0xa31b,0x802e,0x12ee,0xf67a,0xeb79&#125;;</span><br><span class="line">    scanf(&quot;%s&quot;,v5);</span><br><span class="line">    for(i=0;i&lt;39;i++)</span><br><span class="line">      v5[i]=(v5[i+1]&gt;&gt;4)|(v5[i]*16);</span><br><span class="line">    v5[39]=(v5[0]&gt;&gt;4)|(v5[39]&lt;&lt;4);</span><br><span class="line">    int j;int main_tmp=0xDEAD;</span><br><span class="line">    for(j=0;j&lt;40;j++)&#123;</span><br><span class="line">        main_tmp=(unsigned __int16)(291 * main_tmp + 1110);</span><br><span class="line">          if(data[j]!=(main_tmp^v5[j]))&#123;</span><br><span class="line">              printf(&quot;wrong!&quot;);</span><br><span class="line">              break;</span><br><span class="line">          &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	printf(&quot;right!&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里这个main_tmp数组我们可以直接运行得到。主要还是对第一段加密的逆向：</p>
+<p>第一段加密主要逻辑是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// v5[38]=v5[38]低4位+v5[39]高4位</span><br><span class="line">// v5[37]=v5[37]低4位+v5[38]高4位</span><br><span class="line">// ······</span><br><span class="line">// v5[0]=v5[0]低4位+v5[1]高4位</span><br><span class="line">// v5[39]=v5[39]低4位+v5[0]高4位</span><br></pre></td></tr></table></figure>
+
+<p>于是v5[38]的原高4位在v5[37]的低4位，原低四位在其高四位里，以此类推。写脚本如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;stdint.h&gt;</span><br><span class="line">int main()&#123;</span><br><span class="line">    int main_tmp[]=&#123;0x22fd,0xc9ed,0x8cbd,0xff2d,0x147d,0x4e6d,0x2a3d,0x7ad,0xbdfd,0xfaed,</span><br><span class="line">                    0x3fbd,0x782d,0x9f7d,0x4f6d,0x4d3d,0xd0ad,0x38fd,0xcbed,0xd2bd,0x912d,</span><br><span class="line">                    0xa7d,0xf06d,0x503d,0x39ad,0x93fd,0x3ced,0x45bd,0x4a2d,0x557d,0x316d,</span><br><span class="line">                    0x333d,0x42ad,0xcefd,0x4ded,0x98bd,0xa32d,0x807d,0x126d,0xf63d,0xebad&#125;;</span><br><span class="line">    int i,j;</span><br><span class="line">    unsigned int data[]=&#123;0x22b9,0xc9f8,0x8c89,0xff18,0x1439,0x4e0a,0x2a8b,0x7cb,0xbdeb,0xfaab,</span><br><span class="line">                0x3ffb,0x784b,0x9f1e,0x4feb,0x4d0b,0xd08e,0x38bb,0xcbae,0xd2ce,0x913e,</span><br><span class="line">                0xa6b,0xf03b,0x507b,0x398b,0x93de,0x3cce,0x459e,0x4abe,0x553e,0x316e,</span><br><span class="line">                0x33be,0x42fe,0xcece,0x4dde,0x982b,0xa31b,0x802e,0x12ee,0xf67a,0xeb79&#125;;</span><br><span class="line">    for(i=0;i&lt;40;i++)</span><br><span class="line">        data[i]^=main_tmp[i];</span><br><span class="line">    unsigned char flag[40];</span><br><span class="line">    for(i=1;i&lt;40;i++)&#123;</span><br><span class="line">        flag[i]=(data[i]&gt;&gt;4)|(data[i-1]&lt;&lt;4);</span><br><span class="line">    &#125;</span><br><span class="line">    flag[0]=(data[0]&gt;&gt;4)|(data[39]&lt;&lt;4);</span><br><span class="line">    for(i=0;i&lt;40;i++)&#123;</span><br><span class="line">        printf(&quot;%c&quot;,flag[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;   //DASCTF&#123;faddff8cb4d711edbb2294085339ce84&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="bouquet"><a href="#bouquet" class="headerlink" title="bouquet"></a>bouquet</h2><p>题目描述:</p>
+<p><code>简单的花指令去除，二叉树的中序、后序、层次遍历代码的识别</code></p>
+<p>数据结构还在追我🤣。</p>
+<p>先去个花指令：</p>
+<img src="/posts/64455/image-20241220173902805.png" class="" title="image-20241220173902805">
+
+<p>重新选定，按P构造函数，反编译：</p>
+<img src="/posts/64455/image-20241220174051218.png" class="" title="image-20241220174051218">
+
+<p>一开始没看题目描述，没看懂这是干什么东西，然后进判断函数看到了递归就觉得有点可疑，去看了一下描述才发现是二叉树。上面这一段是建树。</p>
+<img src="/posts/64455/image-20241220174323830.png" class="" title="image-20241220174323830">
+
+<p>建完树之后有上面两个判断函数，一个是中序遍历，一个是后序遍历：</p>
+<img src="/posts/64455/image-20241220174442323.png" class="" title="image-20241220174442323">
+
+<img src="/posts/64455/image-20241220174500667.png" class="" title="image-20241220174500667">
+
+<p>于是，主要逻辑就浮现出来了：</p>
+<p>输入的flag进行二叉树建树，然后进入第一个函数判断中序遍历序列是否为“ja7Cws_A3daTd4qDo8}F_Sd{a”，之后进入第二个函数判断后序遍历序列是否为“j7aw_sC3addq4TAo}8_Fda{SD”。层次遍历结果就是flag。</p>
+<p>写代码求中序遍历及后序遍历满足条件的字符串：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">from collections import deque</span><br><span class="line"></span><br><span class="line">class TreeNode:</span><br><span class="line">    def __init__(self, value=&#x27;&#x27;):</span><br><span class="line">        self.value = value</span><br><span class="line">        self.left = None</span><br><span class="line">        self.right = None</span><br><span class="line"></span><br><span class="line">def build_tree(inorder, postorder):</span><br><span class="line">    if not inorder or not postorder:</span><br><span class="line">        return None</span><br><span class="line">    </span><br><span class="line">    root_value = postorder.pop()</span><br><span class="line">    root = TreeNode(root_value)</span><br><span class="line">    </span><br><span class="line">    root_index = inorder.index(root_value)</span><br><span class="line">    </span><br><span class="line">    root.right = build_tree(inorder[root_index + 1:], postorder)</span><br><span class="line">    root.left = build_tree(inorder[:root_index], postorder)</span><br><span class="line">    </span><br><span class="line">    return root</span><br><span class="line"></span><br><span class="line">def preorder_traversal(root):</span><br><span class="line">    if root is None:</span><br><span class="line">        return &quot;&quot;</span><br><span class="line">    return root.value + preorder_traversal(root.left) + preorder_traversal(root.right)</span><br><span class="line"></span><br><span class="line">def print_tree_structure(root):</span><br><span class="line">    if root is None:</span><br><span class="line">        return &quot;None&quot;</span><br><span class="line">    return f&quot;(&#123;root.value&#125;, &#123;print_tree_structure(root.left)&#125;, &#123;print_tree_structure(root.right)&#125;)&quot;</span><br><span class="line"></span><br><span class="line"># 层次遍历函数</span><br><span class="line">def level_order_traversal(root):</span><br><span class="line">    if root is None:</span><br><span class="line">        return &quot;&quot;</span><br><span class="line">    </span><br><span class="line">    result = []</span><br><span class="line">    queue = deque([root])</span><br><span class="line">    </span><br><span class="line">    while queue:</span><br><span class="line">        node = queue.popleft()</span><br><span class="line">        result.append(node.value)</span><br><span class="line">        </span><br><span class="line">        if node.left:</span><br><span class="line">            queue.append(node.left)</span><br><span class="line">        if node.right:</span><br><span class="line">            queue.append(node.right)</span><br><span class="line">    </span><br><span class="line">    return &quot; &quot;.join(result)</span><br><span class="line"></span><br><span class="line"># 给定的中序和后序遍历结果</span><br><span class="line">inorder = &quot;ja7Cws_A3daTd4qDo8&#125;F_Sd&#123;a&quot;</span><br><span class="line">postorder = list(&quot;j7aw_sC3addq4TAo&#125;8_Fda&#123;SD&quot;)</span><br><span class="line"></span><br><span class="line"># 构建二叉树</span><br><span class="line">root = build_tree(list(inorder), postorder)</span><br><span class="line"></span><br><span class="line"># 输出树的前序遍历结果</span><br><span class="line">preorder_result = preorder_traversal(root)</span><br><span class="line">print(f&quot;前序遍历结果: &#123;preorder_result&#125;&quot;)</span><br><span class="line"></span><br><span class="line"># 输出树的层次遍历结果</span><br><span class="line">level_order_result = level_order_traversal(root)</span><br><span class="line">print(f&quot;层次遍历结果: &#123;level_order_result&#125;&quot;)</span><br><span class="line"></span><br><span class="line"># 输出树的结构</span><br><span class="line">tree_structure = print_tree_structure(root)</span><br><span class="line">print(f&quot;树的结构: &#123;tree_structure&#125;&quot;)</span><br><span class="line"></span><br><span class="line"># 层次遍历结果: DASCTF&#123;asd48_daj7w_3adqo&#125;</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">#include&lt;stdlib.h&gt;</span><br><span class="line">#define num 26</span><br><span class="line">char mid[] = &quot;ja7Cws_A3daTd4qDo8&#125;F_Sd&#123;a&quot;;</span><br><span class="line">char post[] = &quot;j7aw_sC3addq4TAo&#125;8_Fda&#123;SD&quot;;</span><br><span class="line">// 目标：给出中序遍历和后序遍历序列，求出完全二叉树结构（打印出层次遍历序列）</span><br><span class="line">typedef struct tree</span><br><span class="line">&#123;</span><br><span class="line">	char c;</span><br><span class="line">	struct tree *left,*right;</span><br><span class="line">&#125;tree;</span><br><span class="line">tree *creat(int ms,int me,int ps,int pe)&#123;   // 反推树的结构</span><br><span class="line">	if(ms&gt;me||ps&gt;pe) return NULL;</span><br><span class="line">	tree *t=(tree  *)malloc(sizeof(tree));</span><br><span class="line">	char charAt=post[pe];</span><br><span class="line">	int i;</span><br><span class="line">	for(i=ms;i&lt;=me&amp;&amp;mid[i]!=charAt;i++) &#123;&#125;</span><br><span class="line">	t-&gt;c=charAt;</span><br><span class="line">	t-&gt;left=creat(ms,i-1,ps, ps + i - ms - 1);</span><br><span class="line">	t-&gt;right=creat(i+1,me, ps + i - ms,pe-1);</span><br><span class="line">	return t;</span><br><span class="line">&#125;</span><br><span class="line">void pre_travel(tree *t)&#123;    // 前序遍历</span><br><span class="line">	if(t==NULL) return;</span><br><span class="line">	printf(&quot;%c&quot;,t-&gt;c);</span><br><span class="line">	pre_travel(t-&gt;left);</span><br><span class="line">	pre_travel(t-&gt;right);</span><br><span class="line">&#125;</span><br><span class="line">// 层次遍历</span><br><span class="line">typedef struct q&#123;  // 创建队列</span><br><span class="line">	tree *c[num];</span><br><span class="line">	int r,f;</span><br><span class="line">&#125;queue;</span><br><span class="line">void init(queue *q)&#123;   //初始化队列</span><br><span class="line">	q-&gt;r=q-&gt;f=0;</span><br><span class="line">&#125;</span><br><span class="line">void enqueue(queue *q,tree *t) &#123; // 入队</span><br><span class="line">	if((q-&gt;f+1)%num==q-&gt;r) &#123;printf(&quot;队满！\n&quot;);return;&#125;</span><br><span class="line">	q-&gt;c[q-&gt;f]=t;</span><br><span class="line">	q-&gt;f=(q-&gt;f+1)%num;</span><br><span class="line">&#125;</span><br><span class="line">tree *dequeue(queue *q) &#123;  // 出队</span><br><span class="line">	if(q-&gt;f==q-&gt;r) &#123;printf(&quot;队空！\n&quot;);return NULL;&#125;</span><br><span class="line">	tree *temp=q-&gt;c[q-&gt;r];</span><br><span class="line">	q-&gt;r=(q-&gt;r+1)%num;</span><br><span class="line">	return temp;</span><br><span class="line">&#125;</span><br><span class="line">void level_travel(tree *t)&#123;  //  层次遍历</span><br><span class="line">	if(t==NULL) return;</span><br><span class="line">	queue *q=(queue *)malloc(sizeof(queue));</span><br><span class="line">	tree *temp;</span><br><span class="line">	init(q);</span><br><span class="line">	enqueue(q,t);</span><br><span class="line">	while(q-&gt;f!=q-&gt;r)&#123;</span><br><span class="line">		temp=dequeue(q);</span><br><span class="line">		printf(&quot;%c&quot;,temp-&gt;c);</span><br><span class="line">		if(temp-&gt;left!=NULL) enqueue(q,temp-&gt;left);</span><br><span class="line">		if(temp-&gt;right!=NULL) enqueue(q,temp-&gt;right);</span><br><span class="line">	&#125;</span><br><span class="line">	free(q);</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">	tree *t=creat(0,strlen(mid)-1,0,strlen(post)-1);</span><br><span class="line">	// pre_travel(t);</span><br><span class="line">	level_travel(t);</span><br><span class="line">&#125;</span><br><span class="line">//层次遍历结果: DASCTF&#123;asd48_daj7w_3adqo&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/wp/" rel="tag"><i class="fa fa-tag"></i> wp</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/55463/" rel="prev" title="CISCN2024wp">
+      <i class="fa fa-chevron-left"></i> CISCN2024wp
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/26315/" rel="next" title="古剑山2024wp">
+      古剑山2024wp <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#go-bytes"><span class="nav-number">1.</span> <span class="nav-text">go_bytes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bouquet"><span class="nav-number">2.</span> <span class="nav-text">bouquet</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

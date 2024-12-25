@@ -32,8 +32,17 @@
 <meta property="og:image" content="http://example.com/posts/43303/image-20241206232906388.png">
 <meta property="og:image" content="http://example.com/posts/43303/image-20241206233019638.png">
 <meta property="og:image" content="http://example.com/posts/43303/image-20241206233108832.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241211210508761.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241211211507576.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241211211858516.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241211211951774.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241211212248223.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241211212600034.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241211213131379.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241211213238362.png">
+<meta property="og:image" content="http://example.com/posts/43303/image-20241211213350764.png">
 <meta property="article:published_time" content="2024-12-06T14:51:40.000Z">
-<meta property="article:modified_time" content="2024-12-11T12:39:07.419Z">
+<meta property="article:modified_time" content="2024-12-15T06:10:16.099Z">
 <meta property="article:author" content="comhacker">
 <meta property="article:tag" content="Reverse">
 <meta name="twitter:card" content="summary">
@@ -225,7 +234,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-12-11 20:39:07" itemprop="dateModified" datetime="2024-12-11T20:39:07+08:00">2024-12-11</time>
+                <time title="修改时间：2024-12-15 14:10:16" itemprop="dateModified" datetime="2024-12-15T14:10:16+08:00">2024-12-15</time>
               </span>
 
           
@@ -253,7 +262,7 @@
 <li>dump出初步的脱壳程序</li>
 <li>修复程序</li>
 </ol>
-<h2 id="寻找OEP"><a href="#寻找OEP" class="headerlink" title="寻找OEP"></a>寻找OEP</h2><p>使用xdbg打开</p>
+<h2 id="1、寻找OEP"><a href="#1、寻找OEP" class="headerlink" title="1、寻找OEP"></a>1、寻找OEP</h2><p>使用xdbg打开</p>
 <img src="/posts/43303/image-20241206232732823.png" class="" title="image-20241206232732823">
 
 <p>可以看到开始就是pushad指令，这个指令是将所有寄存器都压入栈。</p>
@@ -270,7 +279,38 @@
 <p>选定第一个字节，按右键，断点，硬件访问，接下来三个里面随便选一个</p>
 <img src="/posts/43303/image-20241206233108832.png" class="" title="image-20241206233108832">
 
-<p>此时下好了断点，按F9让程序一直运行直到碰到断点处</p>
+<p>此时下好了断点，按F9让程序一直运行直到断点处</p>
+<img src="/posts/43303/image-20241211210508761.png" class="" title="image-20241211210508761">
+
+<p>注意此时的ESP回到了刚用xdbg打开时的值0x0061FF78，此时壳已经解压完了，那么下一个大的跳转就是跳转到OEP处。</p>
+
+
+<p>在跳转到OEP前有一段往回退的代码，我们需要跳过这段代码执行到jmp那里。</p>
+<p>单击0041E963 处的jmp u.4014E0指令对其选定，按F4就停在了这个地址处，接下来按F8往后运行一步，直接跳转到了0x4014E0地址处，这里就是OEP（程序入口点）<img src="/posts/43303/image-20241211211507576.png" class="" title="image-20241211211507576"></p>
+<h2 id="2、dump出初步的脱壳程序"><a href="#2、dump出初步的脱壳程序" class="headerlink" title="2、dump出初步的脱壳程序"></a>2、dump出初步的脱壳程序</h2><p>先点击上方的断点窗口，这里会把所有断点列出来</p>
+
+
+<img src="/posts/43303/image-20241211211858516.png" class="" title="image-20241211211858516">
+
+<p>单击一下刚才设置的断点，按右键，选择删除断点</p>
+<img src="/posts/43303/image-20241211211951774.png" class="" title="image-20241211211951774">
+
+<p>回到cpu窗口，此时的程序是脱壳完成的程序，点击上面第二排的scylla工具</p>
+<img src="/posts/43303/image-20241211212248223.png" class="" title="image-20241211212248223">
+
+<img src="/posts/43303/image-20241211212600034.png" class="" title="image-20241211212600034">
+
+<p>点击dump，会生成一个dump.exe文件.</p>
+<h2 id="3、修复程序"><a href="#3、修复程序" class="headerlink" title="3、修复程序"></a>3、修复程序</h2><p>此时的生成的exe文件还是有问题的文件，可能会运行失败，因为脱壳过程可能会改变程序的数据段、导入表、导出表等内容。所以需要将这些表格和数据恢复到脱壳前的状态，确保程序能够正确加载所需的库和函数。</p>
+<p>还是刚才那个Scylla插件，点击IAT Autosearch、Get Imports</p>
+<img src="/posts/43303/image-20241211213131379.png" class="" title="image-20241211213131379">
+
+<img src="/posts/43303/image-20241211213238362.png" class="" title="image-20241211213238362">
+
+<p>此时按Fix Dump，选择刚才dump出的dump.exe文件，点打开</p>
+<img src="/posts/43303/image-20241211213350764.png" class="" title="image-20241211213350764">
+
+<p>此时会在相同目录下生成一个dump_SCY.exe文件，这个就是脱壳完成的程序。</p>
 
     </div>
 
@@ -359,7 +399,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">操作方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BB%E6%89%BEOEP"><span class="nav-number">2.1.</span> <span class="nav-text">寻找OEP</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">操作方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E5%AF%BB%E6%89%BEOEP"><span class="nav-number">2.1.</span> <span class="nav-text">1、寻找OEP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81dump%E5%87%BA%E5%88%9D%E6%AD%A5%E7%9A%84%E8%84%B1%E5%A3%B3%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.2.</span> <span class="nav-text">2、dump出初步的脱壳程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E4%BF%AE%E5%A4%8D%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.3.</span> <span class="nav-text">3、修复程序</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -375,7 +415,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -388,7 +428,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

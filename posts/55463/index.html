@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="CISCN2024wp">
+<meta property="og:url" content="http://example.com/posts/55463/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/55463/image-20241218215831091.png">
+<meta property="og:image" content="http://example.com/posts/55463/image-20241218220926597.png">
+<meta property="og:image" content="http://example.com/posts/55463/image-20241218221522667.png">
+<meta property="og:image" content="http://example.com/posts/55463/image-2024-12-18223425.png">
+<meta property="og:image" content="http://example.com/posts/55463/image-2024-12-18223808.png">
+<meta property="og:image" content="http://example.com/posts/55463/image2024-12-18223941.png">
+<meta property="og:image" content="http://example.com/posts/55463/image-20241218224642852.png">
+<meta property="og:image" content="http://example.com/posts/55463/image-20241218224927370.png">
+<meta property="article:published_time" content="2024-12-18T13:57:16.000Z">
+<meta property="article:modified_time" content="2024-12-18T15:22:58.835Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="wp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/55463/image-20241218215831091.png">
+
+<link rel="canonical" href="http://example.com/posts/55463/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CISCN2024wp | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/55463/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CISCN2024wp
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-12-18 21:57:16 / 修改时间：23:22:58" itemprop="dateCreated datePublished" datetime="2024-12-18T21:57:16+08:00">2024-12-18</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<span id="more"></span>
+
+<h2 id="ezCsky"><a href="#ezCsky" class="headerlink" title="ezCsky"></a>ezCsky</h2><p>题目描述： 某个新能源汽车使用了国产的交叉编译链对tbox的固件程序进行了编译，你能通过逆向发现其中的秘密吗？</p>
+<p>用DIE查看，这是一个elf文件</p>
+<p>尝试用ida打开，发现他说“不包括处理器类型mcore”，点击ok就直接退出了</p>
+<img src="/posts/55463/image-20241218215831091.png" class="" title="image-20241218215831091">
+
+<p>查了一下题目描述中提到的交叉编译：<strong>交叉编译器</strong>（英语：Cross compiler）是指一个在某个系统平台下可以产生另一个系统平台系的可执行文件的编译器。没什么信息。</p>
+<p>使用虚拟机里面的readelf工具查看该elf文件的信息：</p>
+<h6 id="readelf工具"><a href="#readelf工具" class="headerlink" title="readelf工具"></a>readelf工具</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">格式：readelf -x 文件名</span><br><span class="line">-h 或 --file-header：显示 ELF 文件头部的信息。*****</span><br><span class="line">-l 或 --program-headers，有时也用 -p：显示程序头部表的内容，这描述了文件如何映射到内存中。</span><br><span class="line">-S 或 --section-headers：显示节头部表的信息，即文件中各节的基本信息。</span><br><span class="line">-s 或 --syms：显示文件的符号表内容。*****</span><br><span class="line">-r 或 --relocs：显示重定位条目。</span><br><span class="line">-d 或 --dynamic：显示动态段的信息，这对于共享库或动态链接的可执行文件尤为重要。</span><br><span class="line">-n 或 --notes：显示任何存在的注释段落。</span><br><span class="line">-u 或 --unwind：显示 unwind 表格信息。</span><br><span class="line">-x SEC 或 --hex-dump=SEC：以十六进制转储指定节的内容。</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="/posts/55463/image-20241218220926597.png" class="" title="image-20241218220926597">
+
+<p>发现MCORE架构的，也可以使用file命令：file + 文件名</p>
+<img src="/posts/55463/image-20241218221522667.png" class="" title="image-20241218221522667">
+
+<p>发现他是Motorola RCE架构的。</p>
+<h6 id="计算机架构："><a href="#计算机架构：" class="headerlink" title="计算机架构："></a>计算机架构：</h6><p>Motorola RCE (RISC Core Engine)，全称为Motorola RISC Core Engine，是由 Motorola开发，基于 RISC 架构的处理器架构。</p>
+<p>RISC是一种开源指令集架构。</p>
+<p>指令集架构(ISA)是指定计算机硬件如何执行基本操作的一组规则和格式，而处理器架构（如ARM 架构和x86架构）是指处理器内部的具体设计实现，处理器架构必须遵循某个特定的 ISA。ISA 是一个更高层次的概念，定义了处理器应该如何工作；而处理器架构则是更具体的设计实现，描述了实际的硬件是如何构建来满足 ISA 的要求。</p>
+<p>由此可以得知，这个elf使用了RISC架构，之前IDA无法反编译是选错了架构。</p>
+<p>接着，继续使用readelf查看更多信息：</p>
+<p>readelf -s 文件名  ：查看符号表</p>
+<img src="/posts/55463/image-2024-12-18223425.png" class="" title="image-2024-12-18223425">
+
+<p>注意到有xor函数、check函数和RC4加密。</p>
+<p>接下来使用IDA反编译，需要先手动选择RISC架构：</p>
+<img src="/posts/55463/image-2024-12-18223808.png" class="" title="image-2024-12-18223808">
+
+<img src="/posts/55463/image2024-12-18223941.png" class="" title="image2024-12-18223941">
+
+<p>由这里的RC4加密可以推知，’testkey’就是密钥，unk_8AA0就是密文</p>
+<img src="/posts/55463/image-20241218224642852.png" class="" title="image-20241218224642852">
+
+<p>直接RC4解密得不到flag，根据前面在符号表里面看到的东西，还有一个xor函数。</p>
+<p>先尝试用”flag{“头来反推异或的密钥：</p>
+<img src="/posts/55463/image-20241218224927370.png" class="" title="image-20241218224927370">
+
+<p>发现推到的密钥很像flag，意味着它是flag自身进行前后异或。写脚本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">/*初始化函数*/</span><br><span class="line">void rc4_init(unsigned char*s, unsigned char*key, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0;</span><br><span class="line">    char k[256] = &#123; 0 &#125;;</span><br><span class="line">    unsigned char tmp = 0;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s[i] = i;</span><br><span class="line">        k[i] = key[i%Len];</span><br><span class="line">    &#125;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        j = (j + s[i] + k[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[i]和s[j]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line">/*加解密*/</span><br><span class="line">void rc4_crypt(unsigned char*s, unsigned char*Data, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0, t = 0;</span><br><span class="line">    unsigned long k = 0;</span><br><span class="line">    unsigned char tmp;</span><br><span class="line">    for (k = 0; k&lt;Len; k++)</span><br><span class="line">    &#123;</span><br><span class="line">        i = (i + 1) % 256;</span><br><span class="line">        j = (j + s[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[x]和s[y]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">        t = (s[i] + s[j]) % 256;</span><br><span class="line">        Data[k] ^= s[t];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    unsigned char flag[]=</span><br><span class="line">    &#123;</span><br><span class="line">     	0x96, 0x8F, 0xB8, 0x08, 0x5D, 0xA7, 0x68, 0x44, 0xF2, 0x64,</span><br><span class="line">        0x92, 0x64, 0x42, 0x7A, 0x78, 0xE6, 0xEA, 0xC2, 0x78, 0xB8,</span><br><span class="line">        0x63, 0x9E, 0x5B, 0x3D, 0xD9, 0x28, 0x3F, 0xC8, 0x73, 0x06,</span><br><span class="line">        0xEE, 0x6B, 0x8D, 0x0C, 0x4B, 0xA3, 0x23, 0xAE, 0xCA, 0x40,</span><br><span class="line">        0xED, 0xD1</span><br><span class="line">    &#125;; </span><br><span class="line">    unsigned char key[]=&quot;testkey&quot;;</span><br><span class="line">    unsigned  char s[256]=&#123;0&#125;;</span><br><span class="line">    rc4_init(s,key,7);    //第三位是key长度 </span><br><span class="line">    rc4_crypt(s,flag,42);  //第三位是s长度 </span><br><span class="line">    int i;</span><br><span class="line">    for(i=40;i&gt;=0;i--)&#123;</span><br><span class="line">        flag[i]^=flag[i+1];</span><br><span class="line">    &#125;</span><br><span class="line">    for(i=0;i&lt;42;i++)&#123;</span><br><span class="line">        printf(&quot;%c&quot;,flag[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; //flag&#123;d0f5b330-9a74-11ef-9afd-acde48001122&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/wp/" rel="tag"><i class="fa fa-tag"></i> wp</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/64193/" rel="prev" title="调用.exe爆破">
+      <i class="fa fa-chevron-left"></i> 调用.exe爆破
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/64455/" rel="next" title="楚慧杯2024wp">
+      楚慧杯2024wp <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ezCsky"><span class="nav-number">1.</span> <span class="nav-text">ezCsky</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#readelf%E5%B7%A5%E5%85%B7"><span class="nav-number">1.0.0.0.1.</span> <span class="nav-text">readelf工具</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%9E%B6%E6%9E%84%EF%BC%9A"><span class="nav-number">1.0.0.0.2.</span> <span class="nav-text">计算机架构：</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

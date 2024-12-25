@@ -1,6 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>DASCTF2024</title>
+    <url>/posts/42198/</url>
+    <content><![CDATA[<hr>
+<span id="more"></span>
+
+<p>SMC，去花</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include&lt;stdio.h&gt; </span><br><span class="line">#include&lt;stdint.h&gt;</span><br><span class="line">void xor(unsigned char *data)&#123;</span><br><span class="line">  int i;</span><br><span class="line">  char c[]=&quot;Laughter_is_poison_to_fear&quot;;</span><br><span class="line">  for(i=0;i&lt;48;i++)&#123;</span><br><span class="line">    printf(&quot;%c&quot;,data[i]^c[i%26]);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">void encrypt(uint32_t* v,uint32_t* key)</span><br><span class="line">&#123;</span><br><span class="line">	uint32_t k0,k1,k2,k3;</span><br><span class="line">	uint32_t v0,v1;</span><br><span class="line">	v0=v[0],v1=v[1];</span><br><span class="line">	k0=key[0],k1=key[1],k2=key[2],k3=key[3];</span><br><span class="line">	uint32_t delta=0x9E3779B9,sum=0;</span><br><span class="line">	for(int i=0;i&lt;32;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		sum+=delta;</span><br><span class="line">		v0+=((v1&lt;&lt;4) + k0) ^ (v1 + sum) ^ ((v1&gt;&gt;5) + k1);</span><br><span class="line">		v1+=((v0&lt;&lt;4) + k2) ^ (v0 + sum) ^ ((v0&gt;&gt;5) + k3); </span><br><span class="line">	&#125;</span><br><span class="line">	v[0]=v0,v[1]=v1;</span><br><span class="line">&#125;</span><br><span class="line">void decrypt(uint32_t* v,uint32_t* key)</span><br><span class="line">&#123;</span><br><span class="line">	uint32_t k0,k2,k3,k1;</span><br><span class="line">	uint32_t v0,v1;</span><br><span class="line">	v0=v[0],v1=v[1];</span><br><span class="line">	k0=key[0],k1=key[1],k2=key[2],k3=key[3];</span><br><span class="line">	uint32_t delta=0x61C88647,sum=0-0x61C88647*32;</span><br><span class="line">	for(int i=0;i&lt;32;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		v1 -= (sum + key[(sum &gt;&gt; 11) &amp; 3]) ^ (v0 + ((16 * v0) ^ (v0 &gt;&gt; 5)));</span><br><span class="line">		sum += 0x61C88647;</span><br><span class="line">		v0 -= (sum + key[sum &amp; 3]) ^ (v1 + ((16 * v1) ^ (v1 &gt;&gt; 5)));</span><br><span class="line">	&#125;</span><br><span class="line">	v[0]=v0,v[1]=v1;</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	unsigned char s[50]=&#123;</span><br><span class="line">    0xc2,0x39,0x3f,0xf7,0xeb,0x24,0x94,0x4d,0x99,0x41,</span><br><span class="line">    0x7e,0xfc,0x41,0x79,0xab,0xc8,0x5e,0xd0,0x3b,0xd7,</span><br><span class="line">    0x85,0x63,0xd3,0x1d,0xcb,0x98,0x5a,0x6,0x21,0x8b,</span><br><span class="line">    0xa3,0xd8,0xe3,0x86,0x1a,0x37,0x4a,0x8a,0x5c,0xd2,</span><br><span class="line">    0x53,0xcb,0x14,0x3c,0x89,0xeb,0x71,0xeb</span><br><span class="line">    &#125;;</span><br><span class="line">	char key[]=&quot;&#123;you_find_it_!?&#125;&quot;;</span><br><span class="line">	for(int i=0;i&lt;48;i+=8)</span><br><span class="line">	&#123;</span><br><span class="line">		decrypt((uint32_t*)&amp;s[i],(uint32_t*)key);	</span><br><span class="line">	&#125;</span><br><span class="line">	// printf(&quot;%s&quot;,s);	</span><br><span class="line">  xor(s);	  </span><br><span class="line"> &#125; fakeflag_plz_Try_more_hard_to_find_the_true_flag</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>wp</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CISCN2024wp</title>
+    <url>/posts/55463/</url>
+    <content><![CDATA[<hr>
+<span id="more"></span>
+
+<h2 id="ezCsky"><a href="#ezCsky" class="headerlink" title="ezCsky"></a>ezCsky</h2><p>题目描述： 某个新能源汽车使用了国产的交叉编译链对tbox的固件程序进行了编译，你能通过逆向发现其中的秘密吗？</p>
+<p>用DIE查看，这是一个elf文件</p>
+<p>尝试用ida打开，发现他说“不包括处理器类型mcore”，点击ok就直接退出了</p>
+<img src="/posts/55463/image-20241218215831091.png" class="" title="image-20241218215831091">
+
+<p>查了一下题目描述中提到的交叉编译：<strong>交叉编译器</strong>（英语：Cross compiler）是指一个在某个系统平台下可以产生另一个系统平台系的可执行文件的编译器。没什么信息。</p>
+<p>使用虚拟机里面的readelf工具查看该elf文件的信息：</p>
+<h6 id="readelf工具"><a href="#readelf工具" class="headerlink" title="readelf工具"></a>readelf工具</h6><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">格式：readelf -x 文件名</span><br><span class="line">-h 或 --file-header：显示 ELF 文件头部的信息。*****</span><br><span class="line">-l 或 --program-headers，有时也用 -p：显示程序头部表的内容，这描述了文件如何映射到内存中。</span><br><span class="line">-S 或 --section-headers：显示节头部表的信息，即文件中各节的基本信息。</span><br><span class="line">-s 或 --syms：显示文件的符号表内容。*****</span><br><span class="line">-r 或 --relocs：显示重定位条目。</span><br><span class="line">-d 或 --dynamic：显示动态段的信息，这对于共享库或动态链接的可执行文件尤为重要。</span><br><span class="line">-n 或 --notes：显示任何存在的注释段落。</span><br><span class="line">-u 或 --unwind：显示 unwind 表格信息。</span><br><span class="line">-x SEC 或 --hex-dump=SEC：以十六进制转储指定节的内容。</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="/posts/55463/image-20241218220926597.png" class="" title="image-20241218220926597">
+
+<p>发现MCORE架构的，也可以使用file命令：file + 文件名</p>
+<img src="/posts/55463/image-20241218221522667.png" class="" title="image-20241218221522667">
+
+<p>发现他是Motorola RCE架构的。</p>
+<h6 id="计算机架构："><a href="#计算机架构：" class="headerlink" title="计算机架构："></a>计算机架构：</h6><p>Motorola RCE (RISC Core Engine)，全称为Motorola RISC Core Engine，是由 Motorola开发，基于 RISC 架构的处理器架构。</p>
+<p>RISC是一种开源指令集架构。</p>
+<p>指令集架构(ISA)是指定计算机硬件如何执行基本操作的一组规则和格式，而处理器架构（如ARM 架构和x86架构）是指处理器内部的具体设计实现，处理器架构必须遵循某个特定的 ISA。ISA 是一个更高层次的概念，定义了处理器应该如何工作；而处理器架构则是更具体的设计实现，描述了实际的硬件是如何构建来满足 ISA 的要求。</p>
+<p>由此可以得知，这个elf使用了RISC架构，之前IDA无法反编译是选错了架构。</p>
+<p>接着，继续使用readelf查看更多信息：</p>
+<p>readelf -s 文件名  ：查看符号表</p>
+<img src="/posts/55463/image-2024-12-18223425.png" class="" title="image-2024-12-18223425">
+
+<p>注意到有xor函数、check函数和RC4加密。</p>
+<p>接下来使用IDA反编译，需要先手动选择RISC架构：</p>
+<img src="/posts/55463/image-2024-12-18223808.png" class="" title="image-2024-12-18223808">
+
+<img src="/posts/55463/image2024-12-18223941.png" class="" title="image2024-12-18223941">
+
+<p>由这里的RC4加密可以推知，’testkey’就是密钥，unk_8AA0就是密文</p>
+<img src="/posts/55463/image-20241218224642852.png" class="" title="image-20241218224642852">
+
+<p>直接RC4解密得不到flag，根据前面在符号表里面看到的东西，还有一个xor函数。</p>
+<p>先尝试用”flag{“头来反推异或的密钥：</p>
+<img src="/posts/55463/image-20241218224927370.png" class="" title="image-20241218224927370">
+
+<p>发现推到的密钥很像flag，意味着它是flag自身进行前后异或。写脚本：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">/*初始化函数*/</span><br><span class="line">void rc4_init(unsigned char*s, unsigned char*key, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0;</span><br><span class="line">    char k[256] = &#123; 0 &#125;;</span><br><span class="line">    unsigned char tmp = 0;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s[i] = i;</span><br><span class="line">        k[i] = key[i%Len];</span><br><span class="line">    &#125;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        j = (j + s[i] + k[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[i]和s[j]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line">/*加解密*/</span><br><span class="line">void rc4_crypt(unsigned char*s, unsigned char*Data, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0, t = 0;</span><br><span class="line">    unsigned long k = 0;</span><br><span class="line">    unsigned char tmp;</span><br><span class="line">    for (k = 0; k&lt;Len; k++)</span><br><span class="line">    &#123;</span><br><span class="line">        i = (i + 1) % 256;</span><br><span class="line">        j = (j + s[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[x]和s[y]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">        t = (s[i] + s[j]) % 256;</span><br><span class="line">        Data[k] ^= s[t];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    unsigned char flag[]=</span><br><span class="line">    &#123;</span><br><span class="line">     	0x96, 0x8F, 0xB8, 0x08, 0x5D, 0xA7, 0x68, 0x44, 0xF2, 0x64,</span><br><span class="line">        0x92, 0x64, 0x42, 0x7A, 0x78, 0xE6, 0xEA, 0xC2, 0x78, 0xB8,</span><br><span class="line">        0x63, 0x9E, 0x5B, 0x3D, 0xD9, 0x28, 0x3F, 0xC8, 0x73, 0x06,</span><br><span class="line">        0xEE, 0x6B, 0x8D, 0x0C, 0x4B, 0xA3, 0x23, 0xAE, 0xCA, 0x40,</span><br><span class="line">        0xED, 0xD1</span><br><span class="line">    &#125;; </span><br><span class="line">    unsigned char key[]=&quot;testkey&quot;;</span><br><span class="line">    unsigned  char s[256]=&#123;0&#125;;</span><br><span class="line">    rc4_init(s,key,7);    //第三位是key长度 </span><br><span class="line">    rc4_crypt(s,flag,42);  //第三位是s长度 </span><br><span class="line">    int i;</span><br><span class="line">    for(i=40;i&gt;=0;i--)&#123;</span><br><span class="line">        flag[i]^=flag[i+1];</span><br><span class="line">    &#125;</span><br><span class="line">    for(i=0;i&lt;42;i++)&#123;</span><br><span class="line">        printf(&quot;%c&quot;,flag[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; //flag&#123;d0f5b330-9a74-11ef-9afd-acde48001122&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>wp</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ESP定律脱壳</title>
     <url>/posts/43303/</url>
     <content><![CDATA[<hr>
@@ -17,7 +83,7 @@
 <li>dump出初步的脱壳程序</li>
 <li>修复程序</li>
 </ol>
-<h2 id="寻找OEP"><a href="#寻找OEP" class="headerlink" title="寻找OEP"></a>寻找OEP</h2><p>使用xdbg打开</p>
+<h2 id="1、寻找OEP"><a href="#1、寻找OEP" class="headerlink" title="1、寻找OEP"></a>1、寻找OEP</h2><p>使用xdbg打开</p>
 <img src="/posts/43303/image-20241206232732823.png" class="" title="image-20241206232732823">
 
 <p>可以看到开始就是pushad指令，这个指令是将所有寄存器都压入栈。</p>
@@ -34,10 +100,82 @@
 <p>选定第一个字节，按右键，断点，硬件访问，接下来三个里面随便选一个</p>
 <img src="/posts/43303/image-20241206233108832.png" class="" title="image-20241206233108832">
 
-<p>此时下好了断点，按F9让程序一直运行直到碰到断点处</p>
+<p>此时下好了断点，按F9让程序一直运行直到断点处</p>
+<img src="/posts/43303/image-20241211210508761.png" class="" title="image-20241211210508761">
+
+<p>注意此时的ESP回到了刚用xdbg打开时的值0x0061FF78，此时壳已经解压完了，那么下一个大的跳转就是跳转到OEP处。</p>
+
+
+<p>在跳转到OEP前有一段往回退的代码，我们需要跳过这段代码执行到jmp那里。</p>
+<p>单击0041E963 处的jmp u.4014E0指令对其选定，按F4就停在了这个地址处，接下来按F8往后运行一步，直接跳转到了0x4014E0地址处，这里就是OEP（程序入口点）<img src="/posts/43303/image-20241211211507576.png" class="" title="image-20241211211507576"></p>
+<h2 id="2、dump出初步的脱壳程序"><a href="#2、dump出初步的脱壳程序" class="headerlink" title="2、dump出初步的脱壳程序"></a>2、dump出初步的脱壳程序</h2><p>先点击上方的断点窗口，这里会把所有断点列出来</p>
+
+
+<img src="/posts/43303/image-20241211211858516.png" class="" title="image-20241211211858516">
+
+<p>单击一下刚才设置的断点，按右键，选择删除断点</p>
+<img src="/posts/43303/image-20241211211951774.png" class="" title="image-20241211211951774">
+
+<p>回到cpu窗口，此时的程序是脱壳完成的程序，点击上面第二排的scylla工具</p>
+<img src="/posts/43303/image-20241211212248223.png" class="" title="image-20241211212248223">
+
+<img src="/posts/43303/image-20241211212600034.png" class="" title="image-20241211212600034">
+
+<p>点击dump，会生成一个dump.exe文件.</p>
+<h2 id="3、修复程序"><a href="#3、修复程序" class="headerlink" title="3、修复程序"></a>3、修复程序</h2><p>此时的生成的exe文件还是有问题的文件，可能会运行失败，因为脱壳过程可能会改变程序的数据段、导入表、导出表等内容。所以需要将这些表格和数据恢复到脱壳前的状态，确保程序能够正确加载所需的库和函数。</p>
+<p>还是刚才那个Scylla插件，点击IAT Autosearch、Get Imports</p>
+<img src="/posts/43303/image-20241211213131379.png" class="" title="image-20241211213131379">
+
+<img src="/posts/43303/image-20241211213238362.png" class="" title="image-20241211213238362">
+
+<p>此时按Fix Dump，选择刚才dump出的dump.exe文件，点打开</p>
+<img src="/posts/43303/image-20241211213350764.png" class="" title="image-20241211213350764">
+
+<p>此时会在相同目录下生成一个dump_SCY.exe文件，这个就是脱壳完成的程序。</p>
 ]]></content>
       <tags>
         <tag>Reverse</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>二叉树</title>
+    <url>/posts/10764/</url>
+    <content><![CDATA[<hr>
+<span id="more"></span>
+
+<p>不使用结构体来创建完全二叉树:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">#include&lt;stdlib.h&gt;</span><br><span class="line">#include&lt;stdint.h&gt;</span><br><span class="line">uint64_t *creat_re(char *s,int index)&#123;  // 递归方式创建完全二叉树</span><br><span class="line">	if(index&gt;=strlen(s)) return NULL;</span><br><span class="line">	uint64_t *temp=(uint64_t *)malloc(24);</span><br><span class="line">	if (temp == NULL) &#123;</span><br><span class="line">        fprintf(stderr, &quot;Memory allocation failed!\n&quot;);</span><br><span class="line">        exit(1);  // 如果分配失败，退出程序</span><br><span class="line">    &#125;</span><br><span class="line">	*(char *)temp=s[index];</span><br><span class="line">	temp[1]=(uint64_t)creat_re(s,index*2+1);</span><br><span class="line">	temp[2]=(uint64_t)creat_re(s,index*2+2);</span><br><span class="line">	return temp;</span><br><span class="line">&#125;</span><br><span class="line">uint64_t *newnode(char c)&#123;  // 非递归方式创建完全二叉树的单个结点</span><br><span class="line">	uint64_t *temp=(uint64_t *)malloc(24);</span><br><span class="line">	*(char *)temp=c;</span><br><span class="line">	temp[1]=temp[2]=0;</span><br><span class="line">	return temp;</span><br><span class="line">&#125;</span><br><span class="line">uint64_t *create(char *s)&#123;  // 非递归方式创建完全二叉树</span><br><span class="line">	uint64_t *list[100];</span><br><span class="line">	uint64_t *temp;</span><br><span class="line">	int len=strlen(s);</span><br><span class="line">	int i=1,j=1,k=0;</span><br><span class="line">	list[0]=newnode(s[0]);</span><br><span class="line">	while(i&lt;len)&#123;</span><br><span class="line">		temp=list[k++];</span><br><span class="line">		temp[1]=(uint64_t)newnode(s[i++]);</span><br><span class="line">		list[j++]=(uint64_t *)temp[1];</span><br><span class="line">		if(i&gt;=len) break;</span><br><span class="line">		temp[2]=(uint64_t)newnode(s[i++]);</span><br><span class="line">		list[j++]=(uint64_t *)temp[2];</span><br><span class="line">	&#125;</span><br><span class="line">	return list[0];</span><br><span class="line">&#125;</span><br><span class="line">void pre_travel(uint64_t *n)&#123;  // 前序遍历</span><br><span class="line">	if(n==NULL) return;</span><br><span class="line">	printf(&quot;%c&quot;,*(char *)n);</span><br><span class="line">	pre_travel((uint64_t *)n[1]);</span><br><span class="line">	pre_travel((uint64_t *)n[2]);</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">	char s[]=&quot;1234567&quot;;</span><br><span class="line">	int i;</span><br><span class="line">	uint64_t *temp;</span><br><span class="line">	// temp=creat_re(s,0);</span><br><span class="line">	temp=create(s);</span><br><span class="line">	pre_travel(temp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基于中序遍历和后序遍历序列还原完全二叉树结构，输出层次遍历序列：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">#include&lt;stdlib.h&gt;</span><br><span class="line">#define num 26</span><br><span class="line">char mid[] = &quot;ja7Cws_A3daTd4qDo8&#125;F_Sd&#123;a&quot;;</span><br><span class="line">char post[] = &quot;j7aw_sC3addq4TAo&#125;8_Fda&#123;SD&quot;;</span><br><span class="line">// 目标：给出中序遍历和后序遍历序列，求出完全二叉树结构（打印出层次遍历序列）</span><br><span class="line">typedef struct tree</span><br><span class="line">&#123;</span><br><span class="line">	char c;</span><br><span class="line">	struct tree *left,*right;</span><br><span class="line">&#125;tree;</span><br><span class="line">tree *creat(int ms,int me,int ps,int pe)&#123;   // 反推树的结构</span><br><span class="line">	if(ms&gt;me||ps&gt;pe) return NULL;</span><br><span class="line">	tree *t=(tree  *)malloc(sizeof(tree));</span><br><span class="line">	char charAt=post[pe];</span><br><span class="line">	int i;</span><br><span class="line">	for(i=ms;i&lt;=me&amp;&amp;mid[i]!=charAt;i++) &#123;&#125;</span><br><span class="line">	t-&gt;c=charAt;</span><br><span class="line">	t-&gt;left=creat(ms,i-1,ps, ps + i - ms - 1);</span><br><span class="line">	t-&gt;right=creat(i+1,me, ps + i - ms,pe-1);</span><br><span class="line">	return t;</span><br><span class="line">&#125;</span><br><span class="line">void pre_travel(tree *t)&#123;    // 前序遍历</span><br><span class="line">	if(t==NULL) return;</span><br><span class="line">	printf(&quot;%c&quot;,t-&gt;c);</span><br><span class="line">	pre_travel(t-&gt;left);</span><br><span class="line">	pre_travel(t-&gt;right);</span><br><span class="line">&#125;</span><br><span class="line">// 层次遍历</span><br><span class="line">typedef struct q&#123;  // 创建队列</span><br><span class="line">	tree *c[num];</span><br><span class="line">	int r,f;</span><br><span class="line">&#125;queue;</span><br><span class="line">void init(queue *q)&#123;   //初始化队列</span><br><span class="line">	q-&gt;r=q-&gt;f=0;</span><br><span class="line">&#125;</span><br><span class="line">void enqueue(queue *q,tree *t) &#123; // 入队</span><br><span class="line">	if((q-&gt;f+1)%num==q-&gt;r) &#123;printf(&quot;队满！\n&quot;);return;&#125;</span><br><span class="line">	q-&gt;c[q-&gt;f]=t;</span><br><span class="line">	q-&gt;f=(q-&gt;f+1)%num;</span><br><span class="line">&#125;</span><br><span class="line">tree *dequeue(queue *q) &#123;  // 出队</span><br><span class="line">	if(q-&gt;f==q-&gt;r) &#123;printf(&quot;队空！\n&quot;);return NULL;&#125;</span><br><span class="line">	tree *temp=q-&gt;c[q-&gt;r];</span><br><span class="line">	q-&gt;r=(q-&gt;r+1)%num;</span><br><span class="line">	return temp;</span><br><span class="line">&#125;</span><br><span class="line">void level_travel(tree *t)&#123;  //  层次遍历</span><br><span class="line">	if(t==NULL) return;</span><br><span class="line">	queue *q=(queue *)malloc(sizeof(queue));</span><br><span class="line">	tree *temp;</span><br><span class="line">	init(q);</span><br><span class="line">	enqueue(q,t);</span><br><span class="line">	while(q-&gt;f!=q-&gt;r)&#123;</span><br><span class="line">		temp=dequeue(q);</span><br><span class="line">		printf(&quot;%c&quot;,temp-&gt;c);</span><br><span class="line">		if(temp-&gt;left!=NULL) enqueue(q,temp-&gt;left);</span><br><span class="line">		if(temp-&gt;right!=NULL) enqueue(q,temp-&gt;right);</span><br><span class="line">	&#125;</span><br><span class="line">	free(q);</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">	tree *t=creat(0,strlen(mid)-1,0,strlen(post)-1);</span><br><span class="line">	// pre_travel(t);</span><br><span class="line">	level_travel(t);</span><br><span class="line">&#125;</span><br><span class="line">//层次遍历结果: DASCTF&#123;asd48_daj7w_3adqo&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>数据结构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>古剑山2024wp</title>
+    <url>/posts/26315/</url>
+    <content><![CDATA[<h3 id="re"><a href="#re" class="headerlink" title="re"></a>re</h3><img src="/posts/26315/image-20241223224830088.png" class="" title="image-20241223224830088">
+
+<p>有壳，显示vmp壳，也无法判断是不是其他壳魔改的，于是直接使用ESP定律手动脱壳。</p>
+<img src="/posts/26315/image-20241223224948607.png" class="" title="image-20241223224948607">
+
+<p>这个壳与其他的有一点不一样，上面这段汇编都是没用的，压入后立马又弹出，并没用实际压入参数，所以是混淆视听的。要等到下面那个jmp re.c9970才是壳的开始。我们单步直到它跳转:</p>
+<img src="/posts/26315/image-20241223225312656.png" class="" title="image-20241223225312656">
+
+<p>接下来就是正常的脱壳了。</p>
+<img src="/posts/26315/image-20241223225911496.png" class="" title="image-20241223225911496">
+
+<p>修复的时候有一个地方修复不了，这个地方要手动用ida修复。</p>
+<img src="/posts/26315/image-20241223230212596.png" class="" title="image-20241223230212596">
+
+<p>这里函数提前结束了，看这里的汇编指令就知道这个是垃圾代码，花指令，全部nop掉这三行，再重新分析即可</p>
+<img src="/posts/26315/image-20241223230500326.png" class="" title="image-20241223230500326">
+]]></content>
+      <tags>
+        <tag>wp</tag>
       </tags>
   </entry>
   <entry>
@@ -117,6 +255,80 @@
       </tags>
   </entry>
   <entry>
+    <title>导入表、导出表、重定位表</title>
+    <url>/posts/26540/</url>
+    <content><![CDATA[<hr>
+<span id="more"></span>
+
+<h1 id="导入表"><a href="#导入表" class="headerlink" title="导入表"></a>导入表</h1><p>PE文件需要用到其他库里面的函数时，需要有一个导入表来记录这些导入函数的地址。</p>
+<p>导入表的的地址存储在可选PE头最后一个成员——DataDirectory数组的第二个元素，即DataDirectory[1].</p>
+<p>导入表实际上是结构体<strong>数组</strong>，它由许多个<code>IMAGE_IMPORT_DESCRIPTOR</code>结构体组成，每一个外部库需要一个结构体，在所有结构的最后,由一个内容全为0的<code>IMAGE_IMPORT_DESCRIPTOR</code>结构体作为结束标志。每一个结构体成员如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">typedef struct _IMAGE_IMPORT_DESCRIPTOR &#123;</span><br><span class="line">  union &#123;</span><br><span class="line">    DWORD  Characteristics;      </span><br><span class="line">    DWORD  OriginalFirstThunk;     // 指向导入名称表(INT，import name table)</span><br><span class="line">    &#125; DUMMYUNIONNAME;</span><br><span class="line">  DWORD  TimeDateStamp;        </span><br><span class="line">  DWORD  ForwarderChain;         </span><br><span class="line">  DWORD  Name;					// 该库名字的地址</span><br><span class="line">  DWORD  FirstThunk;           // 指向导入地址表(IAT，import address table)</span><br><span class="line">&#125; IMAGE_IMPORT_DESCRIPTOR;</span><br></pre></td></tr></table></figure>
+
+<p>IAT(导入函数地址表)和INT(导入函数名称表)，都是是一个结构体数组，它的成员都是<code>IMAGE_THUNK_DATA</code>结构的结构体。与导入表相似，IAT、INT也是以一个全为0的结构体结尾。<code>IMAGE_THUNK_DATA</code>结构为：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">typedef struct _IMAGE_THUNK_DATA32</span><br><span class="line">&#123;</span><br><span class="line">    union &#123;</span><br><span class="line">        DWORD ForwarderString;      // 转发字符串的RAV</span><br><span class="line">        DWORD Function;             // 被导入函数的地址</span><br><span class="line">        DWORD Ordinal;              // 被导入函数的序号</span><br><span class="line">        DWORD AddressOfData;        // 指向输入名称表 PIMAGE_IMPORT_BY_NAME</span><br><span class="line">    &#125; u1;</span><br><span class="line">&#125; IMAGE_THUNK_DATA32;</span><br></pre></td></tr></table></figure>
+
+<p>这是一个联合体，只有一个成员有效，一共占4个字节。当结构体的最高位为1时,表示函数是以序号的方式导入的,这时结构体的低位就是函数的序号；当双字最高位为0时,表示函数以函数名方式导入,这时结构体的值是一个RVA,指向一个用来定义导入函数名称的<code>IMAGE_IMPORT_BY_NAME</code>结构,此结构定义如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">typedef struct _IMAGE_IMPORT_BY_NAME</span><br><span class="line">&#123;</span><br><span class="line">    WORD    Hint;          // 函数序号</span><br><span class="line">    CHAR   Name[1];        // 导入函数的名称</span><br><span class="line">&#125; IMAGE_IMPORT_BY_NAME, *PIMAGE_IMPORT_BY_NAME;</span><br></pre></td></tr></table></figure>
+
+<p>当dll加载进内存之后，<code>IMAGE_THUNK_DATA</code>会将导入函数地址填入Function里面，此时这个结构体的4个字节就是一个指向导入函数的地址（RVA），使得程序可以直接通过这个地址来调用函数。</p>
+<p><strong>导入表在文件中时：</strong></p>
+<img src="/posts/26540/88bdc5cc50237f48060afe4af0c3107f.jpeg" class="" title="img">
+
+<p>上例中一共有4个导入函数，前3个是以名字导入，第4个是以序号导入。此时INT和IAT结构是相同的。</p>
+<p><strong>导入完成后的导入表：</strong></p>
+<img src="/posts/26540/00110338f2667ee48574243bcec1ccb5.jpeg" class="" title="img">
+
+<h3 id="导入流程："><a href="#导入流程：" class="headerlink" title="导入流程："></a>导入流程：</h3><p>导入dll库分为两种方法：<strong>静态导入和动态导入</strong>。</p>
+<h4 id="静态导入："><a href="#静态导入：" class="headerlink" title="静态导入："></a><strong>静态导入：</strong></h4><ol>
+<li><strong>编译和链接阶段</strong>：<ul>
+<li><strong>创建导入表</strong>：链接器根据对象文件中的外部符号引用，创建 PE 文件的导入表。</li>
+<li><strong>添加占位符</strong>：对于每个导入的函数，在 IAT 中会有一个占位符，它将在运行时由 Windows 加载器替换为实际的函数地址。</li>
+</ul>
+</li>
+<li><strong>每次启动时</strong>：<ul>
+<li><strong>重新解析导入表</strong>：当程序启动时，Windows 加载器会读取 PE 文件中的导入表，并根据其中的信息加载所有静态导入的 DLL。</li>
+<li><strong>更新 IAT</strong>：加载器会解析这些 DLL 中的导出函数地址，并用实际的地址更新 IAT 中的占位符。</li>
+<li><strong>初始化</strong>：确保所有依赖的 DLL 和它们的导出函数都被正确加载并解析，使程序能够直接调用这些函数。</li>
+</ul>
+</li>
+<li><strong>特点</strong>：<ul>
+<li><strong>自动加载</strong>：所有静态导入的 DLL 在程序启动时自动加载。</li>
+<li><strong>依赖性强</strong>：如果缺少任何一个必要的 DLL，程序将无法启动。</li>
+<li><strong>IAT 更新频率</strong>：每次启动程序时都需要重新解析和更新 IAT。</li>
+</ul>
+</li>
+</ol>
+<h4 id="动态导入："><a href="#动态导入：" class="headerlink" title="动态导入："></a><strong>动态导入：</strong></h4><ol>
+<li><strong>编译和链接阶段</strong>：<ul>
+<li><strong>不生成导入表条目</strong>：与静态导入不同，动态连接不会在编译和链接阶段为动态加载的 DLL 创建导入表条目。</li>
+</ul>
+</li>
+<li><strong>每次启动时</strong>：<ul>
+<li><strong>按需加载</strong>：动态连接的 DLL 不会在程序启动时自动加载，而是在需要时由程序显式调用 <code>LoadLibrary</code> 来加载。</li>
+<li><strong>临时性导入表</strong>：每当调用 <code>LoadLibrary</code> 时，操作系统会在内存中为这个 DLL 创建一个新的导入表<!--（注意，这个导入表仅存在于内存之中，一旦程序停止运行，该导入表不复存在）-->。这包括解析该 DLL 所需的所有其他 DLL 和函数，并更新相应的 IAT。</li>
+<li><strong>独立于原始PE文件</strong>：通过 <code>LoadLibrary</code> 加载的 DLL 的导入表仅存在于内存中，不会影响或改变磁盘上的原始 PE 文件。</li>
+</ul>
+</li>
+<li><strong>特点</strong>：<ul>
+<li><strong>灵活性高</strong>：允许程序在运行时根据需要加载和卸载模块，提供了更大的灵活性。</li>
+<li><strong>减少初始加载时间</strong>：因为不是所有依赖都在启动时加载，所以可以加快程序的启动速度。</li>
+<li><strong>IAT 更新频率</strong>：只有在调用 <code>LoadLibrary</code> 时才会创建和更新 IAT，而不是每次启动程序时都进行。</li>
+</ul>
+</li>
+</ol>
+<p><strong>注意：</strong></p>
+<p>在静态导入dll时，编译阶段创建导入表，但在程序的启动阶段才会修正IAT表，一是因为ASLR 机制导致程序每一次启动都会分配不一样的基址，二是因为在程序开始时，dll文件才会映射到当前进程的虚拟地址中，这个时候才能知道导入函数的实际地址。启动阶段，IAT中所有导入函数（不管用没用到）的地址都会修正。</p>
+<p>在动态导入时，编译阶段并不创建导入表，只会在程序启动状态在虚拟内存按需创建一个导入表，并且并不会把IAT中所有导入函数的地址都修正，而是只对需要使用的导入函数（GetProcAddress调用的）的地址进行修正。</p>
+<p>对于静态导入，在编译阶段程序就已经对该dll文件进行链接和解释，并且在启动阶段会把该dll所有函数的地址进行修正，所以在程序中可以直接使用函数名对其进行调用。对于动态导入，只有在调用LoadLibrary(“example.dll”)时才会加载dll文件并创建导入表，而且并不会对IAT中函数地址进行修正，只会在调用GetProcAddress函数时对函数地址进行修正。因此动态导入一定需要用到LoadLibrary和GetProcAddress函数。</p>
+<h4 id="静态链接库："><a href="#静态链接库：" class="headerlink" title="静态链接库："></a>静态链接库：</h4><p>dll文件是一种动态链接库，它并不会在编译时把代码注入到exe文件里面，而是在exe文件启动时映射到其虚拟内存中，并不会改变原exe文件。因此，它每次都启动都需要将代码映射到内存，非常依赖dll文件，一旦dll文件不存在或找到不到，则exe文件无法运行。</p>
+<p>与之相反，静态链接库.lib文件会在编译时把代码注入到exe文件里面，一旦编译完成，将不在需要调用该lib文件，相比之下，其文件大小会比使用动态库的大。因为它是直接将代码注入，使以它不需要导入表来解释函数位置，而是直接当本地函数使用。</p>
+<h1 id="导出表"><a href="#导出表" class="headerlink" title="导出表"></a>导出表</h1>]]></content>
+      <tags>
+        <tag>PE文件</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>国城杯wp</title>
     <url>/posts/8147/</url>
     <content><![CDATA[<hr>
@@ -164,6 +376,58 @@
       </tags>
   </entry>
   <entry>
+    <title>楚慧杯2024wp</title>
+    <url>/posts/64455/</url>
+    <content><![CDATA[<hr>
+<span id="more"></span>
+
+<h2 id="go-bytes"><a href="#go-bytes" class="headerlink" title="go_bytes"></a>go_bytes</h2><p>第一段加密代码：</p>
+<img src="/posts/64455/image-20241220172142353.png" class="" title="image-20241220172142353">
+
+<p>第二段加密代码：</p>
+<img src="/posts/64455/image-20241220172212964.png" class="" title="image-20241220172212964">
+
+<p>主要逻辑可以简化为：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;stdint.h&gt;</span><br><span class="line">int main()&#123;</span><br><span class="line">    int i;unsigned char v5[40];</span><br><span class="line">    unsigned int data[]=&#123;0x22b9,0xc9f8,0x8c89,0xff18,0x1439,0x4e0a,0x2a8b,0x7cb,0xbdeb,0xfaab,</span><br><span class="line">                0x3ffb,0x784b,0x9f1e,0x4feb,0x4d0b,0xd08e,0x38bb,0xcbae,0xd2ce,0x913e,</span><br><span class="line">                0xa6b,0xf03b,0x507b,0x398b,0x93de,0x3cce,0x459e,0x4abe,0x553e,0x316e,</span><br><span class="line">                0x33be,0x42fe,0xcece,0x4dde,0x982b,0xa31b,0x802e,0x12ee,0xf67a,0xeb79&#125;;</span><br><span class="line">    scanf(&quot;%s&quot;,v5);</span><br><span class="line">    for(i=0;i&lt;39;i++)</span><br><span class="line">      v5[i]=(v5[i+1]&gt;&gt;4)|(v5[i]*16);</span><br><span class="line">    v5[39]=(v5[0]&gt;&gt;4)|(v5[39]&lt;&lt;4);</span><br><span class="line">    int j;int main_tmp=0xDEAD;</span><br><span class="line">    for(j=0;j&lt;40;j++)&#123;</span><br><span class="line">        main_tmp=(unsigned __int16)(291 * main_tmp + 1110);</span><br><span class="line">          if(data[j]!=(main_tmp^v5[j]))&#123;</span><br><span class="line">              printf(&quot;wrong!&quot;);</span><br><span class="line">              break;</span><br><span class="line">          &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	printf(&quot;right!&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里这个main_tmp数组我们可以直接运行得到。主要还是对第一段加密的逆向：</p>
+<p>第一段加密主要逻辑是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// v5[38]=v5[38]低4位+v5[39]高4位</span><br><span class="line">// v5[37]=v5[37]低4位+v5[38]高4位</span><br><span class="line">// ······</span><br><span class="line">// v5[0]=v5[0]低4位+v5[1]高4位</span><br><span class="line">// v5[39]=v5[39]低4位+v5[0]高4位</span><br></pre></td></tr></table></figure>
+
+<p>于是v5[38]的原高4位在v5[37]的低4位，原低四位在其高四位里，以此类推。写脚本如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;stdint.h&gt;</span><br><span class="line">int main()&#123;</span><br><span class="line">    int main_tmp[]=&#123;0x22fd,0xc9ed,0x8cbd,0xff2d,0x147d,0x4e6d,0x2a3d,0x7ad,0xbdfd,0xfaed,</span><br><span class="line">                    0x3fbd,0x782d,0x9f7d,0x4f6d,0x4d3d,0xd0ad,0x38fd,0xcbed,0xd2bd,0x912d,</span><br><span class="line">                    0xa7d,0xf06d,0x503d,0x39ad,0x93fd,0x3ced,0x45bd,0x4a2d,0x557d,0x316d,</span><br><span class="line">                    0x333d,0x42ad,0xcefd,0x4ded,0x98bd,0xa32d,0x807d,0x126d,0xf63d,0xebad&#125;;</span><br><span class="line">    int i,j;</span><br><span class="line">    unsigned int data[]=&#123;0x22b9,0xc9f8,0x8c89,0xff18,0x1439,0x4e0a,0x2a8b,0x7cb,0xbdeb,0xfaab,</span><br><span class="line">                0x3ffb,0x784b,0x9f1e,0x4feb,0x4d0b,0xd08e,0x38bb,0xcbae,0xd2ce,0x913e,</span><br><span class="line">                0xa6b,0xf03b,0x507b,0x398b,0x93de,0x3cce,0x459e,0x4abe,0x553e,0x316e,</span><br><span class="line">                0x33be,0x42fe,0xcece,0x4dde,0x982b,0xa31b,0x802e,0x12ee,0xf67a,0xeb79&#125;;</span><br><span class="line">    for(i=0;i&lt;40;i++)</span><br><span class="line">        data[i]^=main_tmp[i];</span><br><span class="line">    unsigned char flag[40];</span><br><span class="line">    for(i=1;i&lt;40;i++)&#123;</span><br><span class="line">        flag[i]=(data[i]&gt;&gt;4)|(data[i-1]&lt;&lt;4);</span><br><span class="line">    &#125;</span><br><span class="line">    flag[0]=(data[0]&gt;&gt;4)|(data[39]&lt;&lt;4);</span><br><span class="line">    for(i=0;i&lt;40;i++)&#123;</span><br><span class="line">        printf(&quot;%c&quot;,flag[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;   //DASCTF&#123;faddff8cb4d711edbb2294085339ce84&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="bouquet"><a href="#bouquet" class="headerlink" title="bouquet"></a>bouquet</h2><p>题目描述:</p>
+<p><code>简单的花指令去除，二叉树的中序、后序、层次遍历代码的识别</code></p>
+<p>数据结构还在追我🤣。</p>
+<p>先去个花指令：</p>
+<img src="/posts/64455/image-20241220173902805.png" class="" title="image-20241220173902805">
+
+<p>重新选定，按P构造函数，反编译：</p>
+<img src="/posts/64455/image-20241220174051218.png" class="" title="image-20241220174051218">
+
+<p>一开始没看题目描述，没看懂这是干什么东西，然后进判断函数看到了递归就觉得有点可疑，去看了一下描述才发现是二叉树。上面这一段是建树。</p>
+<img src="/posts/64455/image-20241220174323830.png" class="" title="image-20241220174323830">
+
+<p>建完树之后有上面两个判断函数，一个是中序遍历，一个是后序遍历：</p>
+<img src="/posts/64455/image-20241220174442323.png" class="" title="image-20241220174442323">
+
+<img src="/posts/64455/image-20241220174500667.png" class="" title="image-20241220174500667">
+
+<p>于是，主要逻辑就浮现出来了：</p>
+<p>输入的flag进行二叉树建树，然后进入第一个函数判断中序遍历序列是否为“ja7Cws_A3daTd4qDo8}F_Sd{a”，之后进入第二个函数判断后序遍历序列是否为“j7aw_sC3addq4TAo}8_Fda{SD”。层次遍历结果就是flag。</p>
+<p>写代码求中序遍历及后序遍历满足条件的字符串：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from collections import deque</span><br><span class="line"></span><br><span class="line">class TreeNode:</span><br><span class="line">    def __init__(self, value=&#x27;&#x27;):</span><br><span class="line">        self.value = value</span><br><span class="line">        self.left = None</span><br><span class="line">        self.right = None</span><br><span class="line"></span><br><span class="line">def build_tree(inorder, postorder):</span><br><span class="line">    if not inorder or not postorder:</span><br><span class="line">        return None</span><br><span class="line">    </span><br><span class="line">    root_value = postorder.pop()</span><br><span class="line">    root = TreeNode(root_value)</span><br><span class="line">    </span><br><span class="line">    root_index = inorder.index(root_value)</span><br><span class="line">    </span><br><span class="line">    root.right = build_tree(inorder[root_index + 1:], postorder)</span><br><span class="line">    root.left = build_tree(inorder[:root_index], postorder)</span><br><span class="line">    </span><br><span class="line">    return root</span><br><span class="line"></span><br><span class="line">def preorder_traversal(root):</span><br><span class="line">    if root is None:</span><br><span class="line">        return &quot;&quot;</span><br><span class="line">    return root.value + preorder_traversal(root.left) + preorder_traversal(root.right)</span><br><span class="line"></span><br><span class="line">def print_tree_structure(root):</span><br><span class="line">    if root is None:</span><br><span class="line">        return &quot;None&quot;</span><br><span class="line">    return f&quot;(&#123;root.value&#125;, &#123;print_tree_structure(root.left)&#125;, &#123;print_tree_structure(root.right)&#125;)&quot;</span><br><span class="line"></span><br><span class="line"># 层次遍历函数</span><br><span class="line">def level_order_traversal(root):</span><br><span class="line">    if root is None:</span><br><span class="line">        return &quot;&quot;</span><br><span class="line">    </span><br><span class="line">    result = []</span><br><span class="line">    queue = deque([root])</span><br><span class="line">    </span><br><span class="line">    while queue:</span><br><span class="line">        node = queue.popleft()</span><br><span class="line">        result.append(node.value)</span><br><span class="line">        </span><br><span class="line">        if node.left:</span><br><span class="line">            queue.append(node.left)</span><br><span class="line">        if node.right:</span><br><span class="line">            queue.append(node.right)</span><br><span class="line">    </span><br><span class="line">    return &quot; &quot;.join(result)</span><br><span class="line"></span><br><span class="line"># 给定的中序和后序遍历结果</span><br><span class="line">inorder = &quot;ja7Cws_A3daTd4qDo8&#125;F_Sd&#123;a&quot;</span><br><span class="line">postorder = list(&quot;j7aw_sC3addq4TAo&#125;8_Fda&#123;SD&quot;)</span><br><span class="line"></span><br><span class="line"># 构建二叉树</span><br><span class="line">root = build_tree(list(inorder), postorder)</span><br><span class="line"></span><br><span class="line"># 输出树的前序遍历结果</span><br><span class="line">preorder_result = preorder_traversal(root)</span><br><span class="line">print(f&quot;前序遍历结果: &#123;preorder_result&#125;&quot;)</span><br><span class="line"></span><br><span class="line"># 输出树的层次遍历结果</span><br><span class="line">level_order_result = level_order_traversal(root)</span><br><span class="line">print(f&quot;层次遍历结果: &#123;level_order_result&#125;&quot;)</span><br><span class="line"></span><br><span class="line"># 输出树的结构</span><br><span class="line">tree_structure = print_tree_structure(root)</span><br><span class="line">print(f&quot;树的结构: &#123;tree_structure&#125;&quot;)</span><br><span class="line"></span><br><span class="line"># 层次遍历结果: DASCTF&#123;asd48_daj7w_3adqo&#125;</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">#include&lt;stdlib.h&gt;</span><br><span class="line">#define num 26</span><br><span class="line">char mid[] = &quot;ja7Cws_A3daTd4qDo8&#125;F_Sd&#123;a&quot;;</span><br><span class="line">char post[] = &quot;j7aw_sC3addq4TAo&#125;8_Fda&#123;SD&quot;;</span><br><span class="line">// 目标：给出中序遍历和后序遍历序列，求出完全二叉树结构（打印出层次遍历序列）</span><br><span class="line">typedef struct tree</span><br><span class="line">&#123;</span><br><span class="line">	char c;</span><br><span class="line">	struct tree *left,*right;</span><br><span class="line">&#125;tree;</span><br><span class="line">tree *creat(int ms,int me,int ps,int pe)&#123;   // 反推树的结构</span><br><span class="line">	if(ms&gt;me||ps&gt;pe) return NULL;</span><br><span class="line">	tree *t=(tree  *)malloc(sizeof(tree));</span><br><span class="line">	char charAt=post[pe];</span><br><span class="line">	int i;</span><br><span class="line">	for(i=ms;i&lt;=me&amp;&amp;mid[i]!=charAt;i++) &#123;&#125;</span><br><span class="line">	t-&gt;c=charAt;</span><br><span class="line">	t-&gt;left=creat(ms,i-1,ps, ps + i - ms - 1);</span><br><span class="line">	t-&gt;right=creat(i+1,me, ps + i - ms,pe-1);</span><br><span class="line">	return t;</span><br><span class="line">&#125;</span><br><span class="line">void pre_travel(tree *t)&#123;    // 前序遍历</span><br><span class="line">	if(t==NULL) return;</span><br><span class="line">	printf(&quot;%c&quot;,t-&gt;c);</span><br><span class="line">	pre_travel(t-&gt;left);</span><br><span class="line">	pre_travel(t-&gt;right);</span><br><span class="line">&#125;</span><br><span class="line">// 层次遍历</span><br><span class="line">typedef struct q&#123;  // 创建队列</span><br><span class="line">	tree *c[num];</span><br><span class="line">	int r,f;</span><br><span class="line">&#125;queue;</span><br><span class="line">void init(queue *q)&#123;   //初始化队列</span><br><span class="line">	q-&gt;r=q-&gt;f=0;</span><br><span class="line">&#125;</span><br><span class="line">void enqueue(queue *q,tree *t) &#123; // 入队</span><br><span class="line">	if((q-&gt;f+1)%num==q-&gt;r) &#123;printf(&quot;队满！\n&quot;);return;&#125;</span><br><span class="line">	q-&gt;c[q-&gt;f]=t;</span><br><span class="line">	q-&gt;f=(q-&gt;f+1)%num;</span><br><span class="line">&#125;</span><br><span class="line">tree *dequeue(queue *q) &#123;  // 出队</span><br><span class="line">	if(q-&gt;f==q-&gt;r) &#123;printf(&quot;队空！\n&quot;);return NULL;&#125;</span><br><span class="line">	tree *temp=q-&gt;c[q-&gt;r];</span><br><span class="line">	q-&gt;r=(q-&gt;r+1)%num;</span><br><span class="line">	return temp;</span><br><span class="line">&#125;</span><br><span class="line">void level_travel(tree *t)&#123;  //  层次遍历</span><br><span class="line">	if(t==NULL) return;</span><br><span class="line">	queue *q=(queue *)malloc(sizeof(queue));</span><br><span class="line">	tree *temp;</span><br><span class="line">	init(q);</span><br><span class="line">	enqueue(q,t);</span><br><span class="line">	while(q-&gt;f!=q-&gt;r)&#123;</span><br><span class="line">		temp=dequeue(q);</span><br><span class="line">		printf(&quot;%c&quot;,temp-&gt;c);</span><br><span class="line">		if(temp-&gt;left!=NULL) enqueue(q,temp-&gt;left);</span><br><span class="line">		if(temp-&gt;right!=NULL) enqueue(q,temp-&gt;right);</span><br><span class="line">	&#125;</span><br><span class="line">	free(q);</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">	tree *t=creat(0,strlen(mid)-1,0,strlen(post)-1);</span><br><span class="line">	// pre_travel(t);</span><br><span class="line">	level_travel(t);</span><br><span class="line">&#125;</span><br><span class="line">//层次遍历结果: DASCTF&#123;asd48_daj7w_3adqo&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>wp</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>蜀道山wp</title>
     <url>/posts/46980/</url>
     <content><![CDATA[<hr>
@@ -197,6 +461,29 @@
       </categories>
       <tags>
         <tag>wp</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>调用.exe爆破</title>
+    <url>/posts/64193/</url>
+    <content><![CDATA[<hr>
+<span id="more"></span>
+
+<h3 id="引入："><a href="#引入：" class="headerlink" title="引入："></a>引入：</h3><p>CISCN的一个题包含一个.exe文件（加密）和一个文本文件（存放密文），由于.exe文件逻辑比较复杂，如果直接进行逆向来推出flag的话，比较难，于是可以用python的subprocess模块来调用.exe文件进行逐个字符爆破。</p>
+<p>.exe文件主要作用：每次读取一个字符串，进行加密，加密后会与文本文件的密文相等</p>
+<h3 id="使用方法："><a href="#使用方法：" class="headerlink" title="使用方法："></a>使用方法：</h3><p>使用<code>subprocess.run()</code> 调用<code>.exe</code>文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">result = subprocess.run([&#x27;A&#x27;, &#x27;B&#x27;], capture_output=True, text=True)</span><br><span class="line">A: 文件地址</span><br><span class="line">B: 需要传入函数的参数</span><br><span class="line">capture_output=True: 捕获输出</span><br><span class="line">text=True: 确保输出以字符串形式而不是字节形式返回</span><br><span class="line">返回值: CompletedProcess实例</span><br></pre></td></tr></table></figure>
+
+<p><code>CompletedProcess</code> 实例有以下几个属性:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">args: 传递给 run() 的参数（通常是命令和参数列表），以供参考。</span><br><span class="line">returncode: 子进程退出时的状态码。通常，成功执行的命令会返回 0，而非零值表示发生了错误。</span><br><span class="line">stdout: 如果指定了 capture_output=True 或 stdout=PIPE，则包含标准输出的数据；否则为 None。</span><br><span class="line">text: 如果 text=True，那么 stdout 将是字符串；否则，它将是字节对象。</span><br><span class="line">stderr: 类似于 stdout，但是包含了标准错误流的数据。</span><br></pre></td></tr></table></figure>
+
+<p>其中stdout包含了输出流，可以使用result.stdout获取输出流</p>
+<p>脚本示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">import string</span><br><span class="line">table = string.printable   # 可打印字符表</span><br><span class="line">data = [&quot;23&quot;, &quot;29&quot;, &quot;1e&quot;, &quot;24&quot;, &quot;38&quot;,</span><br><span class="line">       &quot;0e&quot;, &quot;15&quot;, &quot;20&quot;, &quot;37&quot;, &quot;0e&quot;,</span><br><span class="line">       &quot;05&quot;, &quot;20&quot;, &quot;00&quot;, &quot;0e&quot;, &quot;37&quot;,</span><br><span class="line">       &quot;12&quot;, &quot;1d&quot;, &quot;0f&quot;, &quot;24&quot;, &quot;01&quot;, &quot;01&quot;, &quot;39&quot;]   # 密文</span><br><span class="line"></span><br><span class="line">flag = &#x27;flag&#123;&#x27;    # 已知的前缀</span><br><span class="line">index = 5</span><br><span class="line">while index&lt;len(data):</span><br><span class="line">    if index == 14:     # 这是提示给的</span><br><span class="line">        flag += &#x27;4&#x27;</span><br><span class="line">        index += 1</span><br><span class="line">        continue</span><br><span class="line"></span><br><span class="line">    for char in table:</span><br><span class="line">        temp = flag + char</span><br><span class="line">        result = subprocess.run([&quot;C:/Users/tzs/Desktop/bin/re.exe&quot;,temp],capture_output=True, text=True)</span><br><span class="line">        out_put = result.stdout   # 这里得到一个十六进制字符串</span><br><span class="line">        out_list = [out_put[i:i+2] for i in range(0,len(out_put),2)]         # 把每两个字符拆成一个十六进制数</span><br><span class="line">        if out_list[index] == data[index]: </span><br><span class="line">            flag += char</span><br><span class="line">            index += 1</span><br><span class="line">            print(flag)</span><br><span class="line">            break</span><br><span class="line"></span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>Reverse</tag>
       </tags>
   </entry>
 </search>
