@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、概论 二、物理层 三、数据链路层以下关于以太网的描述,正确的是( C)  A. 以太网提供差错检测和差错纠正的机制 B. 以太网提供碰撞检测机制 C. 以太网提供流量控制机制 D. 以太网提供拥塞控制机制  答案：B。传统半双工以太网（使用CSMA&#x2F;CD的），无流量控制机制，冲突时依靠随机退避重传，流量控制由上层（如TCP）实现。 DTE（终端设备）：Data Terminal">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计网">
+<meta property="og:url" content="http://example.com/posts/51165/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="一、概论 二、物理层 三、数据链路层以下关于以太网的描述,正确的是( C)  A. 以太网提供差错检测和差错纠正的机制 B. 以太网提供碰撞检测机制 C. 以太网提供流量控制机制 D. 以太网提供拥塞控制机制  答案：B。传统半双工以太网（使用CSMA&#x2F;CD的），无流量控制机制，冲突时依靠随机退避重传，流量控制由上层（如TCP）实现。 DTE（终端设备）：Data Terminal">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-12T09:13:19.000Z">
+<meta property="article:modified_time" content="2025-07-10T14:02:28.689Z">
+<meta property="article:author" content="comhacker">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/posts/51165/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>计网 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/51165/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计网
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-06-12 17:13:19" itemprop="dateCreated datePublished" datetime="2025-06-12T17:13:19+08:00">2025-06-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-10 22:02:28" itemprop="dateModified" datetime="2025-07-10T22:02:28+08:00">2025-07-10</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="一、概论"><a href="#一、概论" class="headerlink" title="一、概论"></a>一、概论</h1><hr>
+<h1 id="二、物理层"><a href="#二、物理层" class="headerlink" title="二、物理层"></a>二、物理层</h1><hr>
+<h1 id="三、数据链路层"><a href="#三、数据链路层" class="headerlink" title="三、数据链路层"></a>三、数据链路层</h1><p>以下关于以太网的描述,正确的是( C)</p>
+<ul>
+<li>A. 以太网提供差错检测和差错纠正的机制</li>
+<li>B. 以太网提供碰撞检测机制</li>
+<li>C. 以太网提供流量控制机制</li>
+<li>D. 以太网提供拥塞控制机制</li>
+</ul>
+<p>答案：B。传统半双工以太网（使用CSMA&#x2F;CD的），<strong>无流量控制机制</strong>，冲突时依靠随机退避重传，流量控制由上层（如TCP）实现。</p>
+<p><strong>DTE（终端设备）：</strong>Data Terminal Equipment，负责生成、处理或消费数据（如发送HTTP请求、运行应用程序）</p>
+<p>注意：路由器也是DTE，因为路由器也会生成报文（如发送路由协议报文：OSPF、BGP），或响应管理请求（如回复ICMP Ping），这符合DTE“生成数据”的特性。</p>
+<p><strong>DCE（数据通信设备）</strong>：Data Communication Device，负责转发或中继数据。（物理层和数据链路层）</p>
+<ul>
+<li>提供时钟同步（如调制解调器控制通信时序）。</li>
+<li>信号格式转换（如将数字信号转为模拟信号）。</li>
+<li>单纯转发数据（如交换机基于MAC地址转发帧）。</li>
+</ul>
+<p>特例：SOHO路由器的internet接口是DTE，LAN接口是DCE。</p>
+<table>
+<thead>
+<tr>
+<th>DTE设备</th>
+<th>DTE设备</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主机、路由器、服务器</td>
+<td>交换机、集线器、网桥、中继器</td>
+</tr>
+</tbody></table>
+<p>可以认为：<strong>物理层与数据链路层设备通常属于DCE</strong>，而<strong>网络层及以上设备通常属于DTE</strong>。</p>
+<p>相同类型设备之间使用交叉线，不同类型设备之间使用直通线。</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>特性</strong></th>
+<th align="center"><strong>基带传输 (Baseband)</strong></th>
+<th align="center"><strong>宽带传输 (Broadband)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>信号类型</strong></td>
+<td align="center">数字信号（直接0&#x2F;1脉冲）</td>
+<td align="center">模拟信号（调制后高频载波）</td>
+</tr>
+<tr>
+<td align="center"><strong>信道复用</strong></td>
+<td align="center">❌ 无复用，独占信道</td>
+<td align="center">✅ 频分复用（FDM），多路信号并行</td>
+</tr>
+<tr>
+<td align="center"><strong>传输距离</strong></td>
+<td align="center">短（&lt;500米）</td>
+<td align="center">长（可达20公里+）</td>
+</tr>
+<tr>
+<td align="center"><strong>典型速率</strong></td>
+<td align="center">10 Mbps ~ 10 Gbps（受距离限制）</td>
+<td align="center">50 Mbps ~ 1 Gbps（多业务共享总带宽）</td>
+</tr>
+<tr>
+<td align="center"><strong>设备需求</strong></td>
+<td align="center">网卡、交换机</td>
+<td align="center">调制解调器、放大器、分频器</td>
+</tr>
+<tr>
+<td align="center"><strong>适用场景</strong></td>
+<td align="center">短距离数字通信（如局域网）</td>
+<td align="center">长距离多业务融合（如电视+互联网）</td>
+</tr>
+<tr>
+<td align="center"><strong>代表技术</strong></td>
+<td align="center">10Base-T以太网、USB</td>
+<td align="center">DOCSIS 3.1（有线宽带）、CATV</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="四、网络层"><a href="#四、网络层" class="headerlink" title="四、网络层"></a>四、网络层</h1><p><strong>子网掩码与可用位数的关系：</strong><br>如果前8-n位为1，后n位为0的掩码十进制表示为<br>$$<br>2^8-2^n&#x3D;256-2^n<br>$$<br>如一个192.168.1.0&#x2F;24抽出5位划分子网，则其子网掩码第4部分为1111 1000 &#x3D; 256 - 8 &#x3D; 248，子网掩码为255.255.255.248</p>
+<p><strong>已知IP、掩码快速求网络号、主机号</strong></p>
+<p>例题：因特网上某主机的IP地址为128.200.68.101，子网掩码为255.255.255.240，该地址的主机号为？</p>
+<p>法一：掩码240，256-240&#x3D;16&#x3D;2^4，也就是前4为为网络号，101-&gt;0110 0101，故其网络号为0110 0000即96，主机号为101-96&#x3D;5；</p>
+<p>法二：掩码240，256-240&#x3D;16，101%16&#x3D;5，主机号5。101&#x2F;16&#x3D;6（子网号），网络号为16*6&#x3D;96。</p>
+<p>法二的原理：求101的网络号就等于求其前4位，101&gt;&gt;4&#x3D;0000 0110（6），6&lt;&lt;4&#x3D;0110 0000(96)，右移4位等于整除16。</p>
+<p>同时该网络：网络地址为128.200.68.96，可用主机数为256-240-2&#x3D;14，范围为128.200.68.97~128.200.68.110</p>
+<p>现将一个IP网络划分为3个子网，若其中一个子网是192.168.9.128&#x2F;26，则下列网络中，不可能是另外两个子网之一的是（  D  ）。 </p>
+<p>A、192.168.9.0&#x2F;25			B、192.168.9.192&#x2F;26</p>
+<p>C、192.168.9.192&#x2F;27		D、192.168.9.0&#x2F;26</p>
+<p>将一个网络划分为3个子网，要满足一下要求：</p>
+<ul>
+<li>3个子网互不包含</li>
+<li>3个子网可完全覆盖原网络</li>
+</ul>
+<p>原网络未知，由于192.168.9.128属于C类网络，暂定原网络为&#x2F;24，则&#x2F;26说明借了两位，128代表10.00 0000，前两位是10。</p>
+<p>分析A选项：192.168.9.0&#x2F;25 代表0.000 0000，相当于包含00和01，只需一个11即可完成覆盖</p>
+<p>分析B选项：192.168.9.192&#x2F;26代表11.00 0000，相当于11，刚好与A互补可完成覆盖</p>
+<p>分析C选项：192.168.9.192&#x2F;27代表110.0 0000，如果原网络为&#x2F;25，那么C代表10，192.168.9.128&#x2F;26代表0（00与01结合），只需一个					  11，即192.168.9.128&#x2F;27</p>
+<p>分析D选项：192.168.9.0&#x2F;26代表00，至少还需要11和01才可完全覆盖，而11和01不可聚合，所以不可能使用3个子网来划分，D错误</p>
+<p> 在给主机设置公网 IP 地址时,下面四个选项哪一个能使用 ( A )</p>
+<p>A、29.9.255.15		B、192.5.91.255</p>
+<p>C、127.21.19.109		D、220.103.256.56 (错误原因：256&gt;255)</p>
+<p>一个IP数据报总长度为4200字节(包含固定长度的首部)。现在需要经过某物理网络传送,但是该网络的MTU&#x3D;1000字节。则该数据报被分片后最后一个分片首部中的片偏移字段的值(用十进制表示)是（ B ）</p>
+<p>A、500 	B、488</p>
+<p>C、125	 D、122</p>
+<p>ip数据报数据长度为4200-20&#x3D;4180</p>
+<p>新数据报长度为1000-20&#x3D;980，但片偏移以8为单位，故数据报长度要为8的倍数，向下取976</p>
+<p>[4280&#x2F;976]&#x3D;5，5个分组</p>
+<p>一个分组片偏移为976&#x2F;8&#x3D;122，故4个分组片偏移为488</p>
+<p>路由表与转发表的区别：</p>
+<table>
+<thead>
+<tr>
+<th><strong>对比维度</strong></th>
+<th><strong>路由表 (RIB)</strong></th>
+<th><strong>转发表 (FIB)</strong></th>
+<th><strong>邻接表 (Adjacency Table)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>核心作用</strong></td>
+<td>存储<strong>所有已知路由</strong></td>
+<td>存储<strong>路由的最优路径</strong></td>
+<td>存储<strong>下一跳与MAC的映射关系</strong></td>
+</tr>
+<tr>
+<td><strong>工作层面</strong></td>
+<td>控制层面（软件决策）</td>
+<td>转发层面（硬件执行）</td>
+<td>数据链路层（L2封装）</td>
+</tr>
+<tr>
+<td><strong>核心内容</strong></td>
+<td>目标网络+掩码、下一跳IP、管理距离、度量值、路由来源</td>
+<td>目标网络+掩码、<strong>出接口</strong>、下一跳IP、<strong>邻接表指针</strong></td>
+<td><strong>下一跳IP</strong>、<strong>出接口</strong>、<strong>目标MAC地址</strong></td>
+</tr>
+<tr>
+<td><strong>生成方式</strong></td>
+<td>路由协议、静态配置、直连网络</td>
+<td>从路由表<strong>提取最优路径</strong>优化生成</td>
+<td>ARP（IPv4）、手动配置</td>
+</tr>
+<tr>
+<td><strong>更新频率</strong></td>
+<td>较高（路由变化时更新）</td>
+<td>较低（路由表最优路径变化时）</td>
+<td>最低（ARP缓存超时——20min、链路状态变化）</td>
+</tr>
+<tr>
+<td><strong>性能要求</strong></td>
+<td>中（CPU处理）</td>
+<td><strong>极高</strong>（硬件TCAM&#x2F;ASIC线速查找）</td>
+<td>高（需与FIB协同快速封装）</td>
+</tr>
+<tr>
+<td><strong>存储位置</strong></td>
+<td>控制处理器内存</td>
+<td>专用硬件（TCAM&#x2F;ASIC）</td>
+<td>硬件或高速内存</td>
+</tr>
+<tr>
+<td><strong>关键决策</strong></td>
+<td><strong>“数据包应该去哪？”</strong>（选择路径）</td>
+<td><strong>“从哪个接口发出？”</strong>（执行转发）</td>
+<td><strong>“如何封装数据帧？”</strong>（解决L2寻址）</td>
+</tr>
+<tr>
+<td><strong>类比</strong></td>
+<td>世界地图（含所有路线）</td>
+<td>导航路线（最优路径指引）</td>
+<td>本地通讯录（下一跳联系方式）</td>
+</tr>
+</tbody></table>
+<p>路由算法创建路由表-&gt;路由表中挑出到各网络最优的路径组成转发表</p>
+<p>分组到达-&gt;根据转发表找下一跳和接口-&gt;邻接表将下一条IP转换为MAC地址-&gt;发包</p>
+<table>
+<thead>
+<tr>
+<th><strong>维度</strong></th>
+<th><strong>RIP</strong></th>
+<th><strong>OSPF</strong></th>
+<th><strong>BGP</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>算法</strong></td>
+<td><strong>距离向量</strong></td>
+<td><strong>链路状态</strong></td>
+<td><strong>路径向量</strong></td>
+</tr>
+<tr>
+<td><strong>协议类型</strong></td>
+<td>IGP（内部网关协议）</td>
+<td>IGP（内部网关协议）</td>
+<td>EGP（外部网关协议）</td>
+</tr>
+<tr>
+<td><strong>协议层级</strong></td>
+<td><strong>应用层（UDP 520 端口）</strong></td>
+<td><strong>网络层（IP 协议号 89）</strong></td>
+<td><strong>应用层（TCP 179 端口）</strong></td>
+</tr>
+<tr>
+<td><strong>设计目标</strong></td>
+<td>小型网络简单路由</td>
+<td>大型网络快速收敛与分层设计</td>
+<td>跨自治系统（AS）的策略路由</td>
+</tr>
+<tr>
+<td><strong>度量标准</strong></td>
+<td>跳数，最大 15 跳</td>
+<td>链路开销</td>
+<td>AS 路径长度、政治等属性</td>
+</tr>
+<tr>
+<td><strong>更新机制</strong></td>
+<td>每 30 秒向邻居发送完整路由表</td>
+<td>触发更新（拓扑变化时洪泛 LSA）</td>
+<td>触发更新 + 增量更新</td>
+</tr>
+<tr>
+<td><strong>收敛速度</strong></td>
+<td>慢（分钟级）</td>
+<td>快（秒级）</td>
+<td>极慢（分钟到小时级）</td>
+</tr>
+<tr>
+<td><strong>防环机制</strong></td>
+<td>跳数限制</td>
+<td>SPF 算法（基于拓扑的无环计算）</td>
+<td>AS_PATH 属性（丢弃含自身 AS 的路由）</td>
+</tr>
+<tr>
+<td><strong>网络规模支持</strong></td>
+<td>极小（≤15 跳）</td>
+<td>大（通过区域划分扩展）</td>
+<td>极大（互联网级路由表）</td>
+</tr>
+<tr>
+<td><strong>配置复杂度</strong></td>
+<td>简单（无需拓扑规划）</td>
+<td>复杂（需设计区域、DR&#x2F;BDR）</td>
+<td>极复杂（策略定制、邻居管理）</td>
+</tr>
+<tr>
+<td><strong>典型应用场景</strong></td>
+<td>小型企业分支、临时网络</td>
+<td>企业内网、数据中心内部</td>
+<td>ISP 互联、跨国企业跨 AS 路由</td>
+</tr>
+</tbody></table>
+<p>OSPF中路由器获得的路由信息是：本区域完整拓扑图 + 其他区域路由摘要，由于OSPF使用组播地址，故其洪泛只在区域内。</p>
+<p>35.(单选题)OSPF协议可以有效的解决路由自环的问题,下面哪一条无法解释这一点()<br>A、OSPF支持路由验证         		 B、OSPF使用链路状态路由算法<br>C、OSPF使用了骨干区域	  		D、当其他区域无法和骨干区域物理直连是，OSPF可以使用虚连接</p>
+<p>A：路由验证是通过密码或密钥验证路由更新的来源，防止恶意路由，与防环无关</p>
+<p>B：每个路由器维护整个网络的链路状态数据库，并独立计算最短路径树，确保路径无环</p>
+<p>C：所有其他区域必须直接或间接连接到骨干区域。分层结构避免区域边界路由器间形成环路</p>
+<p>D：与C相同，分层结构避免区域边界路由器间形成环路</p>
+<hr>
+<h1 id="五、传输层"><a href="#五、传输层" class="headerlink" title="五、传输层"></a>五、传输层</h1><hr>
+<h1 id="六、应用层"><a href="#六、应用层" class="headerlink" title="六、应用层"></a>六、应用层</h1><hr>
+<h1 id="实验："><a href="#实验：" class="headerlink" title="实验："></a>实验：</h1><p>DHCP中继代理（让路由器将外部广播包转发到服务器）：ip helper-address +服务器ip</p>
+<p>DNS实验中：</p>
+<ul>
+<li>域名	A-record	ip</li>
+<li>域名	NS-record	权威域名服务器</li>
+<li>别名	C-NAME	原域名</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/54083/" rel="prev" title="ISCC区域赛wp">
+      <i class="fa fa-chevron-left"></i> ISCC区域赛wp
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/27687/" rel="next" title="VScode中文乱码问题解决">
+      VScode中文乱码问题解决 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%A6%82%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">一、概论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%89%A9%E7%90%86%E5%B1%82"><span class="nav-number">2.</span> <span class="nav-text">二、物理层</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="nav-number">3.</span> <span class="nav-text">三、数据链路层</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%BD%91%E7%BB%9C%E5%B1%82"><span class="nav-number">4.</span> <span class="nav-text">四、网络层</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E4%BC%A0%E8%BE%93%E5%B1%82"><span class="nav-number">5.</span> <span class="nav-text">五、传输层</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%BA%94%E7%94%A8%E5%B1%82"><span class="nav-number">6.</span> <span class="nav-text">六、应用层</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%EF%BC%9A"><span class="nav-number">7.</span> <span class="nav-text">实验：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="导出表概述：optional头最后一个成员DataDirectory[16]，这个结构体数组中的第一个元素存储的就是导出表的位置信息： 1234typedef struct _IMAGE_DATA_DIRECTORY &#123;    DWORD   VirtualAddress;  &#x2F;&#x2F; 导出表的RVA    DWORD   Size;             &#x2F;&#x2F; 大小（没用）&amp;#125">
+<meta property="og:type" content="article">
+<meta property="og:title" content="导出表">
+<meta property="og:url" content="http://example.com/posts/20158/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="导出表概述：optional头最后一个成员DataDirectory[16]，这个结构体数组中的第一个元素存储的就是导出表的位置信息： 1234typedef struct _IMAGE_DATA_DIRECTORY &#123;    DWORD   VirtualAddress;  &#x2F;&#x2F; 导出表的RVA    DWORD   Size;             &#x2F;&#x2F; 大小（没用）&amp;#125">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/20158/image-20250706204430469.png">
+<meta property="og:image" content="http://example.com/posts/20158/draw.drawio.png">
+<meta property="article:published_time" content="2025-07-06T08:55:16.000Z">
+<meta property="article:modified_time" content="2025-07-10T14:02:28.689Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="PE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/20158/image-20250706204430469.png">
+
+<link rel="canonical" href="http://example.com/posts/20158/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>导出表 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/20158/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          导出表
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-06 16:55:16" itemprop="dateCreated datePublished" datetime="2025-07-06T16:55:16+08:00">2025-07-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-10 22:02:28" itemprop="dateModified" datetime="2025-07-10T22:02:28+08:00">2025-07-10</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="导出表"><a href="#导出表" class="headerlink" title="导出表"></a>导出表</h1><h2 id="概述："><a href="#概述：" class="headerlink" title="概述："></a>概述：</h2><p>optional头最后一个成员DataDirectory[16]，这个结构体数组中的第一个元素存储的就是导出表的位置信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_DATA_DIRECTORY &#123;</span><br><span class="line">    DWORD   VirtualAddress;  // 导出表的RVA</span><br><span class="line">    DWORD   Size;             // 大小（没用）</span><br><span class="line">&#125; IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;</span><br></pre></td></tr></table></figure>
+
+<p>导出表不是一张表，而是一个结构体：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_EXPORT_DIRECTORY &#123;</span><br><span class="line">    DWORD   Characteristics; // 未使用</span><br><span class="line">    DWORD   TimeDateStamp; // 时间戳，表示当前PE文件（DLL）编译时的时间</span><br><span class="line">    WORD    MajorVersion; // 未使用</span><br><span class="line">    WORD    MinorVersion; // 未使用</span><br><span class="line">    DWORD   Name; // 当前导出表文件名字符串的地址</span><br><span class="line">    DWORD   Base; // 导出函数起始序号</span><br><span class="line">    DWORD   NumberOfFunctions; // 所有导出函数的个数(不一定准确)</span><br><span class="line">    DWORD   NumberOfNames; // 以函数名字导出的函数个数</span><br><span class="line">    DWORD   AddressOfFunctions;// 导出函数地址表RVA</span><br><span class="line">    DWORD   AddressOfNames; // 导出函数名称表RVA</span><br><span class="line">    DWORD   AddressOfNameOrdinals; // 导出函数序号表RVA</span><br><span class="line">&#125; IMAGE_EXPORT_DIRECTORY, *PIMAGE_EXPORT_DIRECTORY;</span><br></pre></td></tr></table></figure>
+
+<p>实际上，导出表指向了三张表（三个数组），分别是地址表、名称表、序号表。</p>
+<ul>
+<li><strong>Base</strong>（导出函数起始序号）：等于所有导出函数序号的最小值。</li>
+<li><strong>NumberOfFunctions</strong>（所有导出函数的个数）：与地址表的成员个数相等，计算方式是(最大序号-最小序号+1)，但是并不一定等于实际导出函数的个数，比如当我有2个导出函数，使用def文件显式指定序号分别为1和3，那么NumberOfFunctions的值就为3，但是实际导出函数为2个。</li>
+<li><strong>AddressOfFunctions</strong>（导出函数地址表）：每一个成员4个字节，存储一个导出函数的地址（可能为0）</li>
+<li><strong>AddressOfNames</strong>（导出函数名称表）：每一个成员4个字节，存储一个导出函数的名字的地址</li>
+<li><strong>AddressOfNameOrdinals</strong>（导出函数序号表）：一个成员2个字节，与名称表对应，记载对应函数的序号（实际为原序号-base）</li>
+</ul>
+<p>写4个导出函数，给其中两个分别分配2和7，构建dll，使用PE工具打开，观察导出表：</p>
+<img src="/posts/20158/image-20250706204430469.png" class="" title="image-20250706204430469">
+
+<p>导出函数实际有4个，但是NumberOfFunctions值为6（7-2+1），base为2（最小序号）。三表示意图：</p>
+<img src="/posts/20158/draw.drawio.png" class="" title="draw.drawio">
+
+<h2 id="寻找函数方法："><a href="#寻找函数方法：" class="headerlink" title="寻找函数方法："></a>寻找函数方法：</h2><h3 id="通过名称找："><a href="#通过名称找：" class="headerlink" title="通过名称找："></a>通过名称找：</h3><p>1、根据名称在名称表里面找。例如要找”plus”函数，将字符串与名称表里面表中地址指向的字符串进行以一比对，直到相同，记下索引（这里索引是3）。</p>
+<p>2、根据上一步得到的索引，取序号表同索引处的值（这里是5）。</p>
+<p>3、取地址表该索引处的地址，其为函数地址（RVA）。</p>
+<h3 id="通过序号找："><a href="#通过序号找：" class="headerlink" title="通过序号找："></a>通过序号找：</h3><p>假设已知序号为7：</p>
+<p>1、序号-base得到索引（这里是7-2&#x3D;5）</p>
+<p>2、取地址表该索引处的地址，其为函数地址（RVA）。</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>目标：</p>
+<p>1、打印导出表所有信息</p>
+<p>2、通过函数名查找函数FOA</p>
+<p>3、通过序号查找函数FOA</p>
+<p>思路：</p>
+<p>1、由可选头得到结构体数组第一个元素</p>
+<p>2、取第一个元素里面的VirtualAddress转FOA，在定位文件中导出表的位置</p>
+<p>3、定位导出表中三个数组的位置</p>
+<p>4、依据名称或序号找函数地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;windows.h&gt;</span><br><span class="line">IMAGE_DOS_HEADER* dos;</span><br><span class="line">IMAGE_FILE_HEADER* fheader;</span><br><span class="line">IMAGE_OPTIONAL_HEADER32* oheader;</span><br><span class="line">IMAGE_SECTION_HEADER* sheader;</span><br><span class="line">IMAGE_EXPORT_DIRECTORY* export;</span><br><span class="line">int num=0;           //节数量</span><br><span class="line">int header_size=0;   // PE头大小</span><br><span class="line">int base=0;          // 基址</span><br><span class="line">int fsize=0,image_size=0; // 文件大小；文件映射的内存大小</span><br><span class="line">DWORD RVA_to_FOA(DWORD rva)&#123;</span><br><span class="line">	DWORD foa=0;</span><br><span class="line">    if(rva&lt;=header_size) &#123;</span><br><span class="line">        foa = rva;</span><br><span class="line">        return foa;</span><br><span class="line">    &#125;</span><br><span class="line">    if(rva&lt;sheader[0].VirtualAddress) &#123;</span><br><span class="line">        printf(&quot;没有对应的foa!!!\n&quot;);</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    int i=0;</span><br><span class="line">    for(i=0;i&lt;num;i++)&#123;</span><br><span class="line">        if(rva&gt;=sheader[i].VirtualAddress&amp;&amp;rva&lt;(sheader[i].VirtualAddress+sheader[i].Misc.VirtualSize))</span><br><span class="line">            break;</span><br><span class="line">    &#125;</span><br><span class="line">    if(i &gt;= num) &#123;</span><br><span class="line">        printf(&quot;RVA超出范围!!!\n&quot;);</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    int offset=rva-sheader[i].VirtualAddress;</span><br><span class="line">    foa=sheader[i].PointerToRawData+offset;</span><br><span class="line">	return foa;</span><br><span class="line">&#125;</span><br><span class="line">void print_export()&#123;</span><br><span class="line">	printf(&quot;导出表信息:\n&quot;);</span><br><span class="line">	printf(&quot;Characteristics: %#010x\n&quot;, export-&gt;Characteristics);</span><br><span class="line">	printf(&quot;TimeDateStamp: %#010x\n&quot;, export-&gt;TimeDateStamp);</span><br><span class="line">	printf(&quot;MajorVersion: %#x\n&quot;, export-&gt;MajorVersion);</span><br><span class="line">	printf(&quot;MinorVersion: %#x\n&quot;, export-&gt;MinorVersion);</span><br><span class="line">	printf(&quot;Name: %#010x\n&quot;, export-&gt;Name);</span><br><span class="line">	printf(&quot;Base: %#x\n&quot;, export-&gt;Base);</span><br><span class="line">	printf(&quot;NumberOfFunctions: %#x\n&quot;, export-&gt;NumberOfFunctions);</span><br><span class="line">	printf(&quot;NumberOfNames: %#x\n&quot;, export-&gt;NumberOfNames);</span><br><span class="line">	printf(&quot;AddressOfFunctions: %#010x\n&quot;, export-&gt;AddressOfFunctions);</span><br><span class="line">	printf(&quot;AddressOfNames: %#010x\n&quot;, export-&gt;AddressOfNames);</span><br><span class="line">	printf(&quot;AddressOfNameOrdinals: %#010x\n\n&quot;, export-&gt;AddressOfNameOrdinals);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">DWORD SearchInName(char *name,unsigned char *file_buf)&#123;   // 通过名字查找函数地址(返回RVA)</span><br><span class="line">	int i=0;</span><br><span class="line">	DWORD* NameTable=(DWORD*)(RVA_to_FOA(export-&gt;AddressOfNames)+file_buf);</span><br><span class="line">	WORD* OrdinalTable=(WORD*)(RVA_to_FOA(export-&gt;AddressOfNameOrdinals)+file_buf);</span><br><span class="line">	DWORD* AddressTable=(DWORD*)(RVA_to_FOA(export-&gt;AddressOfFunctions)+file_buf);</span><br><span class="line">	for(i=0;i&lt;export-&gt;NumberOfNames;i++)&#123;</span><br><span class="line">		if(!strcmp(name,(char*)(RVA_to_FOA(NameTable[i])+file_buf)))&#123;</span><br><span class="line">			break;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	if(i==export-&gt;NumberOfNames)&#123;</span><br><span class="line">		printf(&quot;未找到该函数\n&quot;);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	int index = (int)OrdinalTable[i];</span><br><span class="line">	return AddressTable[index];</span><br><span class="line">&#125;</span><br><span class="line">DWORD SearchInOrdinal(int index,unsigned char *file_buf)&#123;  // 通过序号查找</span><br><span class="line">	index -= export-&gt;Base;</span><br><span class="line">	DWORD* AddressTable=(DWORD*)(RVA_to_FOA(export-&gt;AddressOfFunctions)+file_buf);</span><br><span class="line">	return AddressTable[index];</span><br><span class="line">&#125;</span><br><span class="line">void Print_All_Function(unsigned char *file_buf)&#123;</span><br><span class="line">    DWORD* NameTable=(DWORD*)(RVA_to_FOA(export-&gt;AddressOfNames)+file_buf);</span><br><span class="line">	WORD* OrdinalTable=(WORD*)(RVA_to_FOA(export-&gt;AddressOfNameOrdinals)+file_buf);</span><br><span class="line">	DWORD* AddressTable=(DWORD*)(RVA_to_FOA(export-&gt;AddressOfFunctions)+file_buf);</span><br><span class="line">    int i=0,j=0;</span><br><span class="line">    printf(&quot;序号   函数名     FOA    RVA\n&quot;);</span><br><span class="line">    for(i=0;i&lt;export-&gt;NumberOfFunctions;i++)&#123;</span><br><span class="line">        if(AddressTable[i]==0) continue;</span><br><span class="line">        for(j=0;j&lt;export-&gt;NumberOfNames;j++)&#123;</span><br><span class="line">            if(i==OrdinalTable[j])&#123;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if(j==export-&gt;NumberOfNames) printf(&quot;%d    NULL    %#x    %#x\n&quot;,i+export-&gt;Base,RVA_to_FOA(AddressTable[i]),AddressTable[i]);</span><br><span class="line">        else printf(&quot;%d    %s    %#x     %#x\n&quot;,i+export-&gt;Base,(char*)(RVA_to_FOA(NameTable[j])+file_buf),RVA_to_FOA(AddressTable[i]),AddressTable[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    printf(&quot;\n\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">    // if(argc != 2) &#123;</span><br><span class="line">    //     printf(&quot;用法: %s &lt;PE文件路径&gt;\n&quot;, argv[0]);</span><br><span class="line">    //     return 1;</span><br><span class="line">    // &#125;</span><br><span class="line">    const char* pe_path = &quot;dlltest.dll&quot;;</span><br><span class="line">    FILE* pf=fopen(pe_path,&quot;rb&quot;);</span><br><span class="line">    if(!pf) &#123;printf(&quot;打开文件失败！！\n&quot;);return 0;&#125;</span><br><span class="line">    fseek(pf, 0, SEEK_END);</span><br><span class="line">    fsize=ftell(pf);    </span><br><span class="line">    fseek(pf, 0, SEEK_SET); </span><br><span class="line">    unsigned char* file_buf=(unsigned char *)malloc(fsize);</span><br><span class="line">    fread(file_buf,1,fsize,pf);</span><br><span class="line">    fclose(pf);</span><br><span class="line">    unsigned char *offset=file_buf;</span><br><span class="line">    dos=(IMAGE_DOS_HEADER*)offset;</span><br><span class="line">    offset+=dos-&gt;e_lfanew+4;  // 定位文件头</span><br><span class="line">    fheader=(IMAGE_FILE_HEADER*)offset;</span><br><span class="line">    num = fheader-&gt;NumberOfSections;</span><br><span class="line">    offset+=20;      // 定位可选头</span><br><span class="line">    oheader = (IMAGE_OPTIONAL_HEADER32*)offset;</span><br><span class="line">    header_size=oheader-&gt;SizeOfHeaders;</span><br><span class="line">    base=oheader-&gt;ImageBase;</span><br><span class="line">    image_size = oheader-&gt;SizeOfImage;</span><br><span class="line">    offset += sizeof(IMAGE_OPTIONAL_HEADER32);   // 定位节表</span><br><span class="line">    int size = num * sizeof(IMAGE_SECTION_HEADER);</span><br><span class="line">    sheader = (IMAGE_SECTION_HEADER*)offset;</span><br><span class="line">	DWORD export_rva = oheader-&gt;DataDirectory[0].VirtualAddress;</span><br><span class="line">	DWORD export_foa = RVA_to_FOA(export_rva);</span><br><span class="line">	if(export_foa == 0) &#123;</span><br><span class="line">		printf(&quot;导出表RVA转换失败\n&quot;);</span><br><span class="line">		free(file_buf);</span><br><span class="line">		return 1;</span><br><span class="line">	&#125;</span><br><span class="line">	export = (IMAGE_EXPORT_DIRECTORY*)(file_buf + export_foa);</span><br><span class="line">	print_export();</span><br><span class="line">    Print_All_Function(file_buf);</span><br><span class="line">	int flag;</span><br><span class="line">	char s[20];</span><br><span class="line">	DWORD address=0;</span><br><span class="line">	int ord=0;</span><br><span class="line">	while(1)&#123;</span><br><span class="line">        printf(&quot;请输入你需要进行的操作（使用名字查找选择1,使用序号查找选择2,退出选择0）:\n&quot;);</span><br><span class="line">        scanf(&quot;%d&quot;,&amp;flag);</span><br><span class="line">        switch(flag)</span><br><span class="line">        &#123;</span><br><span class="line">            case 1:&#123;</span><br><span class="line">                printf(&quot;请输入函数名:&quot;);</span><br><span class="line">				scanf(&quot;%s&quot;,s);</span><br><span class="line">				address = SearchInName(s,file_buf);</span><br><span class="line">				printf(&quot;函数%s的RVA为%#010x,FOA为%#010x\n&quot;,s,address,RVA_to_FOA(address));</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            case 2:&#123;</span><br><span class="line">				printf(&quot;请输入序号:&quot;);</span><br><span class="line">				scanf(&quot;%d&quot;,&amp;ord);</span><br><span class="line">                address = SearchInOrdinal(ord,file_buf);</span><br><span class="line">				printf(&quot;序号为%d的函数的RVA为%#010x,FOA为%#010x\n&quot;,ord,address,RVA_to_FOA(address));</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            default:</span><br><span class="line">                free(file_buf);</span><br><span class="line">                return 0;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    free(file_buf);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/PE/" rel="tag"><i class="fa fa-tag"></i> PE</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/61633/" rel="prev" title="库文件的编写">
+      <i class="fa fa-chevron-left"></i> 库文件的编写
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/42580/" rel="next" title="重定位表">
+      重定位表 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA%E8%A1%A8"><span class="nav-number">1.</span> <span class="nav-text">导出表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">概述：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E5%87%BD%E6%95%B0%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">寻找函数方法：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%90%8D%E7%A7%B0%E6%89%BE%EF%BC%9A"><span class="nav-number">1.2.1.</span> <span class="nav-text">通过名称找：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%BA%8F%E5%8F%B7%E6%89%BE%EF%BC%9A"><span class="nav-number">1.2.2.</span> <span class="nav-text">通过序号找：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">代码实现</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

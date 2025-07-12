@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="导入表PE文件需要用到其他库里面的函数时，需要有一个导入表来记录这些导入函数的地址。导入表与导出表的关系可以理解为：你是一个exe文件，你需要去一家餐馆吃饭，而dll是这家店的老板，他给你提供了他们店的菜单，这个是他的导出表；你将你需要的菜写下来，这个是你的导入表；导入表只在隐式链接使用。 导入表的的地址存储在可选PE头最后一个成员——DataDirectory数组的第二个元素，即DataDi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="导入表">
+<meta property="og:url" content="http://example.com/posts/23232/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="导入表PE文件需要用到其他库里面的函数时，需要有一个导入表来记录这些导入函数的地址。导入表与导出表的关系可以理解为：你是一个exe文件，你需要去一家餐馆吃饭，而dll是这家店的老板，他给你提供了他们店的菜单，这个是他的导出表；你将你需要的菜写下来，这个是你的导入表；导入表只在隐式链接使用。 导入表的的地址存储在可选PE头最后一个成员——DataDirectory数组的第二个元素，即DataDi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/undefined/88bdc5cc50237f48060afe4af0c3107f.jpeg">
+<meta property="og:image" content="http://example.com/posts/undefined/00110338f2667ee48574243bcec1ccb5.jpeg">
+<meta property="article:published_time" content="2025-07-11T14:11:24.000Z">
+<meta property="article:modified_time" content="2025-07-12T13:48:03.283Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="PE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/undefined/88bdc5cc50237f48060afe4af0c3107f.jpeg">
+
+<link rel="canonical" href="http://example.com/posts/23232/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>导入表 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/23232/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          导入表
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-11 22:11:24" itemprop="dateCreated datePublished" datetime="2025-07-11T22:11:24+08:00">2025-07-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-12 21:48:03" itemprop="dateModified" datetime="2025-07-12T21:48:03+08:00">2025-07-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="导入表"><a href="#导入表" class="headerlink" title="导入表"></a>导入表</h1><p>PE文件需要用到其他库里面的函数时，需要有一个导入表来记录这些导入函数的地址。导入表与导出表的关系可以理解为：你是一个exe文件，你需要去一家餐馆吃饭，而dll是这家店的老板，他给你提供了他们店的菜单，这个是他的导出表；你将你需要的菜写下来，这个是你的导入表；导入表只在隐式链接使用。</p>
+<p>导入表的的地址存储在可选PE头最后一个成员——DataDirectory数组的第二个元素，即DataDirectory[1].</p>
+<p>导入表实际上是结构体<strong>数组</strong>，它由许多个<code>IMAGE_IMPORT_DESCRIPTOR</code>结构体组成，每一个外部库需要一个结构体，在所有结构的最后,由一个内容全为0的<code>IMAGE_IMPORT_DESCRIPTOR</code>结构体作为结束标志。每一个结构体成员如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_IMPORT_DESCRIPTOR &#123;</span><br><span class="line">  union &#123;</span><br><span class="line">    DWORD  Characteristics;      </span><br><span class="line">    DWORD  OriginalFirstThunk;     // 指向导入名称表(INT，import name table)</span><br><span class="line">    &#125; DUMMYUNIONNAME;</span><br><span class="line">  DWORD  TimeDateStamp;        </span><br><span class="line">  DWORD  ForwarderChain;         </span><br><span class="line">  DWORD  Name;					// 该库名字的地址</span><br><span class="line">  DWORD  FirstThunk;           // 指向导入地址表(IAT，import address table),同时也是DataDirectory[13]</span><br><span class="line">&#125; IMAGE_IMPORT_DESCRIPTOR;</span><br></pre></td></tr></table></figure>
+
+<p>IAT(导入函数地址表)和INT(导入函数名称表)，都是一个<strong>结构体数组</strong>，它的成员都是<code>IMAGE_THUNK_DATA</code>结构的结构体。与导入表相似，IAT、INT也是以一个全为0的结构体结尾。<code>IMAGE_THUNK_DATA</code>结构为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_THUNK_DATA32</span><br><span class="line">&#123;</span><br><span class="line">    union &#123;</span><br><span class="line">        DWORD ForwarderString;      // 转发字符串的RAV</span><br><span class="line">        DWORD Function;             // 被导入函数的地址</span><br><span class="line">        DWORD Ordinal;              // 被导入函数的序号</span><br><span class="line">        DWORD AddressOfData;        // 指向输入名称表 PIMAGE_IMPORT_BY_NAME</span><br><span class="line">    &#125; u1;</span><br><span class="line">&#125; IMAGE_THUNK_DATA32;</span><br></pre></td></tr></table></figure>
+
+<p>这是一个联合体，只有一个成员有效，一共占4个字节。当结构体的最高位为1时,表示函数是以序号的方式导入的,这时结构体的低位就是函数的序号；当双字最高位为0时,表示函数以函数名方式导入,这时结构体的值是一个RVA,指向一个用来定义导入函数名称的<code>IMAGE_IMPORT_BY_NAME</code>结构,此结构定义如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_IMPORT_BY_NAME</span><br><span class="line">&#123;</span><br><span class="line">    WORD    Hint;          // 函数序号</span><br><span class="line">    CHAR   Name[1];        // 导入函数的名称（这里定义为一个字节，但是实际上只是名字的首个字符）</span><br><span class="line">&#125; IMAGE_IMPORT_BY_NAME, *PIMAGE_IMPORT_BY_NAME;</span><br></pre></td></tr></table></figure>
+
+<p>dll在文件中时，IAT和INT的内容完全相同；当dll加载进内存之后，导入函数地址会填入IAT中<code>IMAGE_THUNK_DATA</code>的Function里面，此时这个结构体的4个字节就是一个指向导入函数的地址（RVA），使得程序可以直接通过这个地址来调用函数。而INT一直保持不变，于是加载后IAT与INT不相同。</p>
+<p>注：可以通过修改导入表来让IAT和INT指向同一张表，由于PE文件运行时，INT表几乎用不到，所以这样在大多数情况不会影响程序的运行。</p>
+<p><strong>导入表在文件中时：</strong></p>
+<img src="/posts/undefined/88bdc5cc50237f48060afe4af0c3107f.jpeg" class="" title="img">
+
+<p>上例中一共有4个导入函数，前3个是以名字导入，第4个是以序号导入。此时INT和IAT结构是相同的。</p>
+<p><strong>导入完成后的导入表：</strong></p>
+<img src="/posts/undefined/00110338f2667ee48574243bcec1ccb5.jpeg" class="" title="img">
+
+<h3 id="导入流程："><a href="#导入流程：" class="headerlink" title="导入流程："></a>导入流程：</h3><p>导入dll库分为两种方法：<strong>静态导入和动态导入</strong>。</p>
+<h4 id="静态导入："><a href="#静态导入：" class="headerlink" title="静态导入："></a><strong>静态导入：</strong></h4><ol>
+<li><strong>编译和链接阶段</strong>：<ul>
+<li><strong>创建导入表</strong>：链接器根据对象文件中的外部符号引用，创建 PE 文件的导入表。</li>
+<li><strong>添加占位符</strong>：对于每个导入的函数，在 IAT 中会有一个占位符（即IMAGE_THUNK_DATA32），它将在运行时由 Windows 加载器替换为实际的函数地址。</li>
+</ul>
+</li>
+<li><strong>每次启动时</strong>：<ul>
+<li><strong>重新解析导入表</strong>：当程序启动时，Windows 加载器会读取 PE 文件中的导入表，并根据其中的信息加载所有静态导入的 DLL。</li>
+<li><strong>更新 IAT</strong>：加载器会通过dll里面的导出表来解析他提供的导出函数地址，并用实际的地址更新 IAT 中的占位符。</li>
+</ul>
+</li>
+<li><strong>特点</strong>：<ul>
+<li><strong>自动加载</strong>：所有静态导入的 DLL 在程序启动时自动加载。</li>
+<li><strong>依赖性强</strong>：如果缺少任何一个必要的 DLL，程序将无法启动。</li>
+<li><strong>IAT 更新频率</strong>：每次启动程序时都需要重新解析和更新 IAT。</li>
+</ul>
+</li>
+</ol>
+<h4 id="动态导入："><a href="#动态导入：" class="headerlink" title="动态导入："></a><strong>动态导入：</strong></h4><ol>
+<li><strong>编译和链接阶段</strong>：<ul>
+<li><strong>不生成导入表条目</strong>：与静态导入不同，动态连接不会在编译和链接阶段为动态加载的 DLL 创建导入表条目，<strong>动态导入与导入表无关</strong>。</li>
+</ul>
+</li>
+<li><strong>每次启动时</strong>：<ul>
+<li><strong>按需加载</strong>：动态连接的 DLL 不会在程序启动时自动加载，而是在需要时由程序显式调用 <code>LoadLibrary</code> 来加载。在使用LoadLibrary函数时，系统会将dll加载进空间，并返回一个句柄（即dll的地址）。使用GetProcAddress后，系统会根据函数名字或序号查找dll的导出表，得到函数RVA，此RVA加上dll的基址得到真实的函数地址，GetProcAddress将真实函数地址返回给程序保存。</li>
+</ul>
+</li>
+<li><strong>特点</strong>：<ul>
+<li><strong>灵活性高</strong>：允许程序在运行时根据需要加载和卸载模块，提供了更大的灵活性。</li>
+<li><strong>减少初始加载时间</strong>：在启动时不需要装载dll、修正导入表，所以可以加快程序的启动速度。</li>
+<li><strong>IAT 更新频率</strong>：不需要任何IAT也不生成任何IAT。</li>
+</ul>
+</li>
+</ol>
+<p><strong>注意：</strong></p>
+<p>在静态导入dll时，编译阶段创建导入表，但在程序的启动阶段才会修正IAT表，一是因为ASLR 机制导致程序每一次启动都会分配不一样的基址，二是因为在程序开始时，dll文件才会映射到当前进程的虚拟地址中，这个时候才能知道导入函数的实际地址。启动阶段，IAT中所有导入函数（不管用没用到）的地址都会修正。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>目标：打印导入表信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;windows.h&gt;</span><br><span class="line">IMAGE_DOS_HEADER* dos;</span><br><span class="line">IMAGE_FILE_HEADER* fheader;</span><br><span class="line">IMAGE_OPTIONAL_HEADER32* oheader;</span><br><span class="line">IMAGE_SECTION_HEADER* sheader;</span><br><span class="line">IMAGE_IMPORT_DESCRIPTOR* import;</span><br><span class="line">int num=0;           //节数量</span><br><span class="line">int header_size=0;   // PE头大小</span><br><span class="line">int base=0;          // 基址</span><br><span class="line">int fsize=0,image_size=0; // 文件大小；文件映射的内存大小</span><br><span class="line">DWORD RVA_to_FOA(DWORD rva)&#123;</span><br><span class="line">	DWORD foa=0;</span><br><span class="line">    if(rva&lt;=header_size) &#123;</span><br><span class="line">        foa = rva;</span><br><span class="line">        return foa;</span><br><span class="line">    &#125;</span><br><span class="line">    if(rva&lt;sheader[0].VirtualAddress) &#123;</span><br><span class="line">        printf(&quot;没有对应的foa!!!\n&quot;);</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    int i=0;</span><br><span class="line">    for(i=0;i&lt;num;i++)&#123;</span><br><span class="line">        if(rva&gt;=sheader[i].VirtualAddress&amp;&amp;rva&lt;(sheader[i].VirtualAddress+sheader[i].Misc.VirtualSize))</span><br><span class="line">            break;</span><br><span class="line">    &#125;</span><br><span class="line">    if(i &gt;= num) &#123;</span><br><span class="line">        printf(&quot;RVA超出范围!!!\n&quot;);</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    int offset=rva-sheader[i].VirtualAddress;</span><br><span class="line">    foa=sheader[i].PointerToRawData+offset;</span><br><span class="line">	return foa;</span><br><span class="line">&#125;</span><br><span class="line">void print_import(unsigned char *buffer)&#123;  // 打印导入表</span><br><span class="line">    int i=0;</span><br><span class="line">    for(i=0;;i++)&#123;</span><br><span class="line">        if(import[i].OriginalFirstThunk==0&amp;&amp;import[i].FirstThunk==0) break;</span><br><span class="line">        printf(&quot;%s导入表信息:\n&quot;,(char *)(RVA_to_FOA(import[i].Name)+buffer));</span><br><span class="line">        printf(&quot;OriginalFirstThunk(INT):%#010x\n&quot;,import[i].OriginalFirstThunk);</span><br><span class="line">        printf(&quot;TimeDateStamp:%#010x\n&quot;,import[i].TimeDateStamp);</span><br><span class="line">        printf(&quot;ForwarderChain:%#010x\n&quot;,import[i].ForwarderChain);</span><br><span class="line">        printf(&quot;Name:%#010x\n&quot;,import[i].Name);</span><br><span class="line">        printf(&quot;FirstThunk(IAT):%#010x\n\n&quot;,import[i].FirstThunk);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">void print_IAT(unsigned char *file_buf)&#123;  // 打印IAT表</span><br><span class="line">    int i=0,j=0;</span><br><span class="line">    IMAGE_THUNK_DATA32* IAT;</span><br><span class="line">    IMAGE_IMPORT_BY_NAME* name_t;</span><br><span class="line">    for(i=0;;i++)&#123;</span><br><span class="line">        if(import[i].OriginalFirstThunk==0&amp;&amp;import[i].FirstThunk==0) break;</span><br><span class="line">        printf(&quot;%s中导出函数:\n&quot;,(char *)(RVA_to_FOA(import[i].Name)+file_buf));</span><br><span class="line">        IAT = (IMAGE_THUNK_DATA32*)(RVA_to_FOA(import[i].FirstThunk)+file_buf);</span><br><span class="line">        printf(&quot;函数名导入:\n&quot;);</span><br><span class="line">        printf(&quot;函数名     Hint\n&quot;);</span><br><span class="line">        for(j=0;;j++)&#123;</span><br><span class="line">            if(IAT[j].u1.AddressOfData==0) break;</span><br><span class="line">            if(IAT[j].u1.AddressOfData&gt;&gt;31==0)</span><br><span class="line">            &#123;</span><br><span class="line">                name_t = (IMAGE_IMPORT_BY_NAME*)(RVA_to_FOA(IAT[j].u1.AddressOfData)+file_buf);</span><br><span class="line">                printf(&quot;%s      %#x\n&quot;,(char*)name_t-&gt;Name,name_t-&gt;Hint);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        printf(&quot;\n序号导入:\n&quot;);</span><br><span class="line">        for(j=0;;j++)&#123;</span><br><span class="line">            if(IAT[j].u1.AddressOfData==0) break;</span><br><span class="line">            if(IAT[j].u1.AddressOfData&gt;&gt;31==1)</span><br><span class="line">            &#123;</span><br><span class="line">                printf(&quot;序号:%#x\n&quot;,IAT[j].u1.AddressOfData&amp;0x7fffffff);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        printf(&quot;\n\n&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">    // if(argc != 2) &#123;</span><br><span class="line">    //     printf(&quot;用法: %s &lt;PE文件路径&gt;\n&quot;, argv[0]);</span><br><span class="line">    //     return 1;</span><br><span class="line">    // &#125;</span><br><span class="line">    const char* pe_path = &quot;grade.exe&quot;;</span><br><span class="line">    FILE* pf=fopen(pe_path,&quot;rb&quot;);</span><br><span class="line">    if(!pf) &#123;printf(&quot;打开文件失败！！\n&quot;);return 0;&#125;</span><br><span class="line">    fseek(pf, 0, SEEK_END);</span><br><span class="line">    fsize=ftell(pf);    </span><br><span class="line">    fseek(pf, 0, SEEK_SET); </span><br><span class="line">    unsigned char* file_buf=(unsigned char *)malloc(fsize);</span><br><span class="line">    fread(file_buf,1,fsize,pf);</span><br><span class="line">    fclose(pf);</span><br><span class="line">    unsigned char *buffer=file_buf;</span><br><span class="line">    dos=(IMAGE_DOS_HEADER*)buffer;</span><br><span class="line">    buffer+=dos-&gt;e_lfanew+4;  // 定位文件头</span><br><span class="line">    fheader=(IMAGE_FILE_HEADER*)buffer;</span><br><span class="line">    num = fheader-&gt;NumberOfSections;</span><br><span class="line">    buffer+=20;      // 定位可选头</span><br><span class="line">    oheader = (IMAGE_OPTIONAL_HEADER32*)buffer;</span><br><span class="line">    header_size=oheader-&gt;SizeOfHeaders;</span><br><span class="line">    base=oheader-&gt;ImageBase;</span><br><span class="line">    image_size = oheader-&gt;SizeOfImage;</span><br><span class="line">    buffer += sizeof(IMAGE_OPTIONAL_HEADER32);   // 定位节表</span><br><span class="line">    int size = num * sizeof(IMAGE_SECTION_HEADER);</span><br><span class="line">    sheader = (IMAGE_SECTION_HEADER*)buffer;</span><br><span class="line">    import = (IMAGE_IMPORT_DESCRIPTOR*)(RVA_to_FOA(oheader-&gt;DataDirectory[1].VirtualAddress)+file_buf);</span><br><span class="line">	print_import(file_buf);</span><br><span class="line">    print_IAT(file_buf);</span><br><span class="line">    free(file_buf);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/PE/" rel="tag"><i class="fa fa-tag"></i> PE</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/56776/" rel="prev" title="移动导出表、重定位表">
+      <i class="fa fa-chevron-left"></i> 移动导出表、重定位表
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/8809/" rel="next" title="添加节">
+      添加节 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E8%A1%A8"><span class="nav-number">1.</span> <span class="nav-text">导入表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="nav-number">1.0.1.</span> <span class="nav-text">导入流程：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%AF%BC%E5%85%A5%EF%BC%9A"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">静态导入：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%AF%BC%E5%85%A5%EF%BC%9A"><span class="nav-number">1.0.1.2.</span> <span class="nav-text">动态导入：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">代码实现：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="HOOK出题流程1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991">
+<meta property="og:type" content="article">
+<meta property="og:title" content="招新赛wp">
+<meta property="og:url" content="http://example.com/posts/52115/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="HOOK出题流程1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425205801010.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425210041906.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425210918537.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425211345949.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425212547314.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425213138620.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425213356338.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425213536378.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425214525222.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425214845634.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425215005936.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425215339751.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425220627820.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425220947082.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425221612166.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250425221706733.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250606232108750.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250525012703047.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250525013209303.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250606233149284.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250606233507807.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250527090453821.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250527090518668.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250527091813146.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250525014624013.png">
+<meta property="og:image" content="http://example.com/posts/52115/image-20250525014757066.png">
+<meta property="article:published_time" content="2025-04-23T15:11:07.000Z">
+<meta property="article:modified_time" content="2025-06-07T14:40:05.011Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="wp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/52115/image-20250425205801010.png">
+
+<link rel="canonical" href="http://example.com/posts/52115/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>招新赛wp | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/52115/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          招新赛wp
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-04-23 23:11:07" itemprop="dateCreated datePublished" datetime="2025-04-23T23:11:07+08:00">2025-04-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-07 22:40:05" itemprop="dateModified" datetime="2025-06-07T22:40:05+08:00">2025-06-07</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="HOOK"><a href="#HOOK" class="headerlink" title="HOOK"></a>HOOK</h1><h2 id="出题流程"><a href="#出题流程" class="headerlink" title="出题流程"></a>出题流程</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;windows.h&gt;</span><br><span class="line">/*初始化函数*/</span><br><span class="line">void rc4_init(unsigned char*s, unsigned char*key, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0;</span><br><span class="line">    unsigned char k[256] = &#123; 0 &#125;;</span><br><span class="line">    unsigned char tmp = 0;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s[i] = i;</span><br><span class="line">        k[i] = key[i%Len];</span><br><span class="line">    &#125;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        j = (j + s[i] + k[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[i]和s[j]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line">/*加解密*/</span><br><span class="line">void rc4_crypt(unsigned char*s, unsigned char*Data, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 1, j = 0, t = 0;  //将i初始值魔改为1</span><br><span class="line">    unsigned long k = 0;</span><br><span class="line">    unsigned char tmp;</span><br><span class="line">    for (k = 0; k&lt;Len; k++)</span><br><span class="line">    &#123;</span><br><span class="line">        i = (i + 1) % 256;</span><br><span class="line">        j = (j + s[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[x]和s[y]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">        t = (s[i] + s[j]) % 256;</span><br><span class="line">        Data[k] ^= s[t];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">int __cdecl encode(char str[])&#123;</span><br><span class="line">	unsigned char *s;</span><br><span class="line">	s=(unsigned char*)str;</span><br><span class="line">    for(int i=0;i&lt;28;i++)&#123;</span><br><span class="line">        for(int j=21;j&lt;40 ;j+=2)&#123;</span><br><span class="line">            if(s[i]&amp;1==1)</span><br><span class="line">                s[i]^=j;</span><br><span class="line">            else</span><br><span class="line">                s[i]^=j+2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 28;</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">	int i=0;</span><br><span class="line">	unsigned char data[]=&#123;0x52,0xd1,0xd4,0x40,0xad,0xf9,0xa7,0x75,0x67,0x11,0x25,0x83,0xcd,0x10,0x62,0x61,0xa6,0xb6,0x74,0x94,0x4f,0x6f,0xb3,0xdd,0x94,0x33,0xd3,0x8b&#125;;</span><br><span class="line">	printf(&quot;请输入你的flag:&quot;);</span><br><span class="line">	unsigned char str[29];</span><br><span class="line">	scanf(&quot;%s&quot;,str);</span><br><span class="line">	int len=strlen((char*)str);</span><br><span class="line">	unsigned char s[256]=&#123;0&#125;;</span><br><span class="line">	unsigned char k[9]=&quot;Real-Key&quot;;</span><br><span class="line">	rc4_init(s,k,8);</span><br><span class="line">	rc4_crypt(s,str,len);</span><br><span class="line">//	encode1(str,28);</span><br><span class="line">	for(i=0;i&lt;len;i++)</span><br><span class="line">		if(str[i]!=data[i])&#123;</span><br><span class="line">			printf(&quot;wrong!\n&quot;);</span><br><span class="line">			return 0;</span><br><span class="line">		&#125;</span><br><span class="line">	printf(&quot;right!!!\n&quot;);</span><br><span class="line">	return 0;</span><br><span class="line">&#125; </span><br><span class="line">__attribute__((constructor)) void hook()&#123; </span><br><span class="line">		__asm__ __volatile__ (  //花指令</span><br><span class="line">			&quot;jz 1f\n\t&quot;</span><br><span class="line">			&quot;jnz 1f\n\t&quot;</span><br><span class="line">			&quot;.byte 0x22\n\t&quot;</span><br><span class="line">			&quot;1:\n\t&quot;</span><br><span class="line">    		&quot;call 1f\n\t&quot;              // 调用当前标签（向后引用）</span><br><span class="line">    		&quot;.byte 0xe8\n\t&quot;           // 插入机器码0xE8（call指令的Opcode）</span><br><span class="line">    		&quot;1:\n\t&quot;                   // 定义局部标签</span><br><span class="line">    		&quot;add $8, (%%esp)\n\t&quot;     // </span><br><span class="line">    		&quot;.byte 0x36\n\t&quot;</span><br><span class="line">    		&quot;ret\n\t&quot;</span><br><span class="line">    		&quot;.byte 0xe8&quot;               // 再次插入0xE8</span><br><span class="line">    		:                          // 无输出操作数</span><br><span class="line">    		:                          // 无输入操作数</span><br><span class="line">    		: &quot;memory&quot;, &quot;esp&quot;, &quot;cc&quot;    // 声明破坏列表：内存、栈指针、标志寄存器</span><br><span class="line">		);</span><br><span class="line">        // 步骤4：取消函数地址保护</span><br><span class="line">        DWORD oldProtect;  // 旧保护属性</span><br><span class="line">        VirtualProtect((LPVOID)strlen,0x1000,PAGE_EXECUTE_READWRITE,&amp;oldProtect);</span><br><span class="line"></span><br><span class="line">        // 步骤5：获取自定义函数地址</span><br><span class="line">        byte* funcAddr = (byte*)encode;</span><br><span class="line">        byte* strlen_add = (byte*)strlen;</span><br><span class="line"></span><br><span class="line">        // 步骤6：跳转到自定义函数</span><br><span class="line">        __asm__ __volatile__ (</span><br><span class="line">    		&quot;movl %0, %%eax \n\t&quot;</span><br><span class="line">		    &quot;movl %1, %%ebx \n\t&quot;</span><br><span class="line">		    &quot;subl %%eax, %%ebx \n\t&quot;</span><br><span class="line">		    &quot;subl $5, %%ebx \n\t&quot;</span><br><span class="line">		    &quot;movb $0xe9, (%%eax) \n\t&quot;</span><br><span class="line">		    &quot;movl %%ebx, 1(%%eax)&quot;</span><br><span class="line">		    : /* 无输出操作数 */</span><br><span class="line">		    : &quot;r&quot; (strlen_add), &quot;r&quot; (funcAddr)  // 输入操作数</span><br><span class="line">		    : &quot;eax&quot;, &quot;ebx&quot;, &quot;memory&quot;            // 破坏列表</span><br><span class="line">		);</span><br><span class="line">         DWORD floadprotect;</span><br><span class="line">         VirtualProtect((LPVOID)strlen,0x1000,oldProtect,&amp;floadprotect);</span><br><span class="line">&#125;注：此代码内联汇编是对32位寄存器操作，因此只能使用32位编译器编译</span><br></pre></td></tr></table></figure>
+
+<p>分析：</p>
+<p>第一部分：魔改的RC4，将加密部分的i初始魔改为1</p>
+<p>第二部分：hook strcmp函数，使用GCC扩展属性__attribute__((constructor))将hook函数标记为全局函数，先于main函数执行</p>
+<p><strong>注：三种使函数先于main函数执行的方法：</strong></p>
+<p>1、TLS函数</p>
+<p>2、使用GCC扩展属性__attribute__((constructor))，使用方法为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__attribute__((constructor)) void function()</span><br></pre></td></tr></table></figure>
+
+<p>3、使用全局变量调用函数，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int function()&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">int a=function();</span><br><span class="line">int main()&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行这段代码得到的exe文件，我再用另一种方式hook（手动hook），即利用xdbg修改hook函数开头几个字节，使其跳转到一个空白处，再在空白处写入被覆盖的代码，最后跳回hook函数：</p>
+<img src="/posts/52115/image-20250425205801010.png" class="" title="image-20250425205801010">
+
+<img src="/posts/52115/image-20250425210041906.png" class="" title="image-20250425210041906">
+
+<p>这样做的目的，就是让IDA分析的hook函数是断开的，从而无法反编译为伪代码，增加分析难度。</p>
+<p>最后，使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strip +文件名</span><br></pre></td></tr></table></figure>
+
+<p>把文件符号表去除，这样函数名就不会是“hook”，就得不到提示。</p>
+<p>最后hook函数的效果🥱:</p>
+<img src="/posts/52115/image-20250425210918537.png" class="" title="image-20250425210918537">
+
+<h2 id="解题"><a href="#解题" class="headerlink" title="解题"></a>解题</h2><p>打开观察main函数</p>
+<img src="/posts/52115/image-20250425211345949.png" class="" title="image-20250425211345949">
+
+<p>是一个魔改的rc4加密，魔改的是加密部分的索引初始值</p>
+
+
+<p>解密会发现得到的并非flag，而是一串乱码。逻辑看起来确实也很简单，并没有出现其他加密。这个时候就要猜是不是有函数被hook了，一般而言，hook函数都要引用被Hook的函数，因此可以通过交叉引用判断某个函数是否被hook。对strlen函数交叉引用：</p>
+<img src="/posts/52115/image-20250425212547314.png" class="" title="image-20250425212547314">
+
+<p>第一个列出的函数是启动函数，系统自带的，不需要我们分析；后面几行有点奇怪，跟进去看看：</p>
+<img src="/posts/52115/image-20250425213138620.png" class="" title="image-20250425213138620">
+
+<p>首先定位汇编代码，有vitualprotect函数和strlen函数，说明很可能使用了Inline hook。想要反编译代码，但是函数开头既有花指令又有一个莫名奇妙的jmp</p>
+<img src="/posts/52115/image-20250425213356338.png" class="" title="image-20250425213356338">
+
+<p>跟进这个sub_401B43看看</p>
+<img src="/posts/52115/image-20250425213536378.png" class="" title="image-20250425213536378">
+
+<p>这个函数开头是正常的栈帧调用，然后预留局部变量空间，最后跳转到4019E2地址处，这个地址就是上面4019DD函数jmp后的第一个指令的地址，所以这里也是一个Inline hook，只不过这个是手动的，作用就是把4019DD函数一分为二，导致IDA无法识别函数后半段。</p>
+<p>程序流程图为：</p>
+<img src="/posts/52115/image-20250425214525222.png" class="" title="image-20250425214525222">
+
+<p>想要IDA重新正确识别，可以在xdbg里面修改，也可直接在IDA里面修改，这里选择在IDA里面修改：</p>
+<p>1、先把汇编指令提取出来：</p>
+<img src="/posts/52115/image-20250425214845634.png" class="" title="image-20250425214845634">
+
+<p>2、右键-&gt;pathing-&gt;change bytes，把刚才复制的硬编码粘贴上去，把从jmp一直到程序回来的位置的数据覆盖掉</p>
+<img src="/posts/52115/image-20250425215005936.png" class="" title="image-20250425215005936">
+
+<img src="/posts/52115/image-20250425215339751.png" class="" title="image-20250425215339751">
+
+<p>接下来去花指令，一共有两个花指令：</p>
+<p>第一个：</p>
+<img src="/posts/52115/image-20250425220627820.png" class="" title="image-20250425220627820">
+
+<p>第二个：</p>
+
+
+
+
+<img src="/posts/52115/image-20250425220947082.png" class="" title="image-20250425220947082">
+
+<p>得到伪代码</p>
+<img src="/posts/52115/image-20250425221612166.png" class="" title="image-20250425221612166">
+
+<p>这里是把strlen函数hook为了sub_401718函数，跟进去看看：</p>
+<img src="/posts/52115/image-20250425221706733.png" class="" title="image-20250425221706733">
+
+<p>这个加密函数看起来挺简单，但实际上并不容易，它每一次根据数据的奇偶性来决定，异或的目标。看起来我们根据加密后的数据无法判断他到底是走了哪条路径，那就无法逆向（当然，爆破也行）。但是实际上，j每一次循环都是奇数，j+2也是奇数，奇数^奇数&#x3D;偶数，偶数^奇数&#x3D;奇数。假如数据加密前是奇数，那么加密后会变为偶数；假如数据加密前是偶数，那么加密后变为奇数。反过来假如加密后是奇数，那么加密前是偶数，与j+2异或得到加密前的数据；如果加密后是偶数，那么加密前是奇数，与j异或得到加密前的数据。</p>
+<p>解密代码为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">void rc4_init(unsigned char*s, unsigned char*key, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0;</span><br><span class="line">    unsigned char k[256] = &#123; 0 &#125;;</span><br><span class="line">    unsigned char tmp = 0;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s[i] = i;</span><br><span class="line">        k[i] = key[i%Len];</span><br><span class="line">    &#125;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        j = (j + s[i] + k[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[i]和s[j]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line">void rc4_crypt(unsigned char*s, unsigned char*Data, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 1, j = 0, t = 0;  //将i初始值魔改为1</span><br><span class="line">    unsigned long k = 0;</span><br><span class="line">    unsigned char tmp;</span><br><span class="line">    for (k = 0; k&lt;Len; k++)</span><br><span class="line">    &#123;</span><br><span class="line">        i = (i + 1) % 256;</span><br><span class="line">        j = (j + s[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[x]和s[y]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">        t = (s[i] + s[j]) % 256;</span><br><span class="line">        Data[k] ^= s[t];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">void decode1(unsigned char s[],int len)&#123;</span><br><span class="line">    for(int i=0;i&lt;len;i++)&#123;</span><br><span class="line">        for(int j=39;j&gt;20;j-=2)&#123;</span><br><span class="line">            if(s[i]&amp;1==1)</span><br><span class="line">                s[i]^=j+2;</span><br><span class="line">            else</span><br><span class="line">                s[i]^=j;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">    unsigned char flag[]=&#123;0x52,0xd1,0xd4,0x40,0xad,0xf9,0xa7,0x75,0x67,0x11,0x25,0x83,0xcd,0x10,0x62,0x61,0xa6,0xb6,0x74,0x94,0x4f,0x6f,0xb3,0xdd,0x94,0x33,0xd3,0x8b&#125;;</span><br><span class="line">    int len=28;</span><br><span class="line">    unsigned char key[]=&quot;Real-Key&quot;;</span><br><span class="line">    unsigned char s[256]=&#123;0&#125;;</span><br><span class="line">    rc4_init(s,key,8);  </span><br><span class="line">    rc4_crypt(s,flag,28); </span><br><span class="line">    int i;</span><br><span class="line">    decode1(flag,len);</span><br><span class="line">    for(i=0;i&lt;28;i++)&#123;</span><br><span class="line">		printf(&quot;%c&quot;,flag[i]);</span><br><span class="line">	&#125; </span><br><span class="line">&#125;//FCTF&#123;dasgygfushfhihsfhsufbj&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="poetry"><a href="#poetry" class="headerlink" title="poetry"></a>poetry</h1><h2 id="源代码："><a href="#源代码：" class="headerlink" title="源代码："></a>源代码：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line">#include &lt;debugapi.h&gt;</span><br><span class="line">#include &lt;windows.h&gt;</span><br><span class="line"></span><br><span class="line">// 检查是否为UTF-8汉字的首字节</span><br><span class="line">int is_chinese(unsigned char c) &#123;</span><br><span class="line">    return (c &gt;= 0xE4 &amp;&amp; c &lt;= 0xE9);  // 对应三字节编码的汉字首字节</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 检查是否为UTF-8格式的汉字句号（0xE3 0x80 0x82）</span><br><span class="line">int is_period(const unsigned char* buf, int pos) &#123;</span><br><span class="line">    return (buf[pos] == 0xE3 &amp;&amp; buf[pos+1] == 0x80 &amp;&amp; buf[pos+2] == 0x82);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int file_operation(char key[]) &#123;</span><br><span class="line">    unsigned char data[]=&#123;0xa3,0xcb,0xff,0xae,0xb8,0xb2,0xd5,0xb6&#125;;</span><br><span class="line"></span><br><span class="line">    // 读取文件内容</span><br><span class="line">    FILE* fp = fopen(&quot;poetry.txt&quot;, &quot;rb&quot;);</span><br><span class="line">    if (!fp) &#123;</span><br><span class="line">        perror(&quot;文件打开失败&quot;);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fseek(fp, 0, SEEK_END);//将指针设置到文件尾</span><br><span class="line">    long size = ftell(fp);//获取文件字节数</span><br><span class="line">    fseek(fp, 0, SEEK_SET);//指针重新设置回文件头</span><br><span class="line"></span><br><span class="line">    unsigned char* buf = (unsigned char*)malloc(size + 1);</span><br><span class="line">    fread(buf, 1, size, fp);</span><br><span class="line">    buf[size] = &#x27;\0&#x27;;</span><br><span class="line">    fclose(fp);</span><br><span class="line"></span><br><span class="line">    // 处理内容</span><br><span class="line">    char result[size * 3 + 1];  // 预分配最大可能空间</span><br><span class="line">    int result_len = 0;</span><br><span class="line">    int count=0;</span><br><span class="line"></span><br><span class="line">    //接下来这段其实就是读取文件中每一个&quot;。&quot;前的一个汉字。utf-8里汉字占3个字节</span><br><span class="line">    for (int i = 0; i &lt; size; ) &#123;</span><br><span class="line">        // 检测句号（3字节）</span><br><span class="line">        if(count==300) break;//防止动调时死循环</span><br><span class="line">        if (i &lt;= size - 3 &amp;&amp; is_period(buf, i)) &#123;//检测句号</span><br><span class="line">            // 向前查找汉字（3字节）</span><br><span class="line">            if (i &gt;= 3 &amp;&amp; is_chinese(buf[i-3])) &#123;</span><br><span class="line">                memcpy(result + result_len, &amp;buf[i-3], 3);</span><br><span class="line">                result_len += 3;</span><br><span class="line">            &#125;</span><br><span class="line">            i += 3;  // 跳过句号</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            i+=1^IsDebuggerPresent();//反调试：在动调时i不变，不在动调i++</span><br><span class="line">            count++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    result[result_len] = &#x27;\0&#x27;;</span><br><span class="line">    for(int i=0;i&lt;8;i++)</span><br><span class="line">        if(((unsigned char)key[i]^(unsigned char)result[i])!=data[i])</span><br><span class="line">            exit(0);</span><br><span class="line">    free(buf);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">void tea_encrypt(uint32_t* v,uint32_t* key)</span><br><span class="line">&#123;</span><br><span class="line">	uint32_t k0,k1,k2,k3;</span><br><span class="line">	uint32_t v0,v1;</span><br><span class="line">	v0=v[0],v1=v[1];</span><br><span class="line">	k0=key[0],k1=key[1],k2=key[2],k3=key[3];</span><br><span class="line">	uint32_t delta=0x9E3779B9,sum=0;</span><br><span class="line">	for(int i=0;i&lt;32;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		sum+=delta;</span><br><span class="line">		v0+=((v1&lt;&lt;4) + k0) ^ (v1 + sum) ^ ((v1&gt;&gt;5) + k1);</span><br><span class="line">		v1+=((v0&lt;&lt;4) + k2) ^ (v0 + sum) ^ ((v0&gt;&gt;5) + k3); </span><br><span class="line">	&#125;</span><br><span class="line">	v[0]=v0,v[1]=v1;</span><br><span class="line">&#125;</span><br><span class="line">void rc4_init(unsigned char*s, char* key)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0;</span><br><span class="line">    unsigned char k[256] = &#123; 0 &#125;;</span><br><span class="line">    unsigned char tmp = 0;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s[i] = i;</span><br><span class="line">        k[i] = (unsigned char)key[i%8];</span><br><span class="line">    &#125;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        j = (j + s[i] + k[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[i]和s[j]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line">/*加解密*/</span><br><span class="line">void rc4_crypt(char* key,unsigned char*key2,  unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0, t = 0;</span><br><span class="line">    unsigned long k = 0;</span><br><span class="line">    unsigned char tmp;</span><br><span class="line">    unsigned char s[256];</span><br><span class="line">    rc4_init(s,key);</span><br><span class="line">    for(k = 0; k&lt;16; k++)</span><br><span class="line">    &#123;</span><br><span class="line">        i = (i + 1) % 256;</span><br><span class="line">        j = (j + s[i]) % 256;</span><br><span class="line">        tmp = s[i]^IsDebuggerPresent();</span><br><span class="line">        s[i] = s[j];//交换s[x]和s[y]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">        t = (s[i] + s[j]) % 256;</span><br><span class="line">        key2[k] = s[t];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">    printf(&quot;Hello, Comrade!!!\n&quot;);</span><br><span class="line">    printf(&quot;Please enter your key and start the struggle!!!\n&quot;);</span><br><span class="line">    char key[9];</span><br><span class="line">    scanf(&quot;%s&quot;,key);</span><br><span class="line">    file_operation(key);  //验证key</span><br><span class="line">    printf(&quot;please input your flag:\n&quot;);</span><br><span class="line">    char flag[49];</span><br><span class="line">    scanf(&quot;%s&quot;,flag);</span><br><span class="line">    unsigned char key2[16];</span><br><span class="line">    rc4_crypt(key,key2,20);  //利用rc4加密生成一个新的key</span><br><span class="line">    //接下来是SMC</span><br><span class="line">	int n; DWORD floadprotect;</span><br><span class="line">	byte* funcAddr = (byte*)tea_encrypt;//函数地址</span><br><span class="line">	VirtualProtect(&amp;tea_encrypt, 0xDF, PAGE_EXECUTE_READWRITE, &amp;floadprotect);//第二个参数为大小,</span><br><span class="line">	for (int i = 0; i &lt; 0xDF; i++)//解密操作 也需要修正大小 这里是修正后的</span><br><span class="line">		funcAddr[i] ^= 0x12;</span><br><span class="line">    for(int i=0;i&lt;48;i+=8)&#123;</span><br><span class="line">        tea_encrypt((uint32_t*)&amp;flag[i],(uint32_t*)key2); //tea加密</span><br><span class="line">    &#125;</span><br><span class="line">    unsigned char data[]=&#123;0x91,0xe5,0x27,0x31,0x2d,0x8c,0xf1,0x61,0x2,0xd8,0xf6,0xea,0xb4,</span><br><span class="line">                          0xba,0xf,0x2,0x97,0x22,0xa8,0x1a,0x1c,0xca,0x83,0x28,0xb1,0x3c,</span><br><span class="line">                          0x67,0x33,0xef,0x25,0x57,0x82,0x7f,0xc,0xac,0xf1,0x89,0xf6,0x45,</span><br><span class="line">                          0xae,0x49,0x53,0x3a,0xee,0x92,0xdd,0xb,0x48&#125;;</span><br><span class="line">    for(int i=0;i&lt;48;i++)&#123;</span><br><span class="line">        if((unsigned char)flag[i]!=data[i])</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;wrong!!!&quot;);</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    printf(&quot;right!!!&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="解题-1"><a href="#解题-1" class="headerlink" title="解题"></a>解题</h2><p>查找字符串定位到主函数</p>
+<img src="/posts/52115/image-20250606232108750.png" class="" title="image-20250606232108750">
+
+<p>查看file_operation函数</p>
+
+
+<p>这个反调试不会直接退出，而是在检测到调试状态时使v10+&#x3D;0，也就是进入死循环，这样后面就没办法通过key的检验。前面一段操作是：以二进制形式读取文件，获取每一个句号前的一个汉字，将得到的汉字拼接为一个数组（一个汉字占3个字节）。将数组与输入的key进行异或，异或结果与数据进行比较。由于运行到第49行时12字节数组已经确定，所以可以直接动调获取。动调前可以采用keypatch绕过反调试：</p>
+<img src="/posts/52115/image-20250525012703047.png" class="" title="image-20250525012703047">
+
+<p>这里汇编代码的xor eax,1 其实就对应!IsDebuggerPresent()，因为eax寄存器存着函数返回值，在动调就返回1，1与1异或等于0，也就是v10+&#x3D;0，进入无限循环。想要绕过反调试，可以keypatch把1改为0，这样在调试时就不会进入无限循环。右键-&gt;keypatch</p>
+<img src="/posts/52115/image-20250525013209303.png" class="" title="image-20250525013209303">
+
+<p>点patch，然后edit-&gt;patch program-&gt;apply patches to…。然后开始动调获取数组v4的值（获取前8字节就行）：</p>
+<img src="/posts/52115/image-20250606233149284.png" class="" title="image-20250606233149284">
+
+<p>这个数组与明文异或可以得到密钥：FCTF2025</p>
+<p>回到主函数	</p>
+<img src="/posts/52115/image-20250606233507807.png" class="" title="image-20250606233507807">
+
+<p>这里rc4传入输入的密钥，生成一个新的密钥v3，然后把v3传入loc_7FF7940217CF函数。rc4函数这里有一个反调试：</p>
+<img src="/posts/52115/image-20250527090453821.png" class="" title="image-20250527090453821">
+
+<p>看汇编段：</p>
+<img src="/posts/52115/image-20250527090518668.png" class="" title="image-20250527090518668">
+
+<p>这里反调试逻辑就是，当不在调试状态时，IsDebuggerPresent()返回0，0与任何数异或等于原数；如果在调试状态，那么IsDebuggerPresent()返回1，与1异或会导致值改变。汇编里面eax存IsDebuggerPresent()函数返回值，140001B16处如果直接加mov eax,1由于指令大小为5字节，大于原指令xor eax,ebx（2字节），会覆盖掉后面的指令，所以要选择两字节的指令，我这里选择改为mov eax,ebx：</p>
+<img src="/posts/52115/image-20250527091813146.png" class="" title="image-20250527091813146">
+
+<p>一样，要记得保存。loc_7FF7940217CF函数使用了SMC隐藏。动调修复函数，同时获取经过rc4加密后的新密钥（这里key输入刚才得到的FCTF2025）：</p>
+<p>新密钥：</p>
+<img src="/posts/52115/image-20250525014624013.png" class="" title="image-20250525014624013">
+
+<p>修复后的函数：</p>
+<img src="/posts/52115/image-20250525014757066.png" class="" title="image-20250525014757066">
+
+<p>是一个tea加密，这里0x61C88647实际上是0x9E3779B9的反码，所以-0x61C88647实际上就是+0x9E3779B9。解密脚本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt; </span><br><span class="line">#include&lt;stdint.h&gt;</span><br><span class="line">void decrypt(uint32_t* v,uint32_t* key)</span><br><span class="line">&#123;</span><br><span class="line">	uint32_t k0,k2,k3,k1;</span><br><span class="line">	uint32_t v0,v1;</span><br><span class="line">	v0=v[0],v1=v[1];</span><br><span class="line">	k0=key[0],k1=key[1],k2=key[2],k3=key[3];</span><br><span class="line">	uint32_t delta=0x9E3779B9,sum=0x9E3779B9*32;</span><br><span class="line">	for(int i=0;i&lt;32;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		v1-=((v0&lt;&lt;4) + k2) ^ (v0 + sum) ^ ((v0&gt;&gt;5) + k3);</span><br><span class="line">		v0-=((v1&lt;&lt;4) + k0) ^ (v1 + sum) ^ ((v1&gt;&gt;5) + k1);</span><br><span class="line">		sum-=delta;</span><br><span class="line">	&#125;</span><br><span class="line">	v[0]=v0,v[1]=v1;</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	unsigned char s[]=&#123;0x91,0xe5,0x27,0x31,0x2d,0x8c,0xf1,0x61,0x2,0xd8,0xf6,0xea,0xb4,</span><br><span class="line">                      0xba,0xf,0x2,0x97,0x22,0xa8,0x1a,0x1c,0xca,0x83,0x28,0xb1,0x3c,</span><br><span class="line">                      0x67,0x33,0xef,0x25,0x57,0x82,0x7f,0xc,0xac,0xf1,0x89,0xf6,0x45,</span><br><span class="line">                      0xae,0x49,0x53,0x3a,0xee,0x92,0xdd,0xb,0x48&#125;;</span><br><span class="line">	unsigned char key[16]=&#123;0x28, 0x28, 0x7B, 0x33, 0x76, 0x67, 0x9D, 0xCD, 0x69, 0x3F, </span><br><span class="line">  							0xA7, 0xD1, 0x40, 0x62, 0x3C, 0xE7&#125;;</span><br><span class="line">	for(int i=0;i&lt;48;i+=8)</span><br><span class="line">	&#123;</span><br><span class="line">		decrypt((uint32_t*)&amp;s[i],(uint32_t*)key);	</span><br><span class="line">	&#125;</span><br><span class="line">	for(int i=0;i&lt;48;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		printf(&quot;%c&quot;,s[i]);	</span><br><span class="line">	&#125;	  </span><br><span class="line"> &#125;</span><br><span class="line"> //FCTF&#123;The_proletariat_all_over_the_world_unite!!&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Maze"><a href="#Maze" class="headerlink" title="Maze"></a>Maze</h1><h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include&lt;stdint.h&gt;</span><br><span class="line">#define row 8  // 行</span><br><span class="line">#define col 6  // 列</span><br><span class="line">char path[100];  // 路径</span><br><span class="line">int len = 0;   //路径长度</span><br><span class="line">int map[48]=&#123;0&#125;;</span><br><span class="line">int num=0;</span><br><span class="line">void search(char s[],int temp[])&#123;</span><br><span class="line">	char table[]=&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&quot;;</span><br><span class="line">	for(int i=0;i&lt;strlen(s);i++)&#123;</span><br><span class="line">		temp[i]=strchr(table,s[i])-table;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">void creat_map(int a[])&#123;  //将8个十进制数转化为8个6比特二进制数，组成8*6的迷宫地图</span><br><span class="line">	int temp;</span><br><span class="line">	for(int i=0;i&lt;8;i++)&#123; //行</span><br><span class="line">		temp=a[i];</span><br><span class="line">		for(int j=5;j&gt;=0;j--)&#123;  //列</span><br><span class="line">			map[i*6+j]=temp&amp;1;</span><br><span class="line">			temp&gt;&gt;=1;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">int judge(char path[])&#123;  //检验是否符合通路</span><br><span class="line">	const char *s[] = &#123;</span><br><span class="line">        &quot;ddddsdssaassassddd&quot;,</span><br><span class="line">        &quot;ddddsdssaawaaasssssddddd&quot;,</span><br><span class="line">        &quot;ssdddsssassddd&quot;,</span><br><span class="line">        &quot;sssssssddddd&quot;</span><br><span class="line">    &#125;;</span><br><span class="line">    for (int i = 0; i &lt; 4; i++) &#123;</span><br><span class="line">        if (!strcmp(path, s[i])) &#123;</span><br><span class="line">            return 1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">void find_road(int r, int c) &#123;</span><br><span class="line">    if (r &gt;= row || r &lt; 0 || c &gt;= col || c &lt; 0 || map[r * col + c] == 1)  return;  // 超出地图或撞上墙则返回</span><br><span class="line">    if (r * col + c == 47) &#123;   // 找到终点</span><br><span class="line">        if(!judge(path))</span><br><span class="line">		&#123;	</span><br><span class="line">			printf(&quot;wrong path!&quot;);</span><br><span class="line">			exit(0);</span><br><span class="line">		&#125;</span><br><span class="line">		num++;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    map[r * col + c] = 1;  // 标记为已访问，防止重复访问</span><br><span class="line">    // 尝试四个方向</span><br><span class="line">    path[len++] = &#x27;d&#x27;;</span><br><span class="line">    find_road(r, c + 1);  // 右</span><br><span class="line">    path[--len] = &#x27;\0&#x27;;</span><br><span class="line"></span><br><span class="line">    path[len++] = &#x27;a&#x27;;</span><br><span class="line">    find_road(r, c - 1);  // 左</span><br><span class="line">    path[--len] = &#x27;\0&#x27;;</span><br><span class="line"></span><br><span class="line">    path[len++] = &#x27;s&#x27;;</span><br><span class="line">    find_road(r + 1, c);  // 下</span><br><span class="line">    path[--len] = &#x27;\0&#x27;;</span><br><span class="line"></span><br><span class="line">    path[len++] = &#x27;w&#x27;;</span><br><span class="line">    find_road(r - 1, c);  // 上</span><br><span class="line">    path[--len] = &#x27;\0&#x27;;</span><br><span class="line"></span><br><span class="line">    map[r * col + c] = 0;  // 回溯</span><br><span class="line">&#125;</span><br><span class="line">int zero_num()&#123;</span><br><span class="line">	int sum=0;</span><br><span class="line">	for(int i=0;i&lt;48;i++)</span><br><span class="line">		if(map[i]==0) sum++;</span><br><span class="line">	return (sum==30)?1:0;</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">	int temp[8];</span><br><span class="line">	char s[14];</span><br><span class="line">	char input[14];</span><br><span class="line">	printf(&quot;请输入你的flag!!!:\n&quot;);</span><br><span class="line">	scanf(&quot;%s&quot;,input);</span><br><span class="line">	int slen=strlen(input);</span><br><span class="line">	if(memcmp(&quot;FCTF&#123;&quot;,input,5)||input[slen-1]!=&#x27;&#125;&#x27;)&#123;</span><br><span class="line">		printf(&quot;wrong!!&quot;);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	memcpy(s,input+5,slen-6);</span><br><span class="line">	search(s,temp);</span><br><span class="line">	creat_map(temp);</span><br><span class="line">	if(!zero_num())</span><br><span class="line">	&#123; printf(&quot;map wrong!!!&quot;);return 0;&#125;</span><br><span class="line">	find_road(0,0);</span><br><span class="line">	if(num==4)</span><br><span class="line">		printf(&quot;right!!!&quot;);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line">// FCTF&#123;BcCYbTXA&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/wp/" rel="tag"><i class="fa fa-tag"></i> wp</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/30238/" rel="prev" title="Hook技术实现！">
+      <i class="fa fa-chevron-left"></i> Hook技术实现！
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/55434/" rel="next" title="操作系统复习">
+      操作系统复习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HOOK"><span class="nav-number">1.</span> <span class="nav-text">HOOK</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BA%E9%A2%98%E6%B5%81%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">出题流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">解题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#poetry"><span class="nav-number">2.</span> <span class="nav-text">poetry</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E4%BB%A3%E7%A0%81%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">源代码：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98-1"><span class="nav-number">2.2.</span> <span class="nav-text">解题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Maze"><span class="nav-number">3.</span> <span class="nav-text">Maze</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="nav-number">3.1.</span> <span class="nav-text">源代码</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
