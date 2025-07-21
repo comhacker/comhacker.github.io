@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="原理：DLL注入是一种将外部动态链接库（DLL）加载到目标进程地址空间并执行其代码的技术。其目的在于利用Windows提供的机制，在一个不属于自己的进程中强制加载并运行指定的代码。与导入表注入不同，DLL注入是强行将DLL加载进目标进程空间，不会改变原程序（不改变文件），不需要修改原程序的导入表，因此DLL注入只对此进程有效，而程序下一次运行产生的进程则不会受到影响。 每一个PE文件在运行时会">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DLL注入">
+<meta property="og:url" content="http://example.com/posts/522/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="原理：DLL注入是一种将外部动态链接库（DLL）加载到目标进程地址空间并执行其代码的技术。其目的在于利用Windows提供的机制，在一个不属于自己的进程中强制加载并运行指定的代码。与导入表注入不同，DLL注入是强行将DLL加载进目标进程空间，不会改变原程序（不改变文件），不需要修改原程序的导入表，因此DLL注入只对此进程有效，而程序下一次运行产生的进程则不会受到影响。 每一个PE文件在运行时会">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250717221804965.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250717221831532.png">
+<meta property="article:published_time" content="2025-07-15T04:50:29.000Z">
+<meta property="article:modified_time" content="2025-07-18T10:32:33.249Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="Reverse">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/undefined/image-20250717221804965.png">
+
+<link rel="canonical" href="http://example.com/posts/522/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>DLL注入 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/522/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DLL注入
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-15 12:50:29" itemprop="dateCreated datePublished" datetime="2025-07-15T12:50:29+08:00">2025-07-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-18 18:32:33" itemprop="dateModified" datetime="2025-07-18T18:32:33+08:00">2025-07-18</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h1><p>DLL注入是一种将外部动态链接库（DLL）加载到目标进程地址空间并执行其代码的技术。其目的在于利用Windows提供的机制，在一个不属于自己的进程中强制加载并运行指定的代码。与导入表注入不同，DLL注入是强行将DLL加载进目标进程空间，不会改变原程序（不改变文件），不需要修改原程序的导入表，因此DLL注入只对此进程有效，而程序下一次运行产生的进程则不会受到影响。</p>
+<p>每一个PE文件在运行时会获得操作系统分配的4GB的独立的、虚拟的空间，进程中的所有地址都是在这个空间中寻址，并且两个进程之间是独立的、分隔的，不会互相影响。而CreateRemoteThread函数可以在获取另一个进程句柄的条件下在另一个句柄中创建线程，因此，可以使用该函数在目标进程中创建一个线程，此线程运行LoadLibrary函数，将待注入DLL的路径作为参数传入，使LoadLibrary函数将待注入DLL注入进目标进程的空间中，进而触发DLL里面的DLLmain函数执行，完成我们需要的功能。但是正常来说我们无法获知目标进程中LoadLibrary函数的地址，并且目标进程中并没有存储DLL路径。于是我们需要使用API在目标进程中申请空间，写入DLL路径，将这个路径的地址作为LoadLibrary参数。由于LoadLibrary所在的DLL（kernel32.dll）在任何程序中都会加载，且是第一个被加载的模块，因此kernel32.dll会加载在它的ImageBase处，它在所有进程中的基址都相同，于是LoadLibrary函数在任何进程中的地址都相同，可用本进程的LoadLibrary地址当作目标进程LoadLibrary的地址。</p>
+<h2 id="关键函数："><a href="#关键函数：" class="headerlink" title="关键函数："></a>关键函数：</h2><h3 id="1、CreateToolhelp32Snapshot"><a href="#1、CreateToolhelp32Snapshot" class="headerlink" title="1、CreateToolhelp32Snapshot"></a>1、CreateToolhelp32Snapshot</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HANDLE CreateToolhelp32Snapshot(</span><br><span class="line">  DWORD dwFlags,        // 指定快照包含的内容。这里使用TH32CS_SNAPPROCESS获取所有进程信息</span><br><span class="line">  DWORD th32ProcessID   // 目标进程ID（某些标志需要，这里不需要，故设为0）</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>：创建系统快照（获取当前系统状态的只读视图）。</p>
+<h3 id="2、Process32FirstW"><a href="#2、Process32FirstW" class="headerlink" title="2、Process32FirstW"></a>2、Process32FirstW</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL WINAPI Process32FirstW(</span><br><span class="line">  HANDLE           hSnapshot,    // CreateToolhelp32Snapshot 返回的句柄(快照句柄)</span><br><span class="line">  LPPROCESSENTRY32W lppe          // 指向 PROCESSENTRY32W 结构的指针</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>作用</strong>：获取系统快照中的第一个进程信息。</p>
+<p>结构体定义:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagPROCESSENTRY32W &#123;</span><br><span class="line">  DWORD     dwSize;              // 结构体大小（必须初始化）</span><br><span class="line">  DWORD     cntUsage;            // 保留字段</span><br><span class="line">  DWORD     th32ProcessID;       // 进程标识符(PID) -------有用</span><br><span class="line">  ULONG_PTR th32DefaultHeapID;   // 默认堆ID（已废弃）</span><br><span class="line">  DWORD     th32ModuleID;        // 模块ID（已废弃）</span><br><span class="line">  DWORD     cntThreads;          // 进程拥有的线程数</span><br><span class="line">  DWORD     th32ParentProcessID; // 父进程PID</span><br><span class="line">  LONG      pcPriClassBase;      // 线程基础优先级</span><br><span class="line">  DWORD     dwFlags;             // 保留字段</span><br><span class="line">  WCHAR     szExeFile[MAX_PATH]; // 可执行文件名（含扩展名）  --------有用</span><br><span class="line">&#125; PROCESSENTRY32W;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、Process32NextW"><a href="#3、Process32NextW" class="headerlink" title="3、Process32NextW"></a>3、Process32NextW</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL WINAPI Process32NextW(</span><br><span class="line">  HANDLE           hSnapshot,    // 快照句柄</span><br><span class="line">  LPPROCESSENTRY32W lppe          // 进程条目结构指针</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>作用</strong>：获取快照中的下一个进程信息（需要在 <code>Process32FirstW</code>之后调用）</p>
+<h3 id="4、OpenProcess"><a href="#4、OpenProcess" class="headerlink" title="4、OpenProcess"></a>4、<strong>OpenProcess</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HANDLE OpenProcess(</span><br><span class="line">  DWORD dwDesiredAccess,  // 你希望获得的对目标进程的操作权限。</span><br><span class="line">  BOOL  bInheritHandle,   // 句柄继承选项。通常设为 FALSE（不继承）</span><br><span class="line">  DWORD dwProcessId       // 目标进程PID</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>其中dwDesiredAccess参数这里需要使用的权限有：</p>
+<table>
+<thead>
+<tr>
+<th>dwDesiredAccess参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PROCESS_CREATE_THREAD</td>
+<td>允许在目标进程中创建远程线程（如 <code>CreateRemoteThread</code>）</td>
+</tr>
+<tr>
+<td>PROCESS_QUERY_INFORMATION</td>
+<td>获取进程基本信息</td>
+</tr>
+<tr>
+<td>PROCESS_VM_OPERATION</td>
+<td>执行虚拟内存操作（如 <code>VirtualAllocEx</code>、<code>VirtualFreeEx</code>）</td>
+</tr>
+<tr>
+<td>PROCESS_VM_READ</td>
+<td>读取目标进程内存（如 <code>ReadProcessMemory</code>）</td>
+</tr>
+<tr>
+<td>PROCESS_VM_WRITE</td>
+<td>写入目标进程内存（如 <code>WriteProcessMemory</code>）</td>
+</tr>
+</tbody></table>
+<p><strong>功能</strong>：通过给出的进程PID获取进程句柄，是后续对进程注入的基础</p>
+<h3 id="5、VirtualAllocEx"><a href="#5、VirtualAllocEx" class="headerlink" title="5、VirtualAllocEx"></a>5、<strong>VirtualAllocEx</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">LPVOID VirtualAllocEx(</span><br><span class="line">  HANDLE hProcess,        // 目标进程句柄</span><br><span class="line">  LPVOID lpAddress,       // 期望起始地址（通常为NULL）</span><br><span class="line">  SIZE_T dwSize,          // 分配区域大小</span><br><span class="line">  DWORD  flAllocationType,// 分配类型。通常为MEM_COMMIT，分配实际物理内存</span><br><span class="line">  DWORD  flProtect        // 内存保护标志。设为PAGE_READWRITE（需写入数据）</span><br><span class="line">);  // 返回值LPVOID代表指向任意类型的指针</span><br></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>：向指定进程的虚拟地址空间中申请内存区域。分配失败返回NULL，成功时返回目标进程中分配的内存区域的起始地址（指针）。</p>
+<h3 id="6、WriteProcessMemory"><a href="#6、WriteProcessMemory" class="headerlink" title="6、WriteProcessMemory"></a>6、<strong>WriteProcessMemory</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">BOOL WriteProcessMemory(</span><br><span class="line">  HANDLE  hProcess,              // 目标进程句柄</span><br><span class="line">  LPVOID  lpBaseAddress,         // 目标内存起始地址</span><br><span class="line">  LPCVOID lpBuffer,              // 本地数据缓冲区指针</span><br><span class="line">  SIZE_T  nSize,                 // 写入字节数</span><br><span class="line">  SIZE_T  *lpNumberOfBytesWritten// 实际写入字节数（可置NULL）</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>：在指定进程内存中写入数据</p>
+<h3 id="7、CreateRemoteThread"><a href="#7、CreateRemoteThread" class="headerlink" title="7、CreateRemoteThread"></a>7、<strong>CreateRemoteThread</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HANDLE CreateRemoteThread(</span><br><span class="line">  HANDLE                 hProcess,        // 目标进程句柄</span><br><span class="line">  LPSECURITY_ATTRIBUTES lpThreadAttributes, // 安全属性（通常NULL）</span><br><span class="line">  SIZE_T                dwStackSize,      // 初始栈大小（0=默认）</span><br><span class="line">  LPTHREAD_START_ROUTINE lpStartAddress,  // 线程函数地址（LoadLibrary指针）</span><br><span class="line">  LPVOID                 lpParameter,     // 线程参数（DLL路径在内存中的地址）</span><br><span class="line">  DWORD                  dwCreationFlags, // 创建标志（0=立即运行）</span><br><span class="line">  LPDWORD                lpThreadId       // 线程ID（可置NULL）</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>其中参数lpStartAddress和lpParameter最重要</p>
+<p><strong>功能</strong>：在目标进程中创建一个远程线程，线程从lpStartAddress处开始运行，并传入一个参数lpParameter。这里实际上就是在目标进程创建一个远程线程，把我的DLL路径作为参数传入，使线程在运行时使用LoadLibrary函数将我的DLL载入进程空间。</p>
+<h3 id="8、WaitForSingleObject"><a href="#8、WaitForSingleObject" class="headerlink" title="8、WaitForSingleObject"></a>8、WaitForSingleObject</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DWORD WINAPI WaitForSingleObject(</span><br><span class="line">  HANDLE hHandle,      // 对象句柄（这里是线程句柄）</span><br><span class="line">  DWORD  dwMilliseconds // 超时时间（毫秒）,INFINITE代表无限等待直到结束</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>：暂停当前线程的执行，持续检查 <code>hThread</code>线程的状态直到目标线程终止（进入 signaled 状态）才继续执行后续代码。</p>
+<h3 id="9、VirtualFreeEx"><a href="#9、VirtualFreeEx" class="headerlink" title="9、VirtualFreeEx"></a>9、VirtualFreeEx</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BOOL VirtualFreeEx(</span><br><span class="line">  HANDLE hProcess,  // 目标进程句柄</span><br><span class="line">  LPVOID lpAddress,  // 要释放的内存起始地址</span><br><span class="line">  SIZE_T dwSize,     // 要释放的内存大小</span><br><span class="line">  DWORD  dwFreeType  // 释放类型（关键参数）。MEM_RELEASE为完全释放</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>作用</strong>：释放目标进程空间</p>
+<h3 id="10、EnumProcessModules"><a href="#10、EnumProcessModules" class="headerlink" title="10、EnumProcessModules"></a>10、EnumProcessModules</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BOOL EnumProcessModules(</span><br><span class="line">  HANDLE  hProcess,      // 目标进程句柄</span><br><span class="line">  HMODULE *lphModule,    // 接收进程加载的模块句柄的数组</span><br><span class="line">  DWORD   cb,            // 数组缓冲区大小（字节）</span><br><span class="line">  LPDWORD lpcbNeeded     // 存储返回的实际的大小</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>作用</strong>：获取指定进程加载的所有模块的句柄，存储在lphModule数组里面</p>
+<h3 id="11、GetModuleFileNameExW"><a href="#11、GetModuleFileNameExW" class="headerlink" title="11、GetModuleFileNameExW"></a>11、GetModuleFileNameExW</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DWORD GetModuleFileNameExW(</span><br><span class="line">  HANDLE  hProcess,     // 目标进程的句柄</span><br><span class="line">  HMODULE hModule,      // 模块句柄（NULL 表示进程主模块）</span><br><span class="line">  LPWSTR  lpFilename,   // 接收路径的缓冲区</span><br><span class="line">  DWORD   nSize         // 缓冲区大小（字符数）</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>作用</strong>：获取指定进程中某个模块（通常是 DLL ）的完整文件路径，返回写入的字符数。</p>
+<h3 id="12、FreeLibrary"><a href="#12、FreeLibrary" class="headerlink" title="12、FreeLibrary"></a>12、FreeLibrary</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">BOOL FreeLibrary(</span><br><span class="line">  [in] HMODULE hLibModule   // 要释放的 DLL 模块句柄</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>作用</strong>：卸载目标模块</p>
+<h3 id="13、wcscmp"><a href="#13、wcscmp" class="headerlink" title="13、wcscmp"></a>13、wcscmp</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int wcscmp(const wchar_t *str1, const wchar_t *str2);</span><br></pre></td></tr></table></figure>
+
+<p><strong>作用</strong>：宽字符串的比较。返回值为0代表相等。</p>
+<h3 id="14、FindWindow"><a href="#14、FindWindow" class="headerlink" title="14、FindWindow"></a>14、FindWindow</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HWND FindWindow(</span><br><span class="line">    LPCTSTR lpClassName,  // 窗口类名（这里设为NULL）</span><br><span class="line">    LPCTSTR lpWindowName  // 窗口标题</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：通过窗口标题或取窗口句柄</p>
+<p>返回值：返回窗口句柄</p>
+<h3 id="15、GetWindowThreadProcessId"><a href="#15、GetWindowThreadProcessId" class="headerlink" title="15、GetWindowThreadProcessId"></a>15、GetWindowThreadProcessId</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DWORD GetWindowThreadProcessId(</span><br><span class="line">    HWND    hWnd,        // 窗口句柄</span><br><span class="line">    LPDWORD lpdwProcessId// 接收进程ID的指针</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：通过窗口句柄获取窗口PID</p>
+<h1 id="主要逻辑："><a href="#主要逻辑：" class="headerlink" title="主要逻辑："></a>主要逻辑：</h1><h2 id="装载逻辑："><a href="#装载逻辑：" class="headerlink" title="装载逻辑："></a>装载逻辑：</h2><ol>
+<li>使用CreateToolhelp32Snapshot获取进程快照</li>
+<li>使用Process32FirstW获取第一个进程信息</li>
+<li>使用循环和Process32NextW函数迭代进程信息，依次比对其中的可执行文件名，以此找到目标进程PID</li>
+<li>使用OpenProcess函数获取目标进程句柄</li>
+<li>使用VirtualAllocEx申请空间</li>
+<li>使用WriteProcessMemory在申请的空间中写入自定义DLL的路径</li>
+<li>使用CreateRemoteThread创建线程，参数lpStartAddress和lpParameter分别填LoadLibraryW函数指针（要转换为LPTHREAD_START_ROUTINE）和DLL路径的内存地址</li>
+<li>在LoadLibrary将我们的DLL载入后，DLL中的DLLmain函数会执行</li>
+<li>等待线程结束后，释放空间和句柄</li>
+</ol>
+<h3 id="卸载逻辑："><a href="#卸载逻辑：" class="headerlink" title="卸载逻辑："></a>卸载逻辑：</h3><ol>
+<li>使用OpenProcess函数获取目标进程句柄</li>
+<li>使用EnumProcessModules函数获取进程所有模块的句柄</li>
+<li>使用GetModuleFileNameExW函数对句柄进行判断，找到目标DLL句柄</li>
+<li>使用CreateRemoteThread创建线程，参数为FreeLibrary函数地址（要转换为LPTHREAD_START_ROUTINE）和DLL句柄</li>
+<li>等待线程结束后，释放空间和句柄</li>
+</ol>
+<h1 id="实现："><a href="#实现：" class="headerlink" title="实现："></a>实现：</h1><p>注意：目标进程、注入进程、DLL必须都是同一个位数。32为dll无法注入到64位进程中，64位进程与32位进程中LoadLibrary函数地址不同，故不可用64位注入程序注入DLL进32位目标进程</p>
+<p>注入程序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;iostream&gt;</span><br><span class="line">#include&lt;windows.h&gt;</span><br><span class="line">#include &lt;tlhelp32.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;shlwapi.h&gt;</span><br><span class="line">#include &lt;psapi.h&gt;</span><br><span class="line">DWORD FindPidByName(wchar_t *s)&#123;  // 通过进程名查找进程PID</span><br><span class="line">	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);</span><br><span class="line">	if (snapshot == INVALID_HANDLE_VALUE) &#123;</span><br><span class="line">        std::cerr &lt;&lt; &quot;创建进程快照失败! 错误代码:&quot; &lt;&lt; GetLastError() &lt;&lt; std::endl;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">	PROCESSENTRY32W lppe= &#123;0&#125;;</span><br><span class="line">	lppe.dwSize = sizeof(PROCESSENTRY32W);</span><br><span class="line">	if(!Process32FirstW(snapshot,&amp;lppe))&#123;</span><br><span class="line">		std::cerr &lt;&lt; &quot;无法枚举进程&quot; &lt;&lt; std::endl;</span><br><span class="line">        CloseHandle(snapshot);</span><br><span class="line">        return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	do&#123;</span><br><span class="line">		if(!wcscmp(s,lppe.szExeFile))&#123;</span><br><span class="line">			CloseHandle(snapshot);</span><br><span class="line">			return lppe.th32ProcessID;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;while(Process32NextW(snapshot,&amp;lppe));</span><br><span class="line">	CloseHandle(snapshot);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">DWORD FindPidByWindowsName(LPCWSTR WindowsName)&#123;  // 通过窗口名查找PID</span><br><span class="line">	HWND hwnd = FindWindowW(NULL,WindowsName);</span><br><span class="line">	if(hwnd)&#123;</span><br><span class="line">		DWORD PID=0;</span><br><span class="line">		GetWindowThreadProcessId(hwnd,&amp;PID);</span><br><span class="line">		return PID;</span><br><span class="line">	&#125;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 创建远程线程加载dll</span><br><span class="line">void injection(DWORD pid,wchar_t path[])&#123;  // dll注入</span><br><span class="line">	// 1、打开进程</span><br><span class="line">	HANDLE phandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |</span><br><span class="line">        PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ,FALSE, pid);</span><br><span class="line">	if (!phandle) &#123;</span><br><span class="line">        std::cerr &lt;&lt; &quot;打开进程失败(代码：&quot;</span><br><span class="line">                  &lt;&lt; GetLastError() &lt;&lt; &quot;)&quot; &lt;&lt; std::endl;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	// 2、分配空间，写入dll路径</span><br><span class="line">	int size = (wcslen(path)+1)*sizeof(wchar_t);</span><br><span class="line">	LPVOID lpaddress = VirtualAllocEx(phandle, nullptr, size, MEM_COMMIT, PAGE_READWRITE);</span><br><span class="line">	if(!lpaddress)&#123;</span><br><span class="line">		std::cerr &lt;&lt; &quot;申请空间失败&quot; &lt;&lt; std::endl;</span><br><span class="line">		return;</span><br><span class="line">	&#125;</span><br><span class="line">	BOOL flag = WriteProcessMemory(phandle,lpaddress,path,size,NULL);</span><br><span class="line">	if(!flag)&#123;</span><br><span class="line">		std::cerr &lt;&lt; &quot;写入失败&quot; &lt;&lt; std::endl;</span><br><span class="line">		return;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 3、创建远程线程</span><br><span class="line">	HANDLE hThread = CreateRemoteThread(phandle,NULL,0,(LPTHREAD_START_ROUTINE)LoadLibraryW,lpaddress,0,NULL);</span><br><span class="line">	if(!hThread)&#123;</span><br><span class="line">		std::cerr &lt;&lt; &quot;线程创建失败&quot; &lt;&lt; GetLastError() &lt;&lt; std::endl;</span><br><span class="line">		return;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 4、等待线程结束</span><br><span class="line">	WaitForSingleObject(hThread, INFINITE);</span><br><span class="line"></span><br><span class="line">	// 5、释放</span><br><span class="line">	CloseHandle(hThread);</span><br><span class="line">	VirtualFreeEx(phandle, lpaddress, size, MEM_RELEASE);</span><br><span class="line">	CloseHandle(phandle);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 创建远程线程卸载dll</span><br><span class="line">void unloadDll(DWORD pid,wchar_t path[])&#123;</span><br><span class="line">	// 1、打开进程</span><br><span class="line">	HANDLE phandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION |</span><br><span class="line">        PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ,FALSE, pid);</span><br><span class="line">	if (!phandle) &#123;</span><br><span class="line">        std::wcerr &lt;&lt; &quot;打开进程失败(代码：&quot;</span><br><span class="line">                  &lt;&lt; GetLastError() &lt;&lt; &quot;)&quot; &lt;&lt; std::endl;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	// 3、获取进程加载的所有模块</span><br><span class="line">	HMODULE lphModule[1000];</span><br><span class="line">	DWORD dwsize;</span><br><span class="line">	BOOL flag = EnumProcessModules(phandle,lphModule,sizeof(lphModule),&amp;dwsize);</span><br><span class="line">	if(!flag)&#123;</span><br><span class="line">		CloseHandle(phandle);</span><br><span class="line">		std::cerr &lt;&lt; &quot;读取模块失败&quot; &lt;&lt; std::endl;</span><br><span class="line">		return;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 4、寻找目标dll的句柄</span><br><span class="line">	int i;</span><br><span class="line">	wchar_t lpFilename[MAX_PATH];</span><br><span class="line">	for(i=0;;i++)&#123;</span><br><span class="line">		if(GetModuleFileNameExW(phandle,lphModule[i],lpFilename,MAX_PATH)==0)&#123;</span><br><span class="line">			CloseHandle(phandle);</span><br><span class="line">			std::cerr &lt;&lt; &quot;未找到此模块&quot; &lt;&lt; std::endl;</span><br><span class="line">			return;</span><br><span class="line">		&#125;</span><br><span class="line">		if(!_wcsicmp(path,lpFilename)) break;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 5、生成线程，卸载dll</span><br><span class="line">	HANDLE hThread;</span><br><span class="line">	hThread = CreateRemoteThread(phandle,NULL,0,(LPTHREAD_START_ROUTINE)FreeLibrary,lphModule[i],0,NULL);</span><br><span class="line">	if(!hThread)&#123;</span><br><span class="line">		CloseHandle(phandle);</span><br><span class="line">		std::cerr &lt;&lt; &quot;打开线程失败&quot; &lt;&lt; std::endl;</span><br><span class="line">		return;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 6、等待线程结束</span><br><span class="line">	WaitForSingleObject(hThread, INFINITE);</span><br><span class="line"></span><br><span class="line">	// 7、释放</span><br><span class="line">	CloseHandle(hThread);</span><br><span class="line">	CloseHandle(phandle);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">	wchar_t name[] = L&quot;target.exe&quot;;</span><br><span class="line">	DWORD PID = FindPidByName(name);</span><br><span class="line">	//const wchar_t WindowsName[] = L&quot;E:\\project\\target.exe&quot;;</span><br><span class="line">	// DWORD PID = FindPidByWindowsName(WindowsName);</span><br><span class="line">	if(PID == 0) return 0;</span><br><span class="line">	wchar_t path[] = L&quot;E:\\project\\DLL注入.dll&quot;;  // dll路径</span><br><span class="line">	injection(PID,path);</span><br><span class="line">	unloadDll(PID,path);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>DLL：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;windows.h&gt;</span><br><span class="line">#include &quot;pch.h&quot;</span><br><span class="line">#include &quot;dllmain.h&quot;</span><br><span class="line"></span><br><span class="line">int  add(int a, int b)</span><br><span class="line">&#123;</span><br><span class="line">    return a + b;</span><br><span class="line">&#125;</span><br><span class="line">BOOL APIENTRY DllMain(</span><br><span class="line">    HMODULE hModule, </span><br><span class="line">    DWORD  ul_reason_for_call,</span><br><span class="line">    LPVOID lpReserved</span><br><span class="line">) &#123;</span><br><span class="line">    switch (ul_reason_for_call) &#123;</span><br><span class="line">        case DLL_PROCESS_ATTACH:</span><br><span class="line">            // 加载时调用MessageBox函数</span><br><span class="line">            MessageBox(NULL, L&quot;DLL 已注入!&quot;, L&quot;提示&quot;, MB_OK);</span><br><span class="line">            break;</span><br><span class="line">        case DLL_PROCESS_DETACH:</span><br><span class="line">            // 卸载时调用MessageBox函数</span><br><span class="line">            MessageBox(NULL, L&quot;DLL 已卸载!&quot;, L&quot;提示&quot;, MB_OK);</span><br><span class="line">            break;</span><br><span class="line">        case DLL_THREAD_ATTACH:</span><br><span class="line">            break;</span><br><span class="line">        case DLL_THREAD_DETACH:</span><br><span class="line">            break;</span><br><span class="line">    &#125;</span><br><span class="line">    return TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>注入后：</p>
+<img src="/posts/undefined/image-20250717221804965.png" class="" title="image-20250717221804965">
+
+<p>卸载后：</p>
+<img src="/posts/undefined/image-20250717221831532.png" class="" title="image-20250717221831532">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Reverse/" rel="tag"><i class="fa fa-tag"></i> Reverse</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/30238/" rel="prev" title="Hook技术实现！">
+      <i class="fa fa-chevron-left"></i> Hook技术实现！
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/27450/" rel="next" title="字符集与编码">
+      字符集与编码 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">原理：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">关键函数：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81CreateToolhelp32Snapshot"><span class="nav-number">1.1.1.</span> <span class="nav-text">1、CreateToolhelp32Snapshot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81Process32FirstW"><span class="nav-number">1.1.2.</span> <span class="nav-text">2、Process32FirstW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81Process32NextW"><span class="nav-number">1.1.3.</span> <span class="nav-text">3、Process32NextW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81OpenProcess"><span class="nav-number">1.1.4.</span> <span class="nav-text">4、OpenProcess</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81VirtualAllocEx"><span class="nav-number">1.1.5.</span> <span class="nav-text">5、VirtualAllocEx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6%E3%80%81WriteProcessMemory"><span class="nav-number">1.1.6.</span> <span class="nav-text">6、WriteProcessMemory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7%E3%80%81CreateRemoteThread"><span class="nav-number">1.1.7.</span> <span class="nav-text">7、CreateRemoteThread</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8%E3%80%81WaitForSingleObject"><span class="nav-number">1.1.8.</span> <span class="nav-text">8、WaitForSingleObject</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9%E3%80%81VirtualFreeEx"><span class="nav-number">1.1.9.</span> <span class="nav-text">9、VirtualFreeEx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10%E3%80%81EnumProcessModules"><span class="nav-number">1.1.10.</span> <span class="nav-text">10、EnumProcessModules</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11%E3%80%81GetModuleFileNameExW"><span class="nav-number">1.1.11.</span> <span class="nav-text">11、GetModuleFileNameExW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12%E3%80%81FreeLibrary"><span class="nav-number">1.1.12.</span> <span class="nav-text">12、FreeLibrary</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13%E3%80%81wcscmp"><span class="nav-number">1.1.13.</span> <span class="nav-text">13、wcscmp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14%E3%80%81FindWindow"><span class="nav-number">1.1.14.</span> <span class="nav-text">14、FindWindow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15%E3%80%81GetWindowThreadProcessId"><span class="nav-number">1.1.15.</span> <span class="nav-text">15、GetWindowThreadProcessId</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E9%80%BB%E8%BE%91%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">主要逻辑：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A3%85%E8%BD%BD%E9%80%BB%E8%BE%91%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">装载逻辑：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E9%80%BB%E8%BE%91%EF%BC%9A"><span class="nav-number">2.1.1.</span> <span class="nav-text">卸载逻辑：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">实现：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="基本概念：事件：事件是操作系统或应用程序中发生的某个特定的、可由系统检测到的行为或状态改变。在Windows中，事件通常与线程或进程的执行、用户的操作（如点击按钮、按键）、硬件的状态变化等相关联。事件分为两类：  系统事件（如硬件事件等）：操作系统监视这些事件。 应用程序事件：应用程序定义的事件，如用户点击按钮、窗口失去焦点等。  消息：消息是Windows应用程序与操作系统和其他应用程序之间">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图形化界面">
+<meta property="og:url" content="http://example.com/posts/21586/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="基本概念：事件：事件是操作系统或应用程序中发生的某个特定的、可由系统检测到的行为或状态改变。在Windows中，事件通常与线程或进程的执行、用户的操作（如点击按钮、按键）、硬件的状态变化等相关联。事件分为两类：  系统事件（如硬件事件等）：操作系统监视这些事件。 应用程序事件：应用程序定义的事件，如用户点击按钮、窗口失去焦点等。  消息：消息是Windows应用程序与操作系统和其他应用程序之间">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/undefined/draw.drawio.png">
+<meta property="article:published_time" content="2025-07-20T08:07:53.000Z">
+<meta property="article:modified_time" content="2025-07-20T14:23:19.171Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="Win32">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/undefined/draw.drawio.png">
+
+<link rel="canonical" href="http://example.com/posts/21586/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>图形化界面 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/21586/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          图形化界面
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-07-20 16:07:53 / 修改时间：22:23:19" itemprop="dateCreated datePublished" datetime="2025-07-20T16:07:53+08:00">2025-07-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="基本概念："><a href="#基本概念：" class="headerlink" title="基本概念："></a>基本概念：</h1><h2 id="事件："><a href="#事件：" class="headerlink" title="事件："></a>事件：</h2><p>事件是操作系统或应用程序中发生的某个特定的、可由系统检测到的行为或状态改变。在Windows中，事件通常与线程或进程的执行、用户的操作（如点击按钮、按键）、硬件的状态变化等相关联。事件分为两类：</p>
+<ul>
+<li><strong>系统事件（如硬件事件等）</strong>：操作系统监视这些事件。</li>
+<li><strong>应用程序事件</strong>：应用程序定义的事件，如用户点击按钮、窗口失去焦点等。</li>
+</ul>
+<h2 id="消息："><a href="#消息：" class="headerlink" title="消息："></a>消息：</h2><p>消息是Windows应用程序与操作系统和其他应用程序之间进行通信的基本单位。Windows是一个基于消息的系统，所有的用户输入、系统事件和应用程序之间的交互都是通过消息传递的（其实就是用来描述事件的）。每个消息都包含特定的信息，例如鼠标位置、按键信息等。</p>
+<ul>
+<li><strong>类型</strong>：每个消息有一个唯一的标识符，称为“消息类型”，例如<code>WM_PAINT</code>表示窗口需要重绘，<code>WM_KEYDOWN</code>表示用户按下键盘的一个键。</li>
+<li><strong>传递机制</strong>：消息是通过消息队列传递的，消息队列是每个线程维护的一个队列，操作系统将消息放入队列，应用程序从队列中获取消息并进行处理。</li>
+</ul>
+<h3 id="MSG结构"><a href="#MSG结构" class="headerlink" title="MSG结构"></a>MSG结构</h3><p><code>MSG</code>结构体用于存储Windows消息的详细信息。它包含了以下几个重要字段：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagMSG &#123;</span><br><span class="line">    HWND hwnd;       // 消息的目标窗口的句柄(谁处理这个消息)</span><br><span class="line">    UINT message;    // 消息的类型（是点击左键还是敲击键盘）</span><br><span class="line">    WPARAM wParam;   // 消息的附加信息。16位整数</span><br><span class="line">    LPARAM lParam;   // 消息的附加信息。32位整数</span><br><span class="line">    DWORD time;      // 消息产生的时间</span><br><span class="line">    POINT pt;        // 消息发生时鼠标的坐标</span><br><span class="line">&#125; MSG;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>hwnd</code>：该消息所关联的目标窗口的句柄。每个窗口都有一个唯一的句柄，它指示消息应该传递给哪个窗口。</li>
+<li><code>message</code>：表示消息的类型（如<code>WM_MOUSEMOVE</code>、<code>WM_KEYDOWN</code>等）。消息类型本来是有编号的，但是由于编号难记，就将编号定义为了宏。</li>
+<li><code>wParam</code> 和 <code>lParam</code>：这些是消息的附加参数，通常用于传递更多的上下文信息。</li>
+<li><code>time</code>：消息的产生时间。</li>
+<li><code>pt</code>：事件发生时鼠标位置的坐标。</li>
+</ul>
+<h2 id="消息流程："><a href="#消息流程：" class="headerlink" title="消息流程："></a>消息流程：</h2><p>Windows应用程序的消息处理流程大致如下：</p>
+<ol>
+<li><strong>操作系统产生消息</strong>：操作系统根据外部事件（如用户输入、系统变化等）生成消息。</li>
+<li><strong>消息放入消息队列</strong>：每个线程有一个消息队列，操作系统将消息放入队列中。</li>
+<li><strong>消息获取</strong>：应用程序通过<code>GetMessage</code>、<code>PeekMessage</code>等函数从消息队列中获取消息。如果队列为空，<code>GetMessage</code>会阻塞等待消息。</li>
+<li><strong>消息分发</strong>：应用程序调用<code>DispatchMessage</code>函数将消息分发到适当的窗口过程（窗口的消息处理函数）。窗口过程根据消息类型做出相应的处理。</li>
+<li><strong>窗口过程处理消息</strong>：每个窗口有一个窗口过程，它是一个函数，负责处理该窗口的消息。例如，<code>WM_PAINT</code>消息可以在窗口过程中的<code>WM_PAINT</code>分支下进行处理，重新绘制窗口。</li>
+<li><strong>返回结果</strong>：窗口过程完成消息处理后，返回结果到操作系统。如果是响应用户输入或其他事件，可能会引发新的消息。</li>
+</ol>
+<img src="/posts/undefined/draw.drawio.png" class="" title="draw.drawio">
+
+<h1 id="第一个图形界面程序："><a href="#第一个图形界面程序：" class="headerlink" title="第一个图形界面程序："></a>第一个图形界面程序：</h1><h2 id="关键函数和结构体"><a href="#关键函数和结构体" class="headerlink" title="关键函数和结构体"></a>关键函数和结构体</h2><h3 id="WNDCLASS"><a href="#WNDCLASS" class="headerlink" title="WNDCLASS"></a>WNDCLASS</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagWNDCLASSA &#123;</span><br><span class="line">  UINT      style;  // 类样式</span><br><span class="line">  WNDPROC   lpfnWndProc;  // 窗口回调函数指针***</span><br><span class="line">  int       cbClsExtra;  // 要按照窗口类结构分配的额外字节数</span><br><span class="line">  int       cbWndExtra;  // 在窗口实例之后分配的额外字节数</span><br><span class="line">  HINSTANCE hInstance;  // 创建窗口的应用进程句柄***</span><br><span class="line">  HICON     hIcon;   // 类图标的句柄</span><br><span class="line">  HCURSOR   hCursor;  // 类游标的句柄</span><br><span class="line">  HBRUSH    hbrBackground;  // 类背景画笔的句柄</span><br><span class="line">  LPCSTR    lpszMenuName;  // 类菜单的资源名称</span><br><span class="line">  LPCSTR    lpszClassName;  // 窗口类名***</span><br><span class="line">&#125; WNDCLASSA, *PWNDCLASSA, *NPWNDCLASSA, *LPWNDCLASSA;</span><br></pre></td></tr></table></figure>
+
+<p>作用：定义窗口类</p>
+<h3 id="CreateWindow"><a href="#CreateWindow" class="headerlink" title="CreateWindow"></a>CreateWindow</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">HWND CreateWindow(</span><br><span class="line">  [in, optional] LPCWSTR   lpClassName,		// 类名</span><br><span class="line">  [in, optional] LPCWSTR   lpWindowName,	// 窗口名称</span><br><span class="line">  [in]           DWORD     dwStyle,      // 窗口的样式</span><br><span class="line">  [in]           int       x,			// 窗口的初始水平位置</span><br><span class="line">  [in]           int       y,			// 窗口的初始垂直位置</span><br><span class="line">  [in]           int       nWidth,		// 宽度</span><br><span class="line">  [in]           int       nHeight,     // 高度</span><br><span class="line">  [in, optional] HWND      hWndParent,		// 父进程句柄</span><br><span class="line">  [in, optional] HMENU     hMenu,			// 菜单句柄</span><br><span class="line">  [in, optional] HINSTANCE hInstance,		// 当前应用程序的句柄  </span><br><span class="line">  [in, optional] LPVOID    lpParam			// 附加信息，一般为NULL	</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：注册窗口类</p>
+<h3 id="ShowWindow"><a href="#ShowWindow" class="headerlink" title="ShowWindow"></a>ShowWindow</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL ShowWindow(</span><br><span class="line">  [in] HWND hWnd,		// 窗口的句柄</span><br><span class="line">  [in] int  nCmdShow	// 窗口的显示方式。SW_SHOW代表激活窗口并以当前大小和位置显示窗口</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：展示窗口</p>
+<h3 id="GetMessage"><a href="#GetMessage" class="headerlink" title="GetMessage"></a>GetMessage</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BOOL GetMessage(</span><br><span class="line">  [out]          LPMSG lpMsg,			// 接收消息的指针</span><br><span class="line">  [in, optional] HWND  hWnd,			// 目标窗口的句柄。若为NULL，则当前线程的任何窗口的消息</span><br><span class="line">  [in]           UINT  wMsgFilterMin,	// 要检索的最低消息值的整数值。</span><br><span class="line">  [in]           UINT  wMsgFilterMax	// 要检索的最高消息值的整数值。</span><br><span class="line">);    // 若wMsgFilterMin和wMsgFilterMax都为0，则返回所有可用消息</span><br></pre></td></tr></table></figure>
+
+<p>作用：读取消息</p>
+<h3 id="TranslateMessage"><a href="#TranslateMessage" class="headerlink" title="TranslateMessage"></a>TranslateMessage</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">BOOL TranslateMessage(</span><br><span class="line">  [in] const MSG *lpMsg			// 消息指针</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：加工、转换消息</p>
+<h3 id="DispatchMessage"><a href="#DispatchMessage" class="headerlink" title="DispatchMessage"></a>DispatchMessage</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LRESULT DispatchMessage(</span><br><span class="line">  [in] const MSG *lpMsg			// 消息指针</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：将消息分发到对应的回调函数</p>
+<h3 id="WndProc"><a href="#WndProc" class="headerlink" title="WndProc"></a>WndProc</h3><p>这个是自编的窗口回调函数，但是此函数有固定的格式，即：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">LRESULT CALLBACK DefWindowProc(</span><br><span class="line">	HWND hwnd, 		 // 窗口句柄</span><br><span class="line">	UINT msg, 		// 消息类型</span><br><span class="line">	WPARAM wParam, 		// 消息附加信息</span><br><span class="line">	LPARAM lParam		// 消息附加信息</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>返回值：如果返回0则代表已处理，否者传给系统处理(调用DefWindowProc函数，参数与此函数相同)</p>
+<p>作用：处理消息</p>
+<h2 id="调试："><a href="#调试：" class="headerlink" title="调试："></a>调试：</h2><p>win32窗口应用程序不再有终端来打印调试，不能使用printf函数，但是提供另一个函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void OutputDebugStringA(</span><br><span class="line">  [in, optional] LPCSTR lpOutputString   // 传入字符串指针</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>这个函数传入字符串指针，在调试控制台打印字符串。但是参数只有一个，没办法打印变量的值，可以进行封装使之具备打印变量的能力:</p>
+<p>Debug.h</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#pragma once</span><br><span class="line"></span><br><span class="line">void DebugLogA(const char* format, ...);  // 窄字符打印</span><br><span class="line">void DebugLogW(const wchar_t* format, ...); // 宽字符打印</span><br></pre></td></tr></table></figure>
+
+<p>DebugLog.cpp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;stdio.h&quot;</span><br><span class="line">#include &quot;Debug.h&quot;</span><br><span class="line">#include &lt;windows.h&gt;</span><br><span class="line">/*</span><br><span class="line">函数功能：实现格式化打印</span><br><span class="line">参数1：format，格式化字符串，类似于&quot;Error %d: %s&quot;</span><br><span class="line">参数2：&quot;...&quot;，可变数量的参数，对应格式化字符串中的占位符</span><br><span class="line">使用方式：与printf函数完全相同</span><br><span class="line">*/</span><br><span class="line">void DebugLogA(const char* format, ...) &#123; // 窄字符版本</span><br><span class="line">    char buf[512] = &#123; 0 &#125;;</span><br><span class="line">    va_list args;				//  声明va_list 类型的变量 args</span><br><span class="line">    va_start(args, format);		// 初始化可变参数列表，使 args 指向 format 后的第一个可变参数</span><br><span class="line">    _vsnprintf_s(buf, _countof(buf), _TRUNCATE, format, args);	// 将格式化字符串和参数组合成最终字符串</span><br><span class="line">    OutputDebugStringA(buf);		// 打印组合后的字符串</span><br><span class="line">    va_end(args);					 // 清理可变参数列表资源，避免资源泄漏</span><br><span class="line">&#125;</span><br><span class="line">void DebugLogW(const wchar_t* format, ...) &#123;  // 宽字符版本</span><br><span class="line">    wchar_t buf[512] = &#123; 0 &#125;;</span><br><span class="line">    va_list args;</span><br><span class="line">    va_start(args, format);</span><br><span class="line">    _vsnwprintf_s(buf, _countof(buf), _TRUNCATE, format, args);</span><br><span class="line">    OutputDebugStringW(buf);</span><br><span class="line">    va_end(args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样就完成了封装。在WinMain函数里面需要使用时，要把头文件包含进去。</p>
+<p>程序如果出现了错误就只是不会弹窗，并不会告诉你错在哪，需要使用GetLastError函数获取错误码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_Post_equals_last_error_ DWORD GetLastError();  // 返回一个错误码</span><br></pre></td></tr></table></figure>
+
+<p>正常来说错误码还需要拿到Windows官方网站去查找对应的错误信息，这里也封装一下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void PrintLastError() &#123;</span><br><span class="line">    DWORD err = GetLastError();  // 获取错误码</span><br><span class="line">    LPSTR msg = NULL;  // 存储错误信息</span><br><span class="line">    FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,</span><br><span class="line">        NULL, err, 0, (LPSTR)&amp;msg, 0, NULL);  // 查找错误信息</span><br><span class="line">    DebugLog(&quot;Error %d: %s&quot;, err, msg);   // 打印</span><br><span class="line">    LocalFree(msg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="主要流程："><a href="#主要流程：" class="headerlink" title="主要流程："></a>主要流程：</h2><ol>
+<li>自定义窗口类</li>
+<li>注册窗口类</li>
+<li>创建窗口</li>
+<li>显示窗口</li>
+<li>设置消息循环，捕获事件</li>
+<li>生成消息，交给系统</li>
+<li>创建回调函数</li>
+</ol>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line">// FirstWindow.cpp : 定义应用程序的入口点。</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#include &quot;framework.h&quot;</span><br><span class="line">#include &quot;FirstWindow.h&quot;</span><br><span class="line">#include &quot;Debug.h&quot;</span><br><span class="line"></span><br><span class="line">LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);</span><br><span class="line"></span><br><span class="line">int APIENTRY wWinMain(_In_ HINSTANCE hInstance,</span><br><span class="line">                     _In_opt_ HINSTANCE hPrevInstance,</span><br><span class="line">                     _In_ LPWSTR    lpCmdLine,</span><br><span class="line">                     _In_ int       nCmdShow)</span><br><span class="line">&#123;</span><br><span class="line">    // 1、注册窗口类</span><br><span class="line">    TCHAR Name[] = L&quot;My First Window&quot;;</span><br><span class="line">    WNDCLASS wnd = &#123; 0 &#125;;</span><br><span class="line">    wnd.lpfnWndProc = WndProc;          // 回调函数</span><br><span class="line">    wnd.lpszClassName = Name;           // 类名</span><br><span class="line">    wnd.hInstance = hInstance;         // 进程句柄</span><br><span class="line">    wnd.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1); // 背景色(白色)</span><br><span class="line">    wnd.hCursor = LoadCursor(NULL, IDC_ARROW);   // 箭头光标</span><br><span class="line">    RegisterClass(&amp;wnd);</span><br><span class="line"></span><br><span class="line">    // 2、创建窗口</span><br><span class="line">    HWND hwnd = CreateWindow(</span><br><span class="line">        Name,                   // 类名</span><br><span class="line">        TEXT(&quot;我的Win32窗口&quot;),          // 窗口标题</span><br><span class="line">        WS_OVERLAPPEDWINDOW,     // 标准窗口样式</span><br><span class="line">        CW_USEDEFAULT,     // 初始水平位置（默认居中）</span><br><span class="line">        CW_USEDEFAULT,      // 初始垂直位置</span><br><span class="line">        500,                // 宽度500px</span><br><span class="line">        300,                // 高度300px</span><br><span class="line">        NULL,       // 父窗口</span><br><span class="line">        NULL,       // 菜单</span><br><span class="line">        hInstance,  // 实例句柄</span><br><span class="line">        NULL</span><br><span class="line">        );</span><br><span class="line">    if (hwnd == NULL) &#123;</span><br><span class="line">        MessageBoxW(NULL, L&quot;窗口创建失败!&quot;, L&quot;错误&quot;, MB_OK | MB_ICONERROR);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 3. 显示窗口</span><br><span class="line">    ShowWindow(hwnd, SW_SHOW); // 显示窗口</span><br><span class="line">   </span><br><span class="line">    // 4. 消息循环</span><br><span class="line">    MSG msg;</span><br><span class="line">    while (GetMessage(&amp;msg, NULL, 0, 0) &gt; 0) &#123;</span><br><span class="line">        TranslateMessage(&amp;msg); // 转换键盘消息</span><br><span class="line">        DispatchMessage(&amp;msg);  // 分发到窗口过程</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*  </span><br><span class="line">函数: WndProc(HWND, UINT, WPARAM, LPARAM)</span><br><span class="line">目标: 处理主窗口的消息。</span><br><span class="line">*/ </span><br><span class="line">LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)</span><br><span class="line">&#123;</span><br><span class="line">    switch (message)</span><br><span class="line">    &#123;</span><br><span class="line">        case WM_CREATE:</span><br><span class="line">        &#123;</span><br><span class="line">            CREATESTRUCT* info = (CREATESTRUCT*)lParam;</span><br><span class="line">            DebugLogW(L&quot;窗口创建成功，窗口类名为%s\n&quot;, info-&gt;lpszClass);</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        case WM_MOVE:</span><br><span class="line">        &#123;</span><br><span class="line">            POINTS point = MAKEPOINTS(lParam);</span><br><span class="line">            DebugLogA(&quot;窗口移动到了(%d,%d)\n&quot;, point.x, point.y);</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        case WM_LBUTTONDOWN:</span><br><span class="line">        &#123;</span><br><span class="line">            POINTS point2 = MAKEPOINTS(lParam);</span><br><span class="line">            DebugLogA(&quot;按下了左键,坐标为(%d,%d)\n&quot;, point2.x, point2.y);</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        case WM_KEYDOWN:</span><br><span class="line">            DebugLogA(&quot;按下了键盘，wParam：%#x，lParam：%#x\n&quot;, wParam, lParam);</span><br><span class="line">            return 0;</span><br><span class="line">        case WM_CLOSE:</span><br><span class="line">            DebugLogA(&quot;关闭窗口\n&quot;);</span><br><span class="line">            DestroyWindow(hWnd); // 销毁窗口</span><br><span class="line">            return 0;</span><br><span class="line">        case WM_DESTROY:</span><br><span class="line">            DebugLogA(&quot;销毁窗口\n&quot;);</span><br><span class="line">            PostQuitMessage(0);   // 关闭程序</span><br><span class="line">            return 0;</span><br><span class="line">        default:</span><br><span class="line">            return DefWindowProc(hWnd, message, wParam, lParam);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="消息类型："><a href="#消息类型：" class="headerlink" title="消息类型："></a>消息类型：</h2><h3 id="WM-CREATE-窗口创建通知"><a href="#WM-CREATE-窗口创建通知" class="headerlink" title="WM_CREATE - 窗口创建通知"></a><strong>WM_CREATE</strong> - 窗口创建通知</h3><p>代表窗口创建成功。</p>
+<ul>
+<li><p><em>wParam</em></p>
+<p>未使用此参数。</p>
+</li>
+<li><p><em>lParam</em></p>
+<p>指向CREATESTRUCTA 结构的指针，该结构包含有关所创建窗口的信息。</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagCREATESTRUCT &#123;</span><br><span class="line">  LPVOID    lpCreateParams;  // 创建时传递的额外参数</span><br><span class="line">  HINSTANCE hInstance;       // 程序实例句柄</span><br><span class="line">  HMENU     hMenu;           // 菜单句柄或控件ID</span><br><span class="line">  HWND      hwndParent;      // 父窗口句柄</span><br><span class="line">  int       cy;              // 初始高度</span><br><span class="line">  int       cx;              // 初始宽度</span><br><span class="line">  int       y;               // 初始Y位置</span><br><span class="line">  int       x;               // 初始X位置</span><br><span class="line">  LONG      style;           // 窗口样式</span><br><span class="line">  LPCSTR    lpszName;        // 窗口标题（名称）</span><br><span class="line">  LPCSTR    lpszClass;       // 窗口类名</span><br><span class="line">  DWORD     dwExStyle;       // 扩展样式</span><br><span class="line">&#125; CREATESTRUCT;</span><br></pre></td></tr></table></figure>
+
+<p>这个结构体信息与CreateWindow函数参数信息完全相同</p>
+<h3 id="WM-MOVE-窗口移动通知"><a href="#WM-MOVE-窗口移动通知" class="headerlink" title="WM_MOVE - 窗口移动通知"></a><strong>WM_MOVE</strong> - 窗口移动通知</h3><ul>
+<li><strong>wParam</strong>：未使用（值为0）</li>
+<li><strong>lParam</strong>：包含新窗口位置的 坐标信息<ul>
+<li>**LOWORD(lParam)**：屏幕坐标下的 X 位置</li>
+<li>**HIWORD(lParam)**：屏幕坐标下的 Y 位置</li>
+</ul>
+</li>
+</ul>
+<p>可使用POINTS point &#x3D; MAKEPOINTS(lParam)来获取坐标</p>
+<h3 id="WM-LBUTTONDOWN-鼠标左键按下"><a href="#WM-LBUTTONDOWN-鼠标左键按下" class="headerlink" title="WM_LBUTTONDOWN - 鼠标左键按下"></a>WM_LBUTTONDOWN - 鼠标左键按下</h3><ul>
+<li><p><strong>wParam</strong>：<strong>修饰键状态标志</strong>（按位组合）</p>
+<table>
+<thead>
+<tr>
+<th align="center">标志</th>
+<th align="center">值</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>MK_LBUTTON</code></td>
+<td align="center">0x0001</td>
+<td align="center">鼠标左键按下状态</td>
+</tr>
+<tr>
+<td align="center"><code>MK_RBUTTON</code></td>
+<td align="center">0x0002</td>
+<td align="center">鼠标右键按下状态</td>
+</tr>
+<tr>
+<td align="center"><code>MK_SHIFT</code></td>
+<td align="center">0x0004</td>
+<td align="center">Shift键按下</td>
+</tr>
+<tr>
+<td align="center"><code>MK_CONTROL</code></td>
+<td align="center">0x0008</td>
+<td align="center">Ctrl键按下</td>
+</tr>
+<tr>
+<td align="center"><code>MK_MBUTTON</code></td>
+<td align="center">0x0010</td>
+<td align="center">鼠标中键按下</td>
+</tr>
+<tr>
+<td align="center"><code>MK_XBUTTON1</code></td>
+<td align="center">0x0020</td>
+<td align="center">鼠标侧键1按下</td>
+</tr>
+<tr>
+<td align="center"><code>MK_XBUTTON2</code></td>
+<td align="center">0x0040</td>
+<td align="center">鼠标侧键2按下</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>lParam</strong>：<strong>鼠标位置坐标</strong></p>
+<ul>
+<li>**LOWORD(lParam)**：X 坐标（相对于窗口客户区左上角）</li>
+<li>**HIWORD(lParam)**：Y 坐标（相对于窗口客户区左上角）</li>
+</ul>
+</li>
+</ul>
+<h3 id="WM-KEYDOWN-键盘按键按下"><a href="#WM-KEYDOWN-键盘按键按下" class="headerlink" title="WM_KEYDOWN - 键盘按键按下"></a><strong>WM_KEYDOWN</strong> - 键盘按键按下</h3><ul>
+<li><p><strong>wParam</strong>：<strong>虚拟键码</strong> (Virtual-Key Code) - 标识按下的物理键<br>常用虚拟键码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">VK_SPACE  (32)    // 空格键</span><br><span class="line">VK_ESCAPE (27)    // Esc键</span><br><span class="line">VK_RETURN (13)    // Enter回车键</span><br><span class="line">VK_TAB    (9)     // Tab键</span><br><span class="line">VK_LEFT   (37)    // 左方向键</span><br><span class="line">VK_RIGHT  (39)    // 右方向键</span><br><span class="line">VK_UP     (38)    // 上方向键</span><br><span class="line">VK_DOWN   (40)    // 下方向键</span><br><span class="line">&#x27;A&#x27;-&#x27;Z&#x27;   (65-90) // 字母键</span><br><span class="line">&#x27;0&#x27;-&#x27;9&#x27;   (48-57) // 数字键</span><br><span class="line">F1-F24    (112-135) // 功能键</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>lParam</strong>：<strong>按键状态和重复信息</strong>（32位，按位解析）：</p>
+<table>
+<thead>
+<tr>
+<th align="center">位</th>
+<th align="center">说明</th>
+<th align="center">获取方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0-15</td>
+<td align="center">重复计数（连续按下的次数）</td>
+<td align="center"><code>LOBYTE(LOWORD(lParam))</code></td>
+</tr>
+<tr>
+<td align="center">16-23</td>
+<td align="center">扫描码（硬件相关）</td>
+<td align="center"><code>HIWORD(lParam) &amp; 0xFF</code></td>
+</tr>
+<tr>
+<td align="center">24</td>
+<td align="center">扩展键标志（1&#x3D;小键盘&#x2F;扩展键）</td>
+<td align="center"><code>(lParam &amp; 0x01000000) ? true : false</code></td>
+</tr>
+<tr>
+<td align="center">25-28</td>
+<td align="center">保留</td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">29</td>
+<td align="center">上下文键状态（1&#x3D;Alt键按下）</td>
+<td align="center"><code>(lParam &amp; 0x20000000) ? true : false</code></td>
+</tr>
+<tr>
+<td align="center">30</td>
+<td align="center">前一个键状态（1&#x3D;之前已按下）</td>
+<td align="center"><code>(lParam &amp; 0x40000000) ? true : false</code></td>
+</tr>
+<tr>
+<td align="center">31</td>
+<td align="center">转换状态（0&#x3D;按下，1&#x3D;释放）</td>
+<td align="center"><code>(lParam &amp; 0x80000000) ? false : true</code></td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h3 id="WM-CLOSE-窗口关闭请求"><a href="#WM-CLOSE-窗口关闭请求" class="headerlink" title="WM_CLOSE - 窗口关闭请求"></a><strong>WM_CLOSE</strong> - 窗口关闭请求</h3><ul>
+<li><strong>wParam</strong>：未使用（值为0）</li>
+<li><strong>lParam</strong>：未使用（值为0）</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Win32/" rel="tag"><i class="fa fa-tag"></i> Win32</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/27450/" rel="prev" title="字符集与编码">
+      <i class="fa fa-chevron-left"></i> 字符集与编码
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">基本概念：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">事件：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">消息：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MSG%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">MSG结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="nav-number">1.3.</span> <span class="nav-text">消息流程：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E7%A8%8B%E5%BA%8F%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">第一个图形界面程序：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-number">2.1.</span> <span class="nav-text">关键函数和结构体</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WNDCLASS"><span class="nav-number">2.1.1.</span> <span class="nav-text">WNDCLASS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CreateWindow"><span class="nav-number">2.1.2.</span> <span class="nav-text">CreateWindow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ShowWindow"><span class="nav-number">2.1.3.</span> <span class="nav-text">ShowWindow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GetMessage"><span class="nav-number">2.1.4.</span> <span class="nav-text">GetMessage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TranslateMessage"><span class="nav-number">2.1.5.</span> <span class="nav-text">TranslateMessage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DispatchMessage"><span class="nav-number">2.1.6.</span> <span class="nav-text">DispatchMessage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WndProc"><span class="nav-number">2.1.7.</span> <span class="nav-text">WndProc</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E8%AF%95%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">调试：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="nav-number">2.3.</span> <span class="nav-text">主要流程：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%EF%BC%9A"><span class="nav-number">2.4.</span> <span class="nav-text">代码实现：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E7%B1%BB%E5%9E%8B%EF%BC%9A"><span class="nav-number">2.5.</span> <span class="nav-text">消息类型：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WM-CREATE-%E7%AA%97%E5%8F%A3%E5%88%9B%E5%BB%BA%E9%80%9A%E7%9F%A5"><span class="nav-number">2.5.1.</span> <span class="nav-text">WM_CREATE - 窗口创建通知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WM-MOVE-%E7%AA%97%E5%8F%A3%E7%A7%BB%E5%8A%A8%E9%80%9A%E7%9F%A5"><span class="nav-number">2.5.2.</span> <span class="nav-text">WM_MOVE - 窗口移动通知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WM-LBUTTONDOWN-%E9%BC%A0%E6%A0%87%E5%B7%A6%E9%94%AE%E6%8C%89%E4%B8%8B"><span class="nav-number">2.5.3.</span> <span class="nav-text">WM_LBUTTONDOWN - 鼠标左键按下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WM-KEYDOWN-%E9%94%AE%E7%9B%98%E6%8C%89%E9%94%AE%E6%8C%89%E4%B8%8B"><span class="nav-number">2.5.4.</span> <span class="nav-text">WM_KEYDOWN - 键盘按键按下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WM-CLOSE-%E7%AA%97%E5%8F%A3%E5%85%B3%E9%97%AD%E8%AF%B7%E6%B1%82"><span class="nav-number">2.5.5.</span> <span class="nav-text">WM_CLOSE - 窗口关闭请求</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

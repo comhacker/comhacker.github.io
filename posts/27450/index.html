@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="字符集字符集是一个预定义的字符集合，每个字符被分配一个唯一的编号，称为码点。字符集类似于一个字典，将字符资源进行编号。 ASCIIASCII（美国信息交换标准码）是最早出现的字符集，包含 128 个字符（0-127），包括英文大小写字母、数字、标点及控制字符（如换行符）。它将给这些字符分配码点，例如A的码点是 65。 ASCII字符集设计初衷只是为了美国使用，仅支持英文、数字及基本符号，世界上">
+<meta property="og:type" content="article">
+<meta property="og:title" content="字符集与编码">
+<meta property="og:url" content="http://example.com/posts/27450/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="字符集字符集是一个预定义的字符集合，每个字符被分配一个唯一的编号，称为码点。字符集类似于一个字典，将字符资源进行编号。 ASCIIASCII（美国信息交换标准码）是最早出现的字符集，包含 128 个字符（0-127），包括英文大小写字母、数字、标点及控制字符（如换行符）。它将给这些字符分配码点，例如A的码点是 65。 ASCII字符集设计初衷只是为了美国使用，仅支持英文、数字及基本符号，世界上">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-19T12:47:18.000Z">
+<meta property="article:modified_time" content="2025-07-20T07:56:49.490Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="Win32">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/posts/27450/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>字符集与编码 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/27450/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          字符集与编码
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-19 20:47:18" itemprop="dateCreated datePublished" datetime="2025-07-19T20:47:18+08:00">2025-07-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-20 15:56:49" itemprop="dateModified" datetime="2025-07-20T15:56:49+08:00">2025-07-20</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="字符集"><a href="#字符集" class="headerlink" title="字符集"></a>字符集</h1><p>字符集是一个预定义的字符集合，每个字符被分配一个唯一的编号，称为码点。字符集类似于一个字典，将字符资源进行编号。</p>
+<h2 id="ASCII"><a href="#ASCII" class="headerlink" title="ASCII"></a>ASCII</h2><p>ASCII（美国信息交换标准码）是最早出现的字符集，包含 128 个字符（0-127），包括英文大小写字母、数字、标点及控制字符（如换行符）。它将给这些字符分配码点，例如A的码点是 65。</p>
+<p>ASCII字符集设计初衷只是为了美国使用，仅支持英文、数字及基本符号，世界上其他语言或表情符号无法用ASCII字符集来表示，于是后续出现了许多扩展字符集。</p>
+<h2 id="本地化字符集："><a href="#本地化字符集：" class="headerlink" title="本地化字符集："></a>本地化字符集：</h2><p>为了解决ASCII字符集的局限性，各国开发了扩展字符集，以支持他们的语言和地区需求：</p>
+<h3 id="GB2312-GBK："><a href="#GB2312-GBK：" class="headerlink" title="GB2312&#x2F;GBK："></a>GB2312&#x2F;GBK：</h3><p>GB2312是中国在1981年发布的国家标准，旨在收录大部分常用的中文字符。GBK是中国于1995年发布的字符集，兼容前面的GB2312，是对GB2312的扩充。</p>
+<p>GBK作为ASCII的扩展字符集，完全兼容于ASCII。</p>
+<h2 id="Unicode："><a href="#Unicode：" class="headerlink" title="Unicode："></a>Unicode：</h2><p>由于各国都使用了各自的本地化字符集，这些字符集各有冲突，互不兼容，可能一个码点在不同地区表示不同的字符，于是同一文件在不同地区打开可能出现乱码，单一编码也无法同时支持多语言（如中文 + 阿拉伯文 + 表情符号）。</p>
+<p>在1991年，国际组织尝试将世界上所有语言符号（如汉字和表情）编在同一个字符集中，每一个字符分配全球唯一的一个码点，以解决互不兼容的问题。例如汉字“你”的码点是U+4F60。</p>
+<p>Unicode目前一共U+0000~U+10FFFF的码位区（其中有一部分作为保留区，不分配给字符）。其中U+0000<code>~</code>U+FFFF包含绝大多数常用字符（拉丁字母、汉字、日韩文、标点等）；U+10000<code>~</code>U+10FFFF包含生僻汉字、历史文字、表情符号、专业符号等。</p>
+<h1 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h1><p>编码是将字符的码点转换为二进制数据（字节序列）的规则，是上述字符集在计算中存储和传输的方式。</p>
+<h2 id="ASCII编码"><a href="#ASCII编码" class="headerlink" title="ASCII编码"></a>ASCII编码</h2><p>使用1字节定长二进制数来表示ASCII字符集里面的字符。8比特中第一个比特置为0，后7个比特使用字符的码点。</p>
+<h2 id="ANSI编码："><a href="#ANSI编码：" class="headerlink" title="ANSI编码："></a>ANSI编码：</h2><p>ANSI编码是指本地化的扩展ASCII编码，在Win32编程中，窄字符（char）就使用这种编码方式。</p>
+<p>常用的ANSI编码有GBK编码，这是对GBK字符集的具体实现，此编码方式完全兼容于ASCII编码，属于变长编码方式。</p>
+<ul>
+<li>0~127个字符与ASCII完全相同，使用一个字节表示</li>
+<li>绝大多数的汉字等扩展字符使用2字节来表示， 首字节在 <code>0x81</code> 到 <code>0xFE</code> (十进制 129 到 254) 之间，第二字节在 <code>0x40</code> 到 <code>0xFE</code> (十进制 64 到 254) 之间。</li>
+</ul>
+<p>Windows在不同的地区采用了不同的本地化字符，例如在中国大陆，使用GBK。GBK的优点是在中文环境下编码效率相对较高，仅需两个字节即可表示一个中文字符。但是不同地区的字符集和编码方式不同，并且Linux等其他系统使用的是utf-8，所以在跨地区或跨系统时，GBK不兼容。</p>
+<h2 id="Unicode-编码："><a href="#Unicode-编码：" class="headerlink" title="Unicode 编码："></a>Unicode 编码：</h2><p>此类编码是对Unicode 字符集的实现，包括utf-8、utf-16、utf-32，其中utf-8是里面编码效率最高的，也是目前国际实际的标准。</p>
+<h3 id="UTF-8"><a href="#UTF-8" class="headerlink" title="UTF-8"></a>UTF-8</h3><p>UTF-8是可变长编码，之所以要选择可变长，是为了增加编码效率，让常用的字符占尽量少的字节，同时又要实现Unicode的全包含 ，以达到全球兼容的目的。</p>
+<p>UTF-8采用了从1~4字节的不等编码，变长编码需要解决的主要问题是如何划定一个字符的结束位置，UTF-8给出的方案是将Unicode 字符集划分为4个范围：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">码点范围            | 字节布局</span><br><span class="line">U+0000 ~ U+007F    | 0xxxxxxx</span><br><span class="line">U+0080 ~ U+07FF    | 110xxxxx 10xxxxxx</span><br><span class="line">U+0800 ~ U+FFFF    | 1110xxxx 10xxxxxx 10xxxxxx</span><br><span class="line">U+10000 ~ U+10FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</span><br></pre></td></tr></table></figure>
+
+<p>其中码点在U+0000 ~ U+007F  的占一个字节，与ASCII完全兼容，所以以前使用ASCII的程序在UTF-8的环境下也能正常运行。每一个字符的第一个字节前面有几个比特连续的1，就代表这个字符由多少字节组成，首字节后的字节前两个比特都是“10”，是为了与ASCII字符区分出来。去掉首字符与后续字符的前缀，得到的比特位拼接在一起形成的二进制数在数值上等同于该字符Unicode 中的码点。</p>
+<p>假设已知一个字符，需要将其编码为UTF-8，正确流程是：</p>
+<ol>
+<li>获取字符在Unicode 中的码点</li>
+<li>判断该码点落在哪个范围内，以确定由几个字节组成及其字节前缀</li>
+<li>将码点转化为二进制数，从右往左填充除前缀外的位置（上面的”x”），得到的就是UTF-8编码</li>
+</ol>
+<p>而解码则是：</p>
+<ol>
+<li>读取首字节，判断前几个比特位为1，代表该字符由几个字节组成</li>
+<li>这几个字节的转化为二进制，前缀去掉，将剩余比特位拼接位二进制数，此即是其码点</li>
+</ol>
+<h3 id="UTF-16"><a href="#UTF-16" class="headerlink" title="UTF-16"></a>UTF-16</h3><p>UTF-16 是可变长编码，字符的编码方式根据码点的范围决定。常见字符使用 2 字节表示，而超出该范围的字符（如表情符号）需要使用 4 字节，通过代理对（surrogate pairs）来表示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">U+0000~U+FFFF： 直接存储 0000~FFFF</span><br><span class="line"></span><br><span class="line">U+10000~U+10FFFF：由高位代理（2字节，起标识作用）和低位代理（2字节）组成的4字节代理对表示</span><br><span class="line">高位代理范围：0xD800~0xDBFF</span><br><span class="line">低位代理范围：0xDC00~0xDFFF</span><br><span class="line">这两个代理区是Unicode为UTF-16专门预留的空间，不可用作任何字符的码点！！！</span><br><span class="line">编码过程（例如码点为U+10437）：</span><br><span class="line">0x10437 - 0x10000 = 0x437  ---------得到一个00000~FFFFF共20位的值</span><br><span class="line">0x437 &gt;&gt; 10 = 0x1          ---------前10比特作为高位代理的偏移</span><br><span class="line">0x437 &amp; 0x3FF = 0x37	   ---------后10比特作为低位代理的偏移</span><br><span class="line">最后组成的代理对为：0xD801-0XDC37</span><br></pre></td></tr></table></figure>
+
+<p>UTF-16是UTF-8和UTF-32的平衡与兼容，对于常用文字（包括中文），使用两字节来表示；对于不常用符号，使用4字节来表示。UTF-16较多的使用在Windows系统中</p>
+<h3 id="UTF-32"><a href="#UTF-32" class="headerlink" title="UTF-32"></a>UTF-32</h3><p>UTF-32是定长编码，规定使用4字节来表示Unicode 中的所有字符。由于Unicode的码点范围为U+0~U+10FFFF，故仅需要21位比特即可完全表示，4字节完全够用。所以UTF-32采用了直接映射的方式，即令UTF-32编码在数值上等同于字符的码点。Linux系统中一般使用UTF-32编码。</p>
+<h1 id="编译器与编码"><a href="#编译器与编码" class="headerlink" title="编译器与编码"></a>编译器与编码</h1><h2 id="“窄”与“宽”："><a href="#“窄”与“宽”：" class="headerlink" title="“窄”与“宽”："></a>“窄”与“宽”：</h2><p>窄字符编码是指<strong>使用单字节（<code>char</code>）存储文本的变长编码方案</strong>。包括UTF-8、GBK、ANSI、ASCII。窄字符编码并不是一个固定的编码方式，而是指一种字符表示方式，有如下特点：</p>
+<ul>
+<li>使用char类型存储字符</li>
+<li>通常是不定长编码</li>
+<li>是字节流编码，即基本单位是字节</li>
+</ul>
+<p>宽字符编码是指<strong>使用多字节(wchar_t)存储文本的定长编码方案。</strong>包括UTF-16，UTF-32。有如下特点：</p>
+<ul>
+<li>使用wchar_t类型存储字符</li>
+<li>通常是定长编码</li>
+<li>是字符流编码，即基本单位是字符（操作以字符为单位）</li>
+</ul>
+<h2 id="不同操作系统、编译器中窄字符与宽字符编码方式"><a href="#不同操作系统、编译器中窄字符与宽字符编码方式" class="headerlink" title="不同操作系统、编译器中窄字符与宽字符编码方式"></a>不同操作系统、编译器中窄字符与宽字符编码方式</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>MSVC</th>
+<th>GCC</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Windows(窄字符char)</td>
+<td>默认输出文件编码为本地编码(中国是GBK)</td>
+<td>默认输出文件编码为UTF-8</td>
+</tr>
+<tr>
+<td>Windows(宽字符wchar_t)</td>
+<td>固定输出文件编码为UTF-16</td>
+<td>固定输出文件编码为UTF-16</td>
+</tr>
+<tr>
+<td>Linux\macOS(窄字符char)</td>
+<td>不使用MSVC</td>
+<td>默认输出文件编码为UTF-8</td>
+</tr>
+<tr>
+<td>Linux\macOS(宽字符wchar_t)</td>
+<td>不使用MSVC</td>
+<td>默认输出文件编码为UTF-32</td>
+</tr>
+</tbody></table>
+<ol>
+<li>在Windows（中国区）中，默认终端是GBK，MSVC编译器源文件默认识别为GBK，GCC源文件默认识别为UTF-8；       					而Linux里，默认终端、GCC默认源文件都是UTF-8文件；</li>
+<li>GCC编译时若要指定源文件的编码为GBK，则需要使用“-finput-charset&#x3D;GBK”参数；若要指定输出文件中窄字符的编码为GBK，则需要使用“-fexec-charset&#x3D;GBK”参数。</li>
+<li>源文件使用的编码方式影响的是<strong>编译器如何解析字符串文本</strong>，但最终生成的 <code>.exe</code> 文件中字符串的编码方式由 <code>-fexec-charset</code> 或其他机制决定，两者并无必然一致关系。</li>
+<li>窄字符转化过程：假设的源文件为GBK，要输出的exe文件为utf-8，那么编译器会先将窄字符GBK解码为字符对应的Unicode码点，然后再将Unicode码点编码为utf-8，最后保存在exe文件中的是字符的utf-8编码形式。此时，若要在终端上打印，则终端会按默认编码（GBK）来解释窄字符，这样就会导致打印乱码。</li>
+<li>宽字符转化过程：假设源文件为 GBK 编码，编译器会先将源文件内容解码为 Unicode 字符码点。对于宽字符文本（如 <code>L&quot;你好&quot;</code>），会将这些字符编码为目标平台的宽字符格式（Windows 为 UTF-16，Linux 为 UTF-32），并将这些宽字符序列保存在 <code>.exe</code> 文件中。</li>
+<li>编译器在碰到无法正常识别的窄字符时，会直接将原字节照抄到exe文件中，不进行编码转换。因此如果源文件为gbk，但Gcc默认识别utf-8，则编译器识别错误，直接把窄字符在源文件中的字节复制到exe文件里面，由于终端是gbk，所以刚好能被终端识别，打印出正常的字符；</li>
+<li>编译器在碰到无法正常识别的宽字符时，会直接编译失败。</li>
+<li>终端本质上是按字节流工作的设备，因此在使用 <code>wprintf</code> 输出宽字符时，底层需要将宽字符编码为终端所支持的窄字符流。若当前进程没有设置正确的 <code>locale</code>（如默认是 <code>&quot;C&quot;</code>），那么字符转换会失败或退化为 ASCII，从而导致中文等字符无法正确打印。因此，在使用宽字符时，务必调用 <code>setlocale(LC_CTYPE, &quot;&quot;)</code> 来启用当前系统的本地编码设置。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Win32/" rel="tag"><i class="fa fa-tag"></i> Win32</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/522/" rel="prev" title="DLL注入">
+      <i class="fa fa-chevron-left"></i> DLL注入
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/21586/" rel="next" title="图形化界面">
+      图形化界面 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="nav-number">1.</span> <span class="nav-text">字符集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ASCII"><span class="nav-number">1.1.</span> <span class="nav-text">ASCII</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%8C%96%E5%AD%97%E7%AC%A6%E9%9B%86%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">本地化字符集：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GB2312-GBK%EF%BC%9A"><span class="nav-number">1.2.1.</span> <span class="nav-text">GB2312&#x2F;GBK：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unicode%EF%BC%9A"><span class="nav-number">1.3.</span> <span class="nav-text">Unicode：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">编码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ASCII%E7%BC%96%E7%A0%81"><span class="nav-number">2.1.</span> <span class="nav-text">ASCII编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ANSI%E7%BC%96%E7%A0%81%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">ANSI编码：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unicode-%E7%BC%96%E7%A0%81%EF%BC%9A"><span class="nav-number">2.3.</span> <span class="nav-text">Unicode 编码：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UTF-8"><span class="nav-number">2.3.1.</span> <span class="nav-text">UTF-8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UTF-16"><span class="nav-number">2.3.2.</span> <span class="nav-text">UTF-16</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UTF-32"><span class="nav-number">2.3.3.</span> <span class="nav-text">UTF-32</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%8E%E7%BC%96%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">编译器与编码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%80%9C%E7%AA%84%E2%80%9D%E4%B8%8E%E2%80%9C%E5%AE%BD%E2%80%9D%EF%BC%9A"><span class="nav-number">3.1.</span> <span class="nav-text">“窄”与“宽”：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E3%80%81%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%AD%E7%AA%84%E5%AD%97%E7%AC%A6%E4%B8%8E%E5%AE%BD%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F"><span class="nav-number">3.2.</span> <span class="nav-text">不同操作系统、编译器中窄字符与宽字符编码方式</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

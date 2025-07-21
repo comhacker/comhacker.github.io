@@ -186,7 +186,7 @@
 
 	<div class="tag-cloud">
 	  <div class="tag-cloud-tags" id="tags">
-		<a href="/tags/PE/" style="font-size: 16px; color: #fff">PE</a> <a href="/tags/Reverse/" style="font-size: 16px; color: #fff">Reverse</a> <a href="/tags/wp/" style="font-size: 16px; color: #fff">wp</a> <a href="/tags/%E4%BD%9C%E4%B8%9A/" style="font-size: 16px; color: #fff">作业</a> <a href="/tags/%E5%85%B6%E4%BB%96/" style="font-size: 16px; color: #fff">其他</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 16px; color: #fff">操作系统</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 16px; color: #fff">数据结构</a> <a href="/tags/%E6%9D%82%E8%AE%B0/" style="font-size: 16px; color: #fff">杂记</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 16px; color: #fff">汇编</a>
+		<a href="/tags/PE/" style="font-size: 16px; color: #fff">PE</a> <a href="/tags/Reverse/" style="font-size: 16px; color: #fff">Reverse</a> <a href="/tags/Win32/" style="font-size: 16px; color: #fff">Win32</a> <a href="/tags/wp/" style="font-size: 16px; color: #fff">wp</a> <a href="/tags/%E4%BD%9C%E4%B8%9A/" style="font-size: 16px; color: #fff">作业</a> <a href="/tags/%E5%85%B6%E4%BB%96/" style="font-size: 16px; color: #fff">其他</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 16px; color: #fff">操作系统</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 16px; color: #fff">数据结构</a> <a href="/tags/%E6%9D%82%E8%AE%B0/" style="font-size: 16px; color: #fff">杂记</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 16px; color: #fff">汇编</a>
 	  </div>
 	</div>
 	<br>
@@ -226,6 +226,314 @@
      transition-duration: 0.15s;
   }
 </style>
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/61633/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/61633/" class="post-title-link" itemprop="url">库文件的编写</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-04 21:58:57" itemprop="dateCreated datePublished" datetime="2025-07-04T21:58:57+08:00">2025-07-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-10 22:02:28" itemprop="dateModified" datetime="2025-07-10T22:02:28+08:00">2025-07-10</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <span id="more"></span>
+
+<h1 id="静态链接库"><a href="#静态链接库" class="headerlink" title="静态链接库"></a>静态链接库</h1><h2 id="生成方法："><a href="#生成方法：" class="headerlink" title="生成方法："></a>生成方法：</h2><p>在VS2022里面创建项目，选择生成静态库，此时程序会自动生成4个文件，分别是framework.h、pch.h、pch.cpp和一个项目名的cpp文件，前三个都是用来提高编译效率的，不用管。自己创建一个.h文件。</p>
+<p>需要编辑两个文件，一个是头文件(h)，一个是源代码文件（c或cpp）。</p>
+<ul>
+<li>h文件里面存放导出函数的声明</li>
+<li>c文件里面存放导出函数的具体实现</li>
+</ul>
+<p>如：</p>
+<p>h文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#pragma once  //注：这个是为了防止头文件被多次包含而重复定义</span><br><span class="line"></span><br><span class="line">#ifdef __cplusplus   //这里是为了防止C++名称修饰（如果检测到是C++，则声明用C的方法包装）（一定要有，否则函数名称会改变）</span><br><span class="line">extern &quot;C&quot; &#123;</span><br><span class="line">#endif</span><br><span class="line">	int add(int a, int b);</span><br><span class="line">	int sub(int a, int b);</span><br><span class="line">#ifdef __cplusplus</span><br><span class="line">&#125;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+
+<p>c文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;pch.h&quot;</span><br><span class="line">#include &quot;framework.h&quot;</span><br><span class="line">#include &quot;libtest.h&quot;</span><br><span class="line">int add(int a, int b)</span><br><span class="line">&#123;</span><br><span class="line">	return a+b;</span><br><span class="line">&#125;</span><br><span class="line">int sub(int a, int b)</span><br><span class="line">&#123;</span><br><span class="line">	return a-b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行会生成一个.lib文件（实现），而之前创建的.h文件（声明）也需要用到</p>
+<h2 id="使用方法："><a href="#使用方法：" class="headerlink" title="使用方法："></a>使用方法：</h2><ol>
+<li>需要包含头文件（让编译器知道函数的声明在哪）</li>
+<li>显式指定库文件（让编译器知道函数的实现在哪）</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&quot;libtest.h&quot;</span><br><span class="line"></span><br><span class="line">#pragma comment(lib,&quot;libtest.lib&quot;)</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	int a = 1, b = 3;</span><br><span class="line">	printf(&quot;%d&quot;, add(a, b));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>静态链接库的特点是会在编译阶段直接将导出函数代码镶嵌进入目标程序中，因此一旦编译完成，目标程序不再需要该库文件，而且一旦修改了静态链接库，就需要重新编译目标程序，这与动态链接库不同。</p>
+<p>同时，由于是将代码镶嵌入目标程序，因此无法通过反汇编分辨函数是从静态库导入的函数还是自己编写的。</p>
+<p>如果多个程序都使用了同一个静态链接库里的函数，那么这些程序之间就会有很多重复的代码，十分浪费磁盘空间。</p>
+<p>我们平常使用的包括printf、strcmp等函数都使用了静态链接库，不需要显示指定库文件是因为编程软件帮我们做了这些事。</p>
+<h2 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h2><p>1、MSVC编译器的静态库文件是lib，但是GCC的静态库文件是.a文件！！！因此：</p>
+<ul>
+<li>在VS2022生成的lib文件在GCC编译器下不兼容，如果使用gcc链接lib文件，会出现“无法解析的外部符号”这样的错误。</li>
+<li>64位的lib文件也与32位编译器不兼容（VS里面x64生成64位程序，x86生成32位程序）</li>
+</ul>
+<p>2、由于C++支持函数重载（支持同名函数不同参数），故其启用了名称修饰（即对函数名进行修饰），可通过工具-&gt;命令行-&gt;开发者命令提示，然后输入</p>
+<p><code>dumpbin /SYMBOLS 库名字.lib</code>查看函数名称。</p>
+<img src="/posts/61633/image-20250705170230840.png" class="" title="image-20250705170230840">
+
+<p>可以看到启用了名称修饰后函数名称变化了。而C不支持函数重载，故C编译器链接此库时会出现“无法解析的外部符号add”这样的错误，c++编译器能正常链接。</p>
+<p>为了兼容C，我们在头文件需要加上一个声明，即extern “C”，这代表我需要使用C的方法来编译，这样生成的库文件就未启用名称修饰。此时函数名称：</p>
+<img src="/posts/61633/image-20250705171041271.png" class="" title="image-20250705171041271">
+
+<p>这个库可被C和C++使用（但是不支持函数重载）</p>
+<h1 id="动态链接库"><a href="#动态链接库" class="headerlink" title="动态链接库"></a>动态链接库</h1><h2 id="生成方法：-1"><a href="#生成方法：-1" class="headerlink" title="生成方法："></a>生成方法：</h2><h3 id="正常导出："><a href="#正常导出：" class="headerlink" title="正常导出："></a>正常导出：</h3><p>在VS2022里面创建动态链接库项目，程序一样会生成4个文件，与静态链接库不同的是头文件和源代码文件不同：</p>
+<p>dlltest.h：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#pragma once</span><br><span class="line"></span><br><span class="line">#ifdef __cplusplus</span><br><span class="line">extern &quot;C&quot; &#123;</span><br><span class="line">#endif</span><br><span class="line">	_declspec(dllexport) int __stdcall add(int a, int b);</span><br><span class="line">	_declspec(dllexport) int __stdcall sub(int a, int b);</span><br><span class="line">#ifdef __cplusplus</span><br><span class="line">&#125;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+
+<p>这里的extern “C”也是声明使用C语言的方式编译，防止C++名称修饰；而_declspec(dllexport)则是声明这个是导出函数，可以被其他程序调用；这个”stdcall”是调用约定，代表被调函数清理堆栈，可以不填（默认是cdecl，调用者清理堆栈）；</p>
+<p>dlltest.cpp:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;pch.h&quot;</span><br><span class="line">#include &quot;dlltest.h&quot;</span><br><span class="line"></span><br><span class="line">int __stdcall add(int a, int b)</span><br><span class="line">&#123;</span><br><span class="line">    return a+b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int __stdcall sub(int a, int b)</span><br><span class="line">&#123;</span><br><span class="line">    return a-b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>会生成一个dll和一个lib文件。</p>
+<ul>
+<li>dll文件：导出函数实际实现</li>
+<li>lib文件：这个不是前面的静态链接库文件，而是“导入库”文件。在编译链接时提供 DLL 中导出函数的符号信息和位置。仅用于隐式链接（简化调用方式），编译完成后不再需要。</li>
+</ul>
+<h3 id="隐藏函数名导出（序号导出）："><a href="#隐藏函数名导出（序号导出）：" class="headerlink" title="隐藏函数名导出（序号导出）："></a>隐藏函数名导出（序号导出）：</h3><p>先创建一个.def文件（可以通过改名创建），然后填入如下格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#pragma once</span><br><span class="line"></span><br><span class="line">EXPORTS			// 这一句一定要有</span><br><span class="line">add @1			// @1代表分配序号1给add</span><br><span class="line">sub @2 NONAME   // NONAME代表不暴露函数名字，如果使用了NONAME就必须指定序号，否则会报语法错误</span><br></pre></td></tr></table></figure>
+
+<p>然后右键项目名-&gt;项目属性 → 链接器 → 输入 → 模块定义文件，输入.def文件的名字。</p>
+<p>可以通过应用depends来查看dll信息：</p>
+<img src="/posts/61633/image-20250705221729314.png" class="" title="image-20250705221729314">
+
+<p>可以看到第二个函数名字被隐藏了。这种只有序号的函数要显示链接来使用。</p>
+<p><strong>序号分配问题：</strong></p>
+<p>经过我的测试发现，未使用def文件显示分配的函数，他们的序号是按函数名称英文字母顺序来指定的，与函数出现顺序无关，例如：</p>
+<img src="/posts/61633/image-20250706154504704.png" class="" title="image-20250706154504704">
+
+<p>再或者：</p>
+<img src="/posts/61633/image-20250706154647403.png" class="" title="image-20250706154647403">
+
+<p>def文件里面指定的序号优先级最高，而且编译器默认分配的序号从def显式指定序号的最小值开始指定。（例如我这里指定了sub是2，plus是4）</p>
+<img src="/posts/61633/image-20250706155621606.png" class="" title="image-20250706155621606">
+
+<h2 id="使用方法：-1"><a href="#使用方法：-1" class="headerlink" title="使用方法："></a>使用方法：</h2><h3 id="一、隐式链接："><a href="#一、隐式链接：" class="headerlink" title="一、隐式链接："></a>一、隐式链接：</h3><p>C语言用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">#pragma comment(lib,&quot;dlltest.lib&quot;)</span><br><span class="line"></span><br><span class="line">_declspec(dllimport) int _stdcall add(int a, int b);</span><br><span class="line">_declspec(dllimport) int _stdcall sub(int a, int b);</span><br><span class="line">int main() &#123;</span><br><span class="line">	int a = 1, b = 3;</span><br><span class="line">	printf(&quot;%d&quot;, add(a, b));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C++用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">#pragma comment(lib,&quot;dlltest.lib&quot;)</span><br><span class="line"></span><br><span class="line">extern &quot;C&quot; _declspec(dllimport) int _stdcall add(int a, int b);</span><br><span class="line">extern &quot;C&quot; _declspec(dllimport) int _stdcall sub(int a, int b);</span><br><span class="line">int main() &#123;</span><br><span class="line">	int a = 1, b = 3;</span><br><span class="line">	printf(&quot;%d&quot;, add(a, b));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：C语言不需要也不支持extern “C”关键字，因为它默认就不存在名称修饰</p>
+<p><strong>也可以创建一个头文件，将函数声明写进去，然后再包含这个头文件</strong></p>
+<h3 id="二、显式链接"><a href="#二、显式链接" class="headerlink" title="二、显式链接"></a>二、显式链接</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line"></span><br><span class="line">typedef int (*func)(int, int);  // 定义函数指针</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	func Plus;</span><br><span class="line">	HINSTANCE hModule = LoadLibrary(TEXT(&quot;dlltest.dll&quot;));  //载入dll，TEXT宏确保Unicode兼容性</span><br><span class="line">	Plus = (func)GetProcAddress(hModule, &quot;add&quot;);   // 获取函数地址（函数名导入）</span><br><span class="line">	// Plus = (func)GetProcAddress(hModule, MAKEINTRESOURCEA(1));  //通过序号导入</span><br><span class="line">	int a = 1, b = 3;</span><br><span class="line">	printf(&quot;%d&quot;, Plus(a, b));</span><br><span class="line">	FreeLibrary(hModule);  // 卸载dll</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>MAKEINTRESOURCEA(1)，这个宏将整数转换为一个字符串指针，但该指针并不指向真正的字符串，而是将序号值直接放在指针值中。由于Windows系统在解析时会检查指针的高位是否为0（即指针值在0~65535之间），如果是，就认为是资源标识符（序号），否则就是字符串指针。</p>
+<h3 id="两种方法的区别："><a href="#两种方法的区别：" class="headerlink" title="两种方法的区别："></a>两种方法的区别：</h3><ol>
+<li>隐式链接启动时载入所有dll，显式链接在程序执行阶段，按程序需要载入dll</li>
+<li>显式链接灵活，可在使用完后卸载dll释放空间，且无需导入库</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/38541/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/38541/" class="post-title-link" itemprop="url">PE解析器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-04 15:56:28" itemprop="dateCreated datePublished" datetime="2025-07-04T15:56:28+08:00">2025-07-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-12 16:10:40" itemprop="dateModified" datetime="2025-07-12T16:10:40+08:00">2025-07-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <span id="more"></span>
+
+<h1 id="PE解析器"><a href="#PE解析器" class="headerlink" title="PE解析器"></a>PE解析器</h1><p>主要功能：</p>
+<ol>
+<li>打印PE头</li>
+<li>打印节表</li>
+<li>打印数据目录表</li>
+</ol>
+<p>在终端中将PE文件路径传入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include &lt;windows.h&gt;</span><br><span class="line">IMAGE_DOS_HEADER* dos;</span><br><span class="line">IMAGE_FILE_HEADER* fheader;</span><br><span class="line">IMAGE_OPTIONAL_HEADER32* oheader;</span><br><span class="line">IMAGE_SECTION_HEADER* sheader;</span><br><span class="line">void DOS_head(unsigned char *pfile)&#123;</span><br><span class="line">    dos=(IMAGE_DOS_HEADER*)pfile;</span><br><span class="line">    printf(&quot;DOS头:\n&quot;);</span><br><span class="line">    printf(&quot;e_magic:%#06x\te_lfanew:%#010x\n\n&quot;,dos-&gt;e_magic,dos-&gt;e_lfanew);</span><br><span class="line">&#125;</span><br><span class="line">void file_header(unsigned char *pfile)&#123;</span><br><span class="line">    fheader=(IMAGE_FILE_HEADER*)pfile;</span><br><span class="line">    printf(&quot;FILE头:\n&quot;);</span><br><span class="line">    printf(&quot;Machine: %#06x\n&quot;, fheader-&gt;Machine);</span><br><span class="line">    printf(&quot;NumberOfSections: %#06x\n&quot;, fheader-&gt;NumberOfSections);</span><br><span class="line">    printf(&quot;TimeDateStamp: %#010x\n&quot;, fheader-&gt;TimeDateStamp);</span><br><span class="line">    printf(&quot;PointerToSymbolTable: %#010x\n&quot;, fheader-&gt;PointerToSymbolTable);</span><br><span class="line">    printf(&quot;NumberOfSymbols: %#010x\n&quot;, fheader-&gt;NumberOfSymbols);</span><br><span class="line">    printf(&quot;SizeOfOptionalHeader: %#06x\n&quot;, fheader-&gt;SizeOfOptionalHeader);</span><br><span class="line">    printf(&quot;Characteristics: %#06x\n\n\n&quot;, fheader-&gt;Characteristics);</span><br><span class="line">&#125;</span><br><span class="line">void optional_header(unsigned char* pfile)&#123;</span><br><span class="line">    oheader = (IMAGE_OPTIONAL_HEADER32*)pfile;</span><br><span class="line">    printf(&quot;optional头:\n&quot;);</span><br><span class="line">    printf(&quot;SizeOfCode:%#010x\n&quot;,oheader-&gt;SizeOfCode);</span><br><span class="line">    printf(&quot;SizeOfInitializedData:%#010x\n&quot;,oheader-&gt;SizeOfInitializedData);</span><br><span class="line">    printf(&quot;SizeOfUninitializedData:%#010x\n&quot;,oheader-&gt;SizeOfUninitializedData);</span><br><span class="line">    printf(&quot;AddressOfEntryPoint:%#010x\n&quot;,oheader-&gt;AddressOfEntryPoint);</span><br><span class="line">    printf(&quot;BaseOfCode:%#010x\n&quot;,oheader-&gt;BaseOfCode);</span><br><span class="line">    printf(&quot;BaseOfData:%#010x\n&quot;,oheader-&gt;BaseOfData);</span><br><span class="line">    printf(&quot;ImageBase:%#010x\n&quot;,oheader-&gt;ImageBase);</span><br><span class="line">    printf(&quot;SectionAlignment:%#010x\n&quot;,oheader-&gt;SectionAlignment);</span><br><span class="line">    printf(&quot;FileAlignment:%#010x\n&quot;,oheader-&gt;FileAlignment);</span><br><span class="line">    printf(&quot;SizeOfImage:%#010x\n&quot;,oheader-&gt;SizeOfImage);</span><br><span class="line">    printf(&quot;SizeOfHeaders:%#010x\n\n\n&quot;,oheader-&gt;SizeOfHeaders);</span><br><span class="line">&#125;</span><br><span class="line">void directory_print()&#123;</span><br><span class="line">    printf(&quot;Directory:\n&quot;);</span><br><span class="line">    printf(&quot;Name                           RVA              size\n&quot;);</span><br><span class="line">    printf(&quot;Export Directory               %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[0].VirtualAddress,oheader-&gt;DataDirectory[0].Size);</span><br><span class="line">    printf(&quot;Import Directory               %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[1].VirtualAddress,oheader-&gt;DataDirectory[1].Size);</span><br><span class="line">    printf(&quot;Resource Directory             %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[2].VirtualAddress,oheader-&gt;DataDirectory[2].Size);</span><br><span class="line">    printf(&quot;Exception Directory            %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[3].VirtualAddress,oheader-&gt;DataDirectory[3].Size);</span><br><span class="line">    printf(&quot;Security Directory             %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[4].VirtualAddress,oheader-&gt;DataDirectory[4].Size);</span><br><span class="line">    printf(&quot;Base Relocation Table          %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[5].VirtualAddress,oheader-&gt;DataDirectory[5].Size);</span><br><span class="line">    printf(&quot;Debug Directory                %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[6].VirtualAddress,oheader-&gt;DataDirectory[6].Size);</span><br><span class="line">    printf(&quot;Architecture Specific Data     %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[7].VirtualAddress,oheader-&gt;DataDirectory[7].Size);</span><br><span class="line">    printf(&quot;RVA of GP                      %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[8].VirtualAddress,oheader-&gt;DataDirectory[8].Size);</span><br><span class="line">    printf(&quot;TLS Directory                  %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[9].VirtualAddress,oheader-&gt;DataDirectory[9].Size);</span><br><span class="line">    printf(&quot;Load Config Directory          %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[10].VirtualAddress,oheader-&gt;DataDirectory[10].Size);</span><br><span class="line">    printf(&quot;Bound Import Directory         %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[11].VirtualAddress,oheader-&gt;DataDirectory[11].Size);</span><br><span class="line">    printf(&quot;Import Address Table           %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[12].VirtualAddress,oheader-&gt;DataDirectory[12].Size);</span><br><span class="line">    printf(&quot;Delay Import Descriptors       %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[13].VirtualAddress,oheader-&gt;DataDirectory[13].Size);</span><br><span class="line">    printf(&quot;COM Runtime descriptor         %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[14].VirtualAddress,oheader-&gt;DataDirectory[14].Size);</span><br><span class="line">    printf(&quot;Reserved                       %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[15].VirtualAddress,oheader-&gt;DataDirectory[15].Size);</span><br><span class="line">&#125;</span><br><span class="line">void section_header(unsigned char *pfile)&#123;</span><br><span class="line">    int num = fheader-&gt;NumberOfSections;</span><br><span class="line">    sheader = (IMAGE_SECTION_HEADER*)pfile;</span><br><span class="line">    int i=0;</span><br><span class="line">    IMAGE_SECTION_HEADER* p=NULL;</span><br><span class="line">    printf(&quot;节表:\n&quot;);</span><br><span class="line">    for(i=0;i&lt;num;i++)&#123;</span><br><span class="line">        p = &amp;sheader[i];</span><br><span class="line">        printf(&quot;name:%s\n&quot;,p-&gt;Name);</span><br><span class="line">        printf(&quot;VirtualSize:%#010x\n&quot;,p-&gt;Misc);</span><br><span class="line">        printf(&quot;VirtualAddress:%#010x\n&quot;,p-&gt;VirtualAddress);</span><br><span class="line">        printf(&quot;SizeOfRawData:%#010x\n&quot;,p-&gt;SizeOfRawData);</span><br><span class="line">        printf(&quot;PointerToRawData:%#010x\n&quot;,p-&gt;PointerToRawData);</span><br><span class="line">        printf(&quot;Characteristics:%#010x\n\n&quot;,p-&gt;Characteristics);</span><br><span class="line">    &#125;</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">int main(int argc, char* argv[])&#123;</span><br><span class="line">    if(argc != 2) &#123;</span><br><span class="line">        printf(&quot;用法: %s &lt;PE文件路径&gt;\n&quot;, argv[0]);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    const char* pe_path = argv[1];</span><br><span class="line">    FILE* pf=fopen(pe_path,&quot;rb&quot;);</span><br><span class="line">    if(!pf) &#123;printf(&quot;打开文件失败！！\n&quot;);return 0;&#125;</span><br><span class="line">    fseek(pf, 0, SEEK_END);</span><br><span class="line">    int psize=ftell(pf);</span><br><span class="line">    fseek(pf, 0, SEEK_SET); </span><br><span class="line">    unsigned char* file_buf=(unsigned char *)malloc(psize);</span><br><span class="line">    fread(file_buf,1,psize,pf);</span><br><span class="line">    fclose(pf);</span><br><span class="line">    DOS_head(file_buf);</span><br><span class="line">    unsigned char* offset = file_buf + dos-&gt;e_lfanew;</span><br><span class="line">    if (memcmp(offset, &quot;PE\0\0&quot;, 4) != 0) &#123;</span><br><span class="line">        printf(&quot;不是有效的PE文件\n&quot;);</span><br><span class="line">        free(file_buf);</span><br><span class="line">        free(dos);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    offset += 4; // 定位到file头</span><br><span class="line">    file_header(offset);</span><br><span class="line">    offset += sizeof(IMAGE_FILE_HEADER); // 定位到可选头</span><br><span class="line">    optional_header(offset);</span><br><span class="line">    offset += sizeof(IMAGE_OPTIONAL_HEADER32);  // 定位到节表</span><br><span class="line">    section_header(offset);</span><br><span class="line">    directory_print();</span><br><span class="line">    free(file_buf);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="RVA与FOA转化器"><a href="#RVA与FOA转化器" class="headerlink" title="RVA与FOA转化器"></a>RVA与FOA转化器</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;windows.h&gt;</span><br><span class="line">IMAGE_DOS_HEADER* dos;</span><br><span class="line">IMAGE_FILE_HEADER* fheader;</span><br><span class="line">IMAGE_OPTIONAL_HEADER32* oheader;</span><br><span class="line">IMAGE_SECTION_HEADER* sheader;</span><br><span class="line">DWORD FOA_to_RVA(DWORD foa)&#123;</span><br><span class="line">    DWORD rva=0;</span><br><span class="line">    if(foa&lt;oheader-&gt;SizeOfHeaders) &#123;</span><br><span class="line">        rva = foa;</span><br><span class="line">        return rva;</span><br><span class="line">    &#125;</span><br><span class="line">    int i=0;</span><br><span class="line">    for(i=0;i&lt;fheader-&gt;NumberOfSections;i++)&#123;</span><br><span class="line">        if(foa&gt;=sheader[i].PointerToRawData&amp;&amp;foa&lt;(sheader[i].PointerToRawData+sheader[i].SizeOfRawData))</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">    int offset=foa-sheader[i].PointerToRawData;</span><br><span class="line">    rva = sheader[i].VirtualAddress + offset;</span><br><span class="line">    return rva;</span><br><span class="line">&#125;</span><br><span class="line">DWORD RVA_to_FOA(DWORD rva)&#123;</span><br><span class="line">    DWORD foa=0;</span><br><span class="line">    if(rva&lt;oheader-&gt;SizeOfHeaders) &#123;</span><br><span class="line">        foa = rva;</span><br><span class="line">        return foa;</span><br><span class="line">    &#125;</span><br><span class="line">    int i=0;</span><br><span class="line">    for(i=0;i&lt;fheader-&gt;NumberOfSections;i++)&#123;</span><br><span class="line">        if(rva&gt;=sheader[i].VirtualAddress&amp;&amp;rva&lt;(sheader[i].VirtualAddress+sheader[i].Misc.VirtualSize))</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">    if(i == fheader-&gt;NumberOfSections) &#123;printf(&quot;没有对应的FOA\n&quot;);return 0;&#125;</span><br><span class="line">    int offset=rva-sheader[i].VirtualAddress;</span><br><span class="line">    foa=sheader[i].PointerToRawData+offset;</span><br><span class="line">    return foa;</span><br><span class="line">&#125;</span><br><span class="line">int main(int argc, char* argv[])&#123;</span><br><span class="line">    if(argc != 2) &#123;</span><br><span class="line">        printf(&quot;用法: %s &lt;PE文件路径&gt;\n&quot;, argv[0]);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    const char* pe_path = argv[1];</span><br><span class="line">    FILE* pf=fopen(pe_path,&quot;rb&quot;);</span><br><span class="line">    if(!pf) &#123;printf(&quot;打开文件失败！！\n&quot;);return 0;&#125;</span><br><span class="line">    fseek(pf, 0, SEEK_END);</span><br><span class="line">    int fsize=ftell(pf);    </span><br><span class="line">    fseek(pf, 0, SEEK_SET); </span><br><span class="line">    unsigned char* file_buf=(unsigned char *)malloc(fsize);</span><br><span class="line">    fread(file_buf,1,fsize,pf);</span><br><span class="line">    fclose(pf);</span><br><span class="line">    unsigned char *buffer=file_buf;</span><br><span class="line">    dos=(IMAGE_DOS_HEADER*)buffer;</span><br><span class="line">    buffer+=dos-&gt;e_lfanew+4;  // 定位文件头</span><br><span class="line">    fheader=(IMAGE_FILE_HEADER*)buffer;</span><br><span class="line">    buffer+=20;      // 定位可选头</span><br><span class="line">    oheader = (IMAGE_OPTIONAL_HEADER32*)buffer;</span><br><span class="line">    buffer += sizeof(IMAGE_OPTIONAL_HEADER32);   // 定位节表</span><br><span class="line">    int size = fheader-&gt;NumberOfSections * sizeof(IMAGE_SECTION_HEADER);</span><br><span class="line">    sheader = (IMAGE_SECTION_HEADER*)buffer;</span><br><span class="line">    int flag=0;</span><br><span class="line">    DWORD foa=0,rva=0;</span><br><span class="line">    while(1)&#123;</span><br><span class="line">        printf(&quot;请输入你需要进行的操作（FOA-&gt;RVA选择1,RVA-&gt;FOA选择2,退出选择-1）:\n&quot;);</span><br><span class="line">        scanf(&quot;%d&quot;,&amp;flag);</span><br><span class="line">        switch(flag)</span><br><span class="line">        &#123;</span><br><span class="line">            case 1:&#123;</span><br><span class="line">                printf(&quot;请输入FOA：&quot;);</span><br><span class="line">                scanf(&quot;%x&quot;,&amp;foa);</span><br><span class="line">                if(foa&gt;fsize||foa&lt;0) &#123;printf(&quot;超出范围!!!&quot;);return 0;&#125;</span><br><span class="line">                rva=FOA_to_RVA(foa);</span><br><span class="line">                printf(&quot;RVA为：%#x,VA为：%#x\n&quot;,rva,rva+oheader-&gt;ImageBase);</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            case 2:&#123;</span><br><span class="line">                printf(&quot;请输入RVA：&quot;);</span><br><span class="line">                scanf(&quot;%x&quot;,&amp;rva);</span><br><span class="line">                if(rva&lt;0||rva&gt;oheader-&gt;SizeOfImage) &#123;printf(&quot;超出范围!!!&quot;);return 0;&#125;</span><br><span class="line">                foa=RVA_to_FOA(rva);</span><br><span class="line">                printf(&quot;FOA为：%#x\n&quot;,foa);</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            default:</span><br><span class="line">                return 0;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    free(file_buf);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/27687/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/27687/" class="post-title-link" itemprop="url">VScode中文乱码问题解决</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-02 21:35:06" itemprop="dateCreated datePublished" datetime="2025-07-02T21:35:06+08:00">2025-07-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-10 22:02:28" itemprop="dateModified" datetime="2025-07-10T22:02:28+08:00">2025-07-10</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <span id="more"></span>
+
+<h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>​	尝试了网上的很多方法，都有各种各样的问题，有将编码全改为utf-8的（缺点：外部运行时乱码，输入中文后输出为乱码），有将编码全改为gbk的（缺点：输入中文为乱码），有直接调用外部终端的（缺点：程序运行结束会直接关闭终端，导致看不到运行结果）。唯一一个貌似行得通的方法就是第三个，但是找了好久都没有让终端停下来的方法，最后在</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://blog.csdn.net/m0_73657663/article/details/134698209?ops_request_misc=%257B%2522request%255Fid%2522%253A%25229fea31e854124f56bd09f3e9533c4251%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&amp;request_id=9fea31e854124f56bd09f3e9533c4251&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-5-134698209-null-null.nonecase&amp;utm_term=vscode&amp;spm=1018.2226.3001.4450</span><br></pre></td></tr></table></figure>
+
+<p>这篇博客里面才知道可以将”type”改为”cppvsdbg”来使程序暂停。</p>
+<h1 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h1><p>1、右下角文件编码改为gbk</p>
+<p>2、tasks.json文件里面args加一个参数”-fexec-charset&#x3D;GBK”</p>
+<p>3、launch.json文件里面改为：”type”: “cppvsdbg”，”externalConsole”: true改为”console”: “externalTerminal”</p>
+<p>最后tasks.json：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;version&quot;: &quot;2.0.0&quot;,</span><br><span class="line">    &quot;tasks&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;type&quot;: &quot;cppbuild&quot;,</span><br><span class="line">            &quot;label&quot;: &quot;C/C++: gcc.exe 生成活动文件&quot;,</span><br><span class="line">            &quot;command&quot;: &quot;D:\\down\\mingw64\\bin\\g++.exe&quot;,</span><br><span class="line">            &quot;args&quot;: [</span><br><span class="line">                &quot;-fdiagnostics-color=always&quot;,</span><br><span class="line">                &quot;-g&quot;,</span><br><span class="line">                &quot;$&#123;file&#125;&quot;,</span><br><span class="line">                &quot;-o&quot;,</span><br><span class="line">                &quot;$&#123;fileDirname&#125;\\$&#123;fileBasenameNoExtension&#125;.exe&quot;,</span><br><span class="line">                &quot;-fexec-charset=GBK&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;options&quot;: &#123;</span><br><span class="line">                &quot;cwd&quot;: &quot;$&#123;fileDirname&#125;&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;problemMatcher&quot;: [</span><br><span class="line">                &quot;$gcc&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;group&quot;: &quot;build&quot;,</span><br><span class="line">            &quot;detail&quot;: &quot;编译器: D:\\down\\mingw64\\bin\\g++.exe&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>launch.json文件:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;configurations&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;C/C++: g++.exe 终端运行&quot;,</span><br><span class="line">            &quot;type&quot;: &quot;cppvsdbg&quot;,</span><br><span class="line">            &quot;request&quot;: &quot;launch&quot;,</span><br><span class="line">            &quot;program&quot;: &quot;$&#123;fileDirname&#125;\\$&#123;fileBasenameNoExtension&#125;.exe&quot;,</span><br><span class="line">            &quot;args&quot;: [],</span><br><span class="line">            &quot;stopAtEntry&quot;: false,</span><br><span class="line">            &quot;cwd&quot;: &quot;$&#123;fileDirname&#125;&quot;,</span><br><span class="line">            &quot;environment&quot;: [],</span><br><span class="line">            &quot;console&quot;: &quot;externalTerminal&quot;,</span><br><span class="line">            &quot;preLaunchTask&quot;: &quot;C/C++: gcc.exe 生成活动文件&quot;,</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;version&quot;: &quot;2.0.0&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
 
       
   
@@ -1391,226 +1699,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/1079/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_2.gif">
-      <meta itemprop="name" content="comhacker">
-      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/posts/1079/" class="post-title-link" itemprop="url">操作系统</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-03-03 19:41:54" itemprop="dateCreated datePublished" datetime="2025-03-03T19:41:54+08:00">2025-03-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-06-04 16:14:32" itemprop="dateModified" datetime="2025-06-04T16:14:32+08:00">2025-06-04</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/1079/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/18925/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_2.gif">
-      <meta itemprop="name" content="comhacker">
-      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/posts/18925/" class="post-title-link" itemprop="url">GHCTF</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-03-02 18:27:50" itemprop="dateCreated datePublished" datetime="2025-03-02T18:27:50+08:00">2025-03-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-08 18:33:56" itemprop="dateModified" datetime="2025-03-08T18:33:56+08:00">2025-03-08</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/18925/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/1106/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar_2.gif">
-      <meta itemprop="name" content="comhacker">
-      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/posts/1106/" class="post-title-link" itemprop="url">数据结构</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-12-30 16:38:32" itemprop="dateCreated datePublished" datetime="2024-12-30T16:38:32+08:00">2024-12-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-01-13 16:26:04" itemprop="dateModified" datetime="2025-01-13T16:26:04+08:00">2025-01-13</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/1106/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1678,7 +1770,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1691,7 +1783,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
