@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、搭建对话框使用DiaLog搭建如图所示的对话框   二、标准控件与通用控件标准控件：是 Windows 最早版本（Windows 1.x, 2.x, 3.x）提供的基础控件。 常见以下类型：  BUTTON：按钮（包括普通按钮、复选框、单选按钮、分组框） STATIC：静态文本、图标、矩形框、分隔线 EDIT：单行或多行文本编辑框 LISTBOX：列表框 COMBOBOX：组合框（下拉列表">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通用控件">
+<meta property="og:url" content="http://example.com/posts/49201/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="一、搭建对话框使用DiaLog搭建如图所示的对话框   二、标准控件与通用控件标准控件：是 Windows 最早版本（Windows 1.x, 2.x, 3.x）提供的基础控件。 常见以下类型：  BUTTON：按钮（包括普通按钮、复选框、单选按钮、分组框） STATIC：静态文本、图标、矩形框、分隔线 EDIT：单行或多行文本编辑框 LISTBOX：列表框 COMBOBOX：组合框（下拉列表">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/49201/image-20250728181113600.png">
+<meta property="article:published_time" content="2025-07-27T12:52:34.000Z">
+<meta property="article:modified_time" content="2025-07-28T12:18:58.309Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="Win32">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/49201/image-20250728181113600.png">
+
+<link rel="canonical" href="http://example.com/posts/49201/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>通用控件 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/49201/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          通用控件
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-27 20:52:34" itemprop="dateCreated datePublished" datetime="2025-07-27T20:52:34+08:00">2025-07-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-28 20:18:58" itemprop="dateModified" datetime="2025-07-28T20:18:58+08:00">2025-07-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="一、搭建对话框"><a href="#一、搭建对话框" class="headerlink" title="一、搭建对话框"></a>一、搭建对话框</h1><p>使用DiaLog搭建如图所示的对话框</p>
+
+
+<h1 id="二、标准控件与通用控件"><a href="#二、标准控件与通用控件" class="headerlink" title="二、标准控件与通用控件"></a>二、标准控件与通用控件</h1><h2 id="标准控件："><a href="#标准控件：" class="headerlink" title="标准控件："></a>标准控件：</h2><p>是 Windows 最早版本（Windows 1.x, 2.x, 3.x）提供的基础控件。</p>
+<p>常见以下类型：</p>
+<ul>
+<li><code>BUTTON</code>：按钮（包括普通按钮、复选框、单选按钮、分组框）</li>
+<li><code>STATIC</code>：静态文本、图标、矩形框、分隔线</li>
+<li><code>EDIT</code>：单行或多行文本编辑框</li>
+<li><code>LISTBOX</code>：列表框</li>
+<li><code>COMBOBOX</code>：组合框（下拉列表框）</li>
+<li><code>SCROLLBAR</code>：滚动条（也常用于窗口本身）</li>
+</ul>
+<p>它们提供核心的交互功能（点击、选择、输入文本、简单列表），<strong>在应用程序启动时即可直接使用</strong>，主要通过父窗口接收 <code>WM_COMMAND</code> 通知消息（对于按钮、编辑框、列表框、组合框）。</p>
+<h2 id="通用控件："><a href="#通用控件：" class="headerlink" title="通用控件："></a>通用控件：</h2><p>随着 Windows 95 和 Windows NT 4.0 引入，微软提供了更现代、更丰富的控件，通用控件是对标准控件库的扩展。他们由 <code>ComCtl32.dll</code> 实现和管理。在创建前必须<strong>先初始化</strong>通用控件库！必须调用 <code>InitCommonControlsEx</code> 函数注册控件窗口类才能使用。 </p>
+<p>InitCommonControlsEx函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">BOOL InitCommonControlsEx(</span><br><span class="line">  [in] const INITCOMMONCONTROLSEX *picce</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>其中，INITCOMMONCONTROLSEX结构体：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagINITCOMMONCONTROLSEX &#123;</span><br><span class="line">  DWORD dwSize;		// 结构体大小</span><br><span class="line">  DWORD dwICC;		// 将从 DLL 加载哪些公共控件类的位标志集。</span><br><span class="line">&#125; INITCOMMONCONTROLSEX, *LPINITCOMMONCONTROLSEX;</span><br></pre></td></tr></table></figure>
+
+<p>dwICC常用的是ICC_WIN95_CLASSES（加载动画控件、标头、热键、列表视图、进度栏、状态栏、选项卡、工具提示、工具栏、跟踪条、树视图和向上-向下控件类）。</p>
+<p>初始化流程:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 包含头文件和静态库</span><br><span class="line">#include &lt;commctrl.h&gt;</span><br><span class="line">#pragma comment(lib, &quot;comctl32.lib&quot;)</span><br><span class="line"></span><br><span class="line">int APIENTRY wWinMain(_In_ HINSTANCE hInstance,</span><br><span class="line">    _In_opt_ HINSTANCE hPrevInstance,</span><br><span class="line">    _In_ LPWSTR    lpCmdLine,</span><br><span class="line">    _In_ int       nCmdShow)</span><br><span class="line">&#123;</span><br><span class="line">	// 初始化</span><br><span class="line">    INITCOMMONCONTROLSEX icex;</span><br><span class="line">    icex.dwSize = sizeof(INITCOMMONCONTROLSEX);</span><br><span class="line">    icex.dwICC = ICC_WIN95_CLASSES;</span><br><span class="line">    InitCommonControlsEx(&amp;icex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注：现在VS2022貌似不需要初始化也能直接运行</p>
+<h3 id="WM-NOTIFY消息："><a href="#WM-NOTIFY消息：" class="headerlink" title="WM_NOTIFY消息："></a>WM_NOTIFY消息：</h3><p>通用控件主要通过父窗口接收 <code>WM_NOTIFY</code> 消息。此消息有两个参数：</p>
+<h4 id="wParam"><a href="#wParam" class="headerlink" title="wParam:"></a>wParam:</h4><p>控件标识符（ID）</p>
+<h4 id="lParam："><a href="#lParam：" class="headerlink" title="lParam："></a>lParam：</h4><p>一个指向通知信息结构体的指针。</p>
+<p>这个结构体（基础版）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagNMHDR &#123;</span><br><span class="line">    HWND hwndFrom;    // 发送通知的控件句柄</span><br><span class="line">    UINT_PTR idFrom;   // 控件ID（与 wParam 相同）</span><br><span class="line">    UINT code;         // 通知码（如 LVN_ITEMCHANGED）</span><br><span class="line">&#125; NMHDR;</span><br></pre></td></tr></table></figure>
+
+<p>常见通知码：</p>
+<table>
+<thead>
+<tr>
+<th align="center">通知码</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>NM_CLICK</strong></td>
+<td align="center">鼠标单击控件</td>
+</tr>
+<tr>
+<td align="center"><strong>NM_DBLCLK</strong></td>
+<td align="center">鼠标双击控件</td>
+</tr>
+<tr>
+<td align="center"><strong>NM_RCLICK</strong></td>
+<td align="center">鼠标右键单击</td>
+</tr>
+<tr>
+<td align="center"><strong>NM_RDBLCLK</strong></td>
+<td align="center">鼠标右键双击</td>
+</tr>
+</tbody></table>
+<p>如果基础版不足以表示信息，可以使用扩充版结构体（有很多种，下面只是其中一种）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 列表视图项变更通知</span><br><span class="line">typedef struct tagNMLISTVIEW &#123;</span><br><span class="line">    NMHDR hdr;          // 基础头(就是上面那个结构体)</span><br><span class="line">    int iItem;          // 项索引</span><br><span class="line">    int iSubItem;       // 子项索引</span><br><span class="line">    UINT uNewState;     // 新状态</span><br><span class="line">    UINT uOldState;     // 旧状态</span><br><span class="line">    UINT uChanged;      // 变化标志</span><br><span class="line">    POINT ptAction;     // 事件位置</span><br><span class="line">    LPARAM lParam;      // 自定义数据</span><br><span class="line">&#125; NMLISTVIEW;</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、完善对话框"><a href="#三、完善对话框" class="headerlink" title="三、完善对话框"></a>三、完善对话框</h1><h2 id="列表划分列："><a href="#列表划分列：" class="headerlink" title="列表划分列："></a>列表划分列：</h2><p>目标：向列表里面添加4个列</p>
+<p>完成效果(如图红框)：</p>
+
+
+<h3 id="关键数据结构："><a href="#关键数据结构：" class="headerlink" title="关键数据结构："></a>关键数据结构：</h3><h4 id="GetDlgItem函数："><a href="#GetDlgItem函数：" class="headerlink" title="GetDlgItem函数："></a>GetDlgItem函数：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HWND GetDlgItem(</span><br><span class="line">  [in, optional] HWND hDlg,			// Dialog对话框句柄</span><br><span class="line">  [in]           int  nIDDlgItem	// 控件标识符（ID）</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：返回对话框子控件的句柄</p>
+<h4 id="SendMessage函数："><a href="#SendMessage函数：" class="headerlink" title="SendMessage函数："></a>SendMessage函数：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">LRESULT SendMessage(</span><br><span class="line">  [in] HWND   hWnd,			// 窗口的句柄</span><br><span class="line">  [in] UINT   Msg,			// 要发送的消息</span><br><span class="line">  [in] WPARAM wParam,		// 附加信息</span><br><span class="line">  [in] LPARAM lParam		// 附加信息</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h4 id="LVM-SETEXTENDEDLISTVIEWSTYLE消息："><a href="#LVM-SETEXTENDEDLISTVIEWSTYLE消息：" class="headerlink" title="LVM_SETEXTENDEDLISTVIEWSTYLE消息："></a>LVM_SETEXTENDEDLISTVIEWSTYLE消息：</h4><p>是一个专门用于设置列表视图控件扩展样式的消息。它的两个参数：</p>
+<ul>
+<li><p>wParam：指定要影响 lParam中的样式。若参数为零， 则 lParam 中的所有样式都将受到影响。</p>
+</li>
+<li><p>lParam：指定要设置的扩展列表视图控件样式。</p>
+</li>
+</ul>
+<p>这两个参数都使用 ListView扩展样式。这里使用的是LVS_EX_FULLROWSELECT：这是一个扩展样式标志，用于启用整行选择功能。当启用时，用户点击行的任意位置（任何列）都将高亮显示整行。如果不设置，那么只有第一列（通常只有标签列）可以触发选中，其他列不会高亮整行。</p>
+<h4 id="LVM-INSERTCOLUMN消息："><a href="#LVM-INSERTCOLUMN消息：" class="headerlink" title="LVM_INSERTCOLUMN消息："></a>LVM_INSERTCOLUMN消息：</h4><p>用于在列表视图控件中插入新列。 </p>
+<ul>
+<li><em>wParam</em>：新列的索引</li>
+<li><em>lParam</em>：指向包含新列属性的 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/commctrl/ns-commctrl-lvcolumna"><strong>LVCOLUMN</strong></a> 结构的指针。</li>
+</ul>
+<h4 id="LV-COLUMN结构体-："><a href="#LV-COLUMN结构体-：" class="headerlink" title="LV_COLUMN结构体 ："></a>LV_COLUMN结构体 ：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagLVCOLUMNA &#123;</span><br><span class="line">  UINT  mask;	// 指定哪些成员包含有效信息的变量</span><br><span class="line">  int   fmt;	// 列标题和列中子项文本的对齐方式。</span><br><span class="line">  int   cx;		// 列的宽度</span><br><span class="line">  LPSTR pszText;	// 接收或设置标题文本的缓冲区</span><br><span class="line">  int   cchTextMax;		// 缓冲区的大小</span><br><span class="line">  int   iSubItem;	// 与列关联的子项的索引（第一列索引为0，第二列索引为1、、、、）</span><br><span class="line">  int   iImage;		// 图像列表中图像的从零开始的索引</span><br><span class="line">  int   iOrder;		// 从零开始的列偏移量</span><br><span class="line">  int   cxMin;		//  列的最小宽度</span><br><span class="line">  int   cxDefault;	// 应用程序定义的值通常用于存储列的默认宽度</span><br><span class="line">  int   cxIdeal;	//  列的理想宽度</span><br><span class="line">&#125; LVCOLUMNA, *LPLVCOLUMNA;</span><br></pre></td></tr></table></figure>
+
+<p>mask常用取值：</p>
+<table>
+<thead>
+<tr>
+<th><strong>LVCF_FMT</strong></th>
+<th><strong>fmt</strong> 成员有效。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>LVCF_WIDTH</strong></td>
+<td><strong>cx</strong> 成员有效。</td>
+</tr>
+<tr>
+<td><strong>LVCF_TEXT</strong></td>
+<td><strong>pszText</strong> 成员有效。</td>
+</tr>
+<tr>
+<td><strong>LVCF_SUBITEM</strong></td>
+<td><strong>iSubItem</strong> 成员有效。</td>
+</tr>
+</tbody></table>
+<p>fmt常用值：</p>
+<table>
+<thead>
+<tr>
+<th align="left">值</th>
+<th align="left">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>LVCFMT_LEFT</strong></td>
+<td align="left">文本左对齐。</td>
+</tr>
+<tr>
+<td align="left"><strong>LVCFMT_RIGHT</strong></td>
+<td align="left">文本右对齐。</td>
+</tr>
+<tr>
+<td align="left"><strong>LVCFMT_CENTER</strong></td>
+<td align="left">文本居中。</td>
+</tr>
+</tbody></table>
+<h4 id="ListView-InsertColumn宏"><a href="#ListView-InsertColumn宏" class="headerlink" title="ListView_InsertColumn宏"></a><em>ListView_InsertColumn</em>宏</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int ListView_InsertColumn(</span><br><span class="line">         HWND       hwnd,		// 列表视图控件的句柄。</span><br><span class="line">         int        iCol,		// 新列的索引</span><br><span class="line">   const LPLVCOLUMN pcol		// 指向包含新列属性的 LVCOLUMN 结构的指针。</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：在列表视图控件中插入新列。 可以使用此宏或显式发送 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/Controls/lvm-insertcolumn">LVM_INSERTCOLUMN</a> 消息。效果与使用SendMessage发送LVM_INSERTCOLUMN消息相同。</p>
+<p>返回值：如果成功，则返回新列的索引，否则返回 -1</p>
+<h3 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">void InitProcessList(HWND hwndDlg)&#123;</span><br><span class="line">    // 获取句柄</span><br><span class="line">    HWND HwndList=NULL;</span><br><span class="line">    HwndList = GetDlgItem(hwndDlg,IDC_LIST_PROCESS );</span><br><span class="line"></span><br><span class="line">    // 设置整行选中</span><br><span class="line">    SendMessage(HwndList, LVM_SETEXTENDEDLISTVIEWSTYLE, LVS_EX_FULLROWSELECT, LVS_EX_FULLROWSELECT);</span><br><span class="line"></span><br><span class="line">    // 获取控件总宽度</span><br><span class="line">    RECT rc;</span><br><span class="line">    GetClientRect(HwndList, &amp;rc);</span><br><span class="line">    int listWidth = rc.right - rc.left;</span><br><span class="line"></span><br><span class="line">    LV_COLUMN lv;</span><br><span class="line">    memset(&amp;lv, 0,sizeof(LV_COLUMN));</span><br><span class="line">    // 设置第一列</span><br><span class="line">    TCHAR Name[20] = TEXT(&quot;进程名&quot;);</span><br><span class="line">    lv.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_FMT | LVCF_SUBITEM ;</span><br><span class="line">    lv.pszText = Name;				//  列标题</span><br><span class="line">    lv.fmt = LVCFMT_CENTER;         // 标题中间对齐</span><br><span class="line">    lv.cx = 200;								//列宽</span><br><span class="line">    lv.iSubItem = 0;</span><br><span class="line">    // SendMessage(HwndList, LVM_INSERTCOLUMN, 0, (DWORD)&amp;lv);</span><br><span class="line">    ListView_InsertColumn(HwndList, 0, &amp;lv);</span><br><span class="line"></span><br><span class="line">    // 设置第二列</span><br><span class="line">    TCHAR Name2[] = TEXT(&quot;PID&quot;);</span><br><span class="line">    lv.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_FMT | LVCF_SUBITEM;</span><br><span class="line">    lv.pszText = Name2;				//列标题</span><br><span class="line">    lv.fmt = LVCFMT_CENTER;</span><br><span class="line">    lv.cx = 100;								//列宽</span><br><span class="line">    lv.iSubItem = 1;</span><br><span class="line">    // SendMessage(HwndList, LVM_INSERTCOLUMN, 1, (DWORD)&amp;lv);</span><br><span class="line">    ListView_InsertColumn(HwndList, 1, &amp;lv);</span><br><span class="line"></span><br><span class="line">    // 设置第三列</span><br><span class="line">    TCHAR Name3[] = TEXT(&quot;镜像基址&quot;);</span><br><span class="line">    lv.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_FMT | LVCF_SUBITEM;</span><br><span class="line">    lv.pszText = Name3;				//列标题</span><br><span class="line">    lv.fmt = LVCFMT_CENTER;</span><br><span class="line">    lv.cx = 100;								//列宽</span><br><span class="line">    lv.iSubItem = 2;</span><br><span class="line">    // SendMessage(HwndList, LVM_INSERTCOLUMN, 2, (DWORD)&amp;lv);</span><br><span class="line">    ListView_InsertColumn(HwndList, 2, &amp;lv);</span><br><span class="line"></span><br><span class="line">    // 设置第四列</span><br><span class="line">    TCHAR Name4[] = TEXT(&quot;镜像大小&quot;);</span><br><span class="line">    lv.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_FMT | LVCF_SUBITEM;</span><br><span class="line">    lv.pszText = Name4;				//列标题</span><br><span class="line">    lv.fmt = LVCFMT_CENTER;</span><br><span class="line">    lv.cx = listWidth - 200 - 100*2;	// 这里列宽取剩余大小是为了防止有剩余导致多出一个空列</span><br><span class="line">    lv.iSubItem = 3;</span><br><span class="line">    // SendMessage(HwndList, LVM_INSERTCOLUMN, 3, (DWORD)&amp;lv);</span><br><span class="line">    ListView_InsertColumn(HwndList, 3, &amp;lv);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="列表添加信息"><a href="#列表添加信息" class="headerlink" title="列表添加信息"></a>列表添加信息</h2><p>目标：向列表里面添加两行</p>
+<p>完成效果：</p>
+
+
+<h3 id="关键数据结构"><a href="#关键数据结构" class="headerlink" title="关键数据结构:"></a>关键数据结构:</h3><h4 id="LV-ITEM结构体："><a href="#LV-ITEM结构体：" class="headerlink" title="LV_ITEM结构体："></a>LV_ITEM结构体：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagLVITEMA &#123;</span><br><span class="line">  UINT   mask;			// 指定以下哪些属性有效（iItem和iSubItem无需设置，默认有效）</span><br><span class="line">  int    iItem;			// 此结构引用的项的从零开始的索引。（人话：行索引）</span><br><span class="line">  int    iSubItem;		// 此结构引用的子项的基于一个索引，如果此结构引用项而不是子项，则为零。（人话：列索引）</span><br><span class="line">  UINT   state;</span><br><span class="line">  UINT   stateMask;</span><br><span class="line">  LPSTR  pszText;		// 指向或接受包含项文本的字符串的指针。（人话：要填入的内容）</span><br><span class="line">  int    cchTextMax;	// 缓冲区大小</span><br><span class="line">  int    iImage;</span><br><span class="line">  LPARAM lParam;</span><br><span class="line">  int    iIndent;</span><br><span class="line">  int    iGroupId;</span><br><span class="line">  UINT   cColumns;</span><br><span class="line">  PUINT  puColumns;</span><br><span class="line">  int    *piColFmt;</span><br><span class="line">  int    iGroup;</span><br><span class="line">&#125; LVITEMA, *LPLVITEMA;</span><br></pre></td></tr></table></figure>
+
+<p>作用：声明要添加的信息的各个属性。</p>
+<h4 id="ListView-InsertItem宏："><a href="#ListView-InsertItem宏：" class="headerlink" title="ListView_InsertItem宏："></a>ListView_InsertItem宏：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int ListView_InsertItem(</span><br><span class="line">         HWND     hwnd,			// 列表句柄</span><br><span class="line">   const LPLVITEM pitem			// 指向 LVITEM 结构的指针，该结构指定列表视图项的属性</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：发送发送 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/Controls/lvm-insertitem">LVM_INSERTITEM</a> 消息，使列表添加新项（行）。</p>
+<h4 id="LVM-INSERTITEM消息："><a href="#LVM-INSERTITEM消息：" class="headerlink" title="LVM_INSERTITEM消息："></a>LVM_INSERTITEM消息：</h4><p>作用：在列表视图控件中插入新项（省流：开辟一个新项（行））。</p>
+<ul>
+<li><em>wParam</em>：必须为零。</li>
+<li><em>lParam</em>：指向 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/commctrl/ns-commctrl-lvitema"><strong>LVITEM</strong></a> 结构的指针，该结构指定列表视图项的属性。</li>
+</ul>
+<h4 id="ListView-SetItem宏："><a href="#ListView-SetItem宏：" class="headerlink" title="ListView_SetItem宏："></a>ListView_SetItem宏：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL ListView_SetItem(</span><br><span class="line">         HWND     hwnd,			// 列表句柄</span><br><span class="line">   const LPLVITEM pitem			// 指向LV_ITEM结构的指针</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：发送 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/Controls/lvm-setitem">LVM_SETITEM</a> 消息来让列表添加信息。</p>
+<h4 id="LVM-SETITEM消息："><a href="#LVM-SETITEM消息：" class="headerlink" title="LVM_SETITEM消息："></a>LVM_SETITEM消息：</h4><p>作用：设置列表视图项的部分或全部属性（省流：给项添加信息）。是在LVM_INSERTITEM发送完毕后，创建完一个项后对此项的补充</p>
+<ul>
+<li><em>wParam</em>：必须为零。</li>
+<li><em>lParam</em>：指向包含新项属性的 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/commctrl/ns-commctrl-lvitema"><strong>LVITEM</strong></a> 结构的指针。</li>
+</ul>
+<h4 id="ListView-SetItemText宏："><a href="#ListView-SetItemText宏：" class="headerlink" title="ListView_SetItemText宏："></a>ListView_SetItemText宏：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">VOID ListView_SetItemText(</span><br><span class="line">   HWND    hwndLV,			// 列表视图控件的句柄。</span><br><span class="line">   int     i,				// 列表视图项的从零开始的索引（行索引）</span><br><span class="line">   int     iSubItem_,		// 子项的基于一个索引。（列索引）</span><br><span class="line">   LPCTSTR pszText_			// 指向包含新文本的以 null 结尾的字符串的指针。</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：发送 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/Controls/lvm-setitemtext">LVM_SETITEMTEXT</a> 消息，更改列表视图项或子项的文本。</p>
+<h4 id="LVM-SETITEMTEXT消息："><a href="#LVM-SETITEMTEXT消息：" class="headerlink" title="LVM_SETITEMTEXT消息："></a>LVM_SETITEMTEXT消息：</h4><p>作用：用于更改列表视图项或子项的文本。</p>
+<ul>
+<li><em>wParam</em>：列表视图项的从零开始的索引。</li>
+<li><em>lParam</em>：指向 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/commctrl/ns-commctrl-lvitema"><strong>LVITEM</strong></a> 结构的指针。</li>
+</ul>
+<h3 id="代码实现：-1"><a href="#代码实现：-1" class="headerlink" title="代码实现："></a>代码实现：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">void InsertInfo(HWND hwndDlg) &#123;</span><br><span class="line"></span><br><span class="line">    // 获取列表句柄</span><br><span class="line">    HWND HwndList = NULL;</span><br><span class="line">    HwndList = GetDlgItem(hwndDlg, IDC_LIST_PROCESS);</span><br><span class="line"></span><br><span class="line">    LV_ITEM lvi;</span><br><span class="line">    memset(&amp;lvi, 0, sizeof(LV_ITEM));</span><br><span class="line"></span><br><span class="line">    // 列表插入第一项</span><br><span class="line">    lvi.pszText = (LPWSTR)TEXT(&quot;test.exe&quot;);</span><br><span class="line">    lvi.iSubItem = 0;</span><br><span class="line">    lvi.mask = LVIF_TEXT;  // 指定pszText有效</span><br><span class="line">    lvi.iItem = 0;</span><br><span class="line">    //ListView_InsertItem(HwndList, &amp;lvi);</span><br><span class="line">    SendMessage(HwndList, LVM_INSERTITEM, 0, (DWORD)&amp; lvi);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    // 设置第一项第二列的信息</span><br><span class="line">    lvi.pszText = (LPWSTR)TEXT(&quot;100&quot;);</span><br><span class="line">    lvi.iSubItem = 1;</span><br><span class="line">    //ListView_SetItem(HwndList,&amp;lvi);</span><br><span class="line">    SendMessage(HwndList, LVM_SETITEM, 0, (DWORD)&amp;lvi);</span><br><span class="line"></span><br><span class="line">    // 设置第一项第三列的信息</span><br><span class="line">    lvi.pszText = (LPWSTR)TEXT(&quot;0x77ffee&quot;);</span><br><span class="line">    lvi.iSubItem = 2;</span><br><span class="line">    //ListView_SetItem(HwndList,&amp;lvi);</span><br><span class="line">    SendMessage(HwndList, LVM_SETITEM, 0, (DWORD)&amp;lvi);</span><br><span class="line"></span><br><span class="line">    // 设置第一项第四列的信息</span><br><span class="line">    lvi.pszText = (LPWSTR)TEXT(&quot;0x100&quot;);</span><br><span class="line">    lvi.iSubItem = 3;</span><br><span class="line">    //ListView_SetItem(HwndList,&amp;lvi);</span><br><span class="line">    SendMessage(HwndList, LVM_SETITEM, 0, (DWORD)&amp;lvi);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    // 列表插入第二项</span><br><span class="line">    lvi.mask = LVIF_TEXT;  // 指定pszText有效</span><br><span class="line">    lvi.iItem = 1;</span><br><span class="line">    lvi.pszText = (LPWSTR)TEXT(&quot;MyWin32.exe&quot;);</span><br><span class="line">    lvi.iSubItem = 0;</span><br><span class="line">    //ListView_InsertItem(HwndList, &amp;lvi);</span><br><span class="line">    SendMessage(HwndList, LVM_INSERTITEM, 0, (DWORD)&amp;lvi);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    // 设置第二项第二列的信息</span><br><span class="line">    lvi.pszText = (LPWSTR)TEXT(&quot;101&quot;);</span><br><span class="line">    lvi.iSubItem = 1;</span><br><span class="line">    //ListView_SetItem(HwndList,&amp;lvi);</span><br><span class="line">    SendMessage(HwndList, LVM_SETITEM, 0, (DWORD)&amp;lvi);</span><br><span class="line"></span><br><span class="line">    // 设置第二项第三列的信息</span><br><span class="line">    lvi.pszText = (LPWSTR)TEXT(&quot;0x77ff00&quot;);</span><br><span class="line">    lvi.iSubItem = 2;</span><br><span class="line">    //ListView_SetItem(HwndList,&amp;lvi);</span><br><span class="line">    SendMessage(HwndList, LVM_SETITEM, 0, (DWORD)&amp;lvi);</span><br><span class="line"></span><br><span class="line">    // 设置第二项第四列的信息</span><br><span class="line">    lvi.pszText = (LPWSTR)TEXT(&quot;0x200&quot;);</span><br><span class="line">    lvi.iSubItem = 3;</span><br><span class="line">    //ListView_SetItem(HwndList,&amp;lvi);</span><br><span class="line">    SendMessage(HwndList, LVM_SETITEM, 0, (DWORD)&amp;lvi);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>或者：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">void InsertInfo(HWND hwndDlg) &#123;</span><br><span class="line">    HWND hList = GetDlgItem(hwndDlg, IDC_LIST_PROCESS);</span><br><span class="line"></span><br><span class="line">    LVITEM lvi = &#123; 0 &#125;;</span><br><span class="line">    lvi.mask = LVIF_TEXT;</span><br><span class="line"></span><br><span class="line">    // 插入第 0 行</span><br><span class="line">    lvi.iItem = 0;</span><br><span class="line">    lvi.iSubItem = 0;</span><br><span class="line">    lvi.pszText = (LPWSTR)TEXT(&quot;test.exe&quot;);</span><br><span class="line">    ListView_InsertItem(hList, &amp;lvi);</span><br><span class="line"></span><br><span class="line">    // 设置其他列</span><br><span class="line">    ListView_SetItemText(hList, 0, 1, (LPWSTR)TEXT(&quot;100&quot;));</span><br><span class="line">    ListView_SetItemText(hList, 0, 2, (LPWSTR)TEXT(&quot;0x77ffee&quot;));</span><br><span class="line">    ListView_SetItemText(hList, 0, 3, (LPWSTR)TEXT(&quot;0x100&quot;));</span><br><span class="line"></span><br><span class="line">    // 插入第 1 行</span><br><span class="line">    lvi.iItem = 1;</span><br><span class="line">    lvi.iSubItem = 0;</span><br><span class="line">    lvi.pszText = (LPWSTR)TEXT(&quot;MyWin32.exe&quot;);</span><br><span class="line">    ListView_InsertItem(hList, &amp;lvi);</span><br><span class="line"></span><br><span class="line">    // 设置其他列</span><br><span class="line">    ListView_SetItemText(hList, 1, 1, (LPWSTR)TEXT(&quot;101&quot;));</span><br><span class="line">    ListView_SetItemText(hList, 1, 2, (LPWSTR)TEXT(&quot;0x77ff00&quot;));</span><br><span class="line">    ListView_SetItemText(hList, 1, 3, (LPWSTR)TEXT(&quot;0x200&quot;));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="消息处理："><a href="#消息处理：" class="headerlink" title="消息处理："></a>消息处理：</h2><p>目标：在点击列表中某项时，显示该项PID</p>
+<p>完成效果：</p>
+<img src="/posts/49201/image-20250728181113600.png" class="" title="image-20250728181113600">
+
+<h3 id="关键数据结构：-1"><a href="#关键数据结构：-1" class="headerlink" title="关键数据结构："></a>关键数据结构：</h3><h4 id="LVM-GETNEXTITEM消息："><a href="#LVM-GETNEXTITEM消息：" class="headerlink" title="LVM_GETNEXTITEM消息："></a>LVM_GETNEXTITEM消息：</h4><p>作用：搜索具有指定属性且具有与指定项的指定关系的列表视图项。可以使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/api/Commctrl/nf-commctrl-listview_getnextitem"><strong>ListView_GetNextItem</strong></a> 宏发送。</p>
+<ul>
+<li><p><em>wParam</em></p>
+<p>要开始搜索的项的索引。-1代表查找与指定标志匹配的第一个项。</p>
+</li>
+<li><p><em>lParam</em></p>
+<p>指定与 <em>wParam</em> 中指定的项的关系。</p>
+</li>
+</ul>
+<p>lParam的常见取值：</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>LVNI_ABOVE</strong></td>
+<td>搜索位于指定项上方的项。</td>
+</tr>
+<tr>
+<td><strong>LVNI_BELOW</strong></td>
+<td>搜索位于指定项下方的项。</td>
+</tr>
+<tr>
+<td><strong>LVNI_TOLEFT</strong></td>
+<td>搜索位于指定项左方的项。</td>
+</tr>
+<tr>
+<td><strong>LVNI_TORIGHT</strong></td>
+<td>搜索位于指定项右方的项。</td>
+</tr>
+<tr>
+<td><strong>LVNI_SELECTED</strong></td>
+<td>被选定的项</td>
+</tr>
+</tbody></table>
+<h4 id="ListView-GetNextItem宏："><a href="#ListView-GetNextItem宏：" class="headerlink" title="ListView_GetNextItem宏："></a>ListView_GetNextItem宏：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int ListView_GetNextItem(</span><br><span class="line">   HWND hwnd,			// 列表句柄</span><br><span class="line">   int  i,				// 与上面LVM_GETNEXTITEM消息的wParam参数相同</span><br><span class="line">   UINT flags			// 与上面LVM_GETNEXTITEM消息的lParam参数相同</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：发送LVM_GETNEXTITEM消息，搜索具有指定属性且具有与指定项的指定关系的列表视图项</p>
+<p>返回值：返回索引（失败返回-1）</p>
+<h4 id="LVM-GETITEMTEXT消息："><a href="#LVM-GETITEMTEXT消息：" class="headerlink" title="LVM_GETITEMTEXT消息："></a>LVM_GETITEMTEXT消息：</h4><p>作用：检索（获取）列表视图项或子项的文本。可以使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/api/Commctrl/nf-commctrl-listview_getitemtext"><strong>ListView_GetItemText</strong></a> 宏发送。</p>
+<ul>
+<li><p><em>wParam</em></p>
+<p>列表视图项的索引。</p>
+</li>
+<li><p><em>lParam</em></p>
+<p>指向 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/commctrl/ns-commctrl-lvitema"><strong>LVITEM</strong></a> 结构的指针。</p>
+</li>
+</ul>
+<h4 id="ListView-GetItemText-宏："><a href="#ListView-GetItemText-宏：" class="headerlink" title="ListView_GetItemText 宏："></a>ListView_GetItemText 宏：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void ListView_GetItemText(</span><br><span class="line">   HWND   hwndLV,		// 列表视图控件的句柄</span><br><span class="line">   int    i,			// 项的索引(列索引)</span><br><span class="line">   int    iSubItem_,	// 子项的索引（行索引）</span><br><span class="line">   LPTSTR pszText_,		// 接收缓冲区</span><br><span class="line">   int    cchTextMax_	// 缓冲区大小（字符数）</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">VOID EnumModules(HWND HwndList) &#123;</span><br><span class="line">    int Iitem = SendMessage(HwndList, LVM_GETNEXTITEM, -1, LVNI_SELECTED);</span><br><span class="line">    //int Iitem = ListView_GetNextItem(HwndList,-1, LVNI_SELECTED);</span><br><span class="line">    LV_ITEM lvi;</span><br><span class="line">    memset(&amp;lvi, 0, sizeof(LV_ITEM));</span><br><span class="line">    lvi.mask = LVIF_TEXT;</span><br><span class="line">    lvi.iItem = Iitem;</span><br><span class="line">    lvi.iSubItem = 1;</span><br><span class="line">    TCHAR szPid[20] = &#123; 0 &#125;;</span><br><span class="line">    lvi.pszText = szPid;</span><br><span class="line">    lvi.cchTextMax = 20;</span><br><span class="line">    SendMessage(HwndList, LVM_GETITEMTEXT, Iitem, (DWORD)&amp;lvi);</span><br><span class="line">    //ListView_GetItemText(HwndList,Iitem,1,szPid,20);</span><br><span class="line">    MessageBox(NULL, szPid, TEXT(&quot;PID&quot;), MB_OK);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="最终代码："><a href="#最终代码：" class="headerlink" title="最终代码："></a>最终代码：</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br></pre></td><td class="code"><pre><span class="line">// Resorce.cpp : 定义应用程序的入口点。</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#include &quot;framework.h&quot;</span><br><span class="line">#include &quot;testDe.h&quot;</span><br><span class="line">#include &lt;commctrl.h&gt;</span><br><span class="line">#pragma comment(lib, &quot;comctl32.lib&quot;)</span><br><span class="line"></span><br><span class="line">INT_PTR CALLBACK   DialogProc(HWND, UINT, WPARAM, LPARAM);</span><br><span class="line">void InitProcessList(HWND);</span><br><span class="line">void InsertInfo(HWND);</span><br><span class="line"></span><br><span class="line">// 主函数</span><br><span class="line">int APIENTRY wWinMain(_In_ HINSTANCE hInstance,</span><br><span class="line">    _In_opt_ HINSTANCE hPrevInstance,</span><br><span class="line">    _In_ LPWSTR    lpCmdLine,</span><br><span class="line">    _In_ int       nCmdShow)</span><br><span class="line">&#123;</span><br><span class="line">    DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG_MAIN), NULL, DialogProc);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* </span><br><span class="line">作用：初始化列表（添加列）</span><br><span class="line">参数hwndDlg：对话框句柄</span><br><span class="line">*/</span><br><span class="line">void InitProcessList(HWND hwndDlg)&#123;</span><br><span class="line">    // 获取句柄</span><br><span class="line">    HWND HwndList=NULL;</span><br><span class="line">    HwndList = GetDlgItem(hwndDlg,IDC_LIST_PROCESS );</span><br><span class="line"></span><br><span class="line">    // 设置整行选中</span><br><span class="line">    SendMessage(HwndList, LVM_SETEXTENDEDLISTVIEWSTYLE, LVS_EX_FULLROWSELECT, LVS_EX_FULLROWSELECT);</span><br><span class="line"></span><br><span class="line">    // 获取控件总宽度</span><br><span class="line">    RECT rc;</span><br><span class="line">    GetClientRect(HwndList, &amp;rc);</span><br><span class="line">    int listWidth = rc.right - rc.left;</span><br><span class="line"></span><br><span class="line">    LV_COLUMN lv;</span><br><span class="line">    memset(&amp;lv, 0,sizeof(LV_COLUMN));</span><br><span class="line">    // 设置第一列</span><br><span class="line">    TCHAR Name[20] = TEXT(&quot;进程名&quot;);</span><br><span class="line">    lv.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_FMT | LVCF_SUBITEM ;</span><br><span class="line">    lv.pszText = Name;				//  列标题</span><br><span class="line">    lv.fmt = LVCFMT_CENTER;         // 标题中间对齐</span><br><span class="line">    lv.cx = 200;								//列宽</span><br><span class="line">    lv.iSubItem = 0;</span><br><span class="line">    // SendMessage(HwndList, LVM_INSERTCOLUMN, 0, (DWORD)&amp;lv);</span><br><span class="line">    ListView_InsertColumn(HwndList, 0, &amp;lv);</span><br><span class="line"></span><br><span class="line">    // 设置第二列</span><br><span class="line">    TCHAR Name2[] = TEXT(&quot;PID&quot;);</span><br><span class="line">    lv.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_FMT | LVCF_SUBITEM;</span><br><span class="line">    lv.pszText = Name2;				//列标题</span><br><span class="line">    lv.fmt = LVCFMT_CENTER;</span><br><span class="line">    lv.cx = 100;								//列宽</span><br><span class="line">    lv.iSubItem = 1;</span><br><span class="line">    // SendMessage(HwndList, LVM_INSERTCOLUMN, 1, (DWORD)&amp;lv);</span><br><span class="line">    ListView_InsertColumn(HwndList, 1, &amp;lv);</span><br><span class="line"></span><br><span class="line">    // 设置第三列</span><br><span class="line">    TCHAR Name3[] = TEXT(&quot;镜像基址&quot;);</span><br><span class="line">    lv.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_FMT | LVCF_SUBITEM;</span><br><span class="line">    lv.pszText = Name3;				//列标题</span><br><span class="line">    lv.fmt = LVCFMT_CENTER;</span><br><span class="line">    lv.cx = 100;								//列宽</span><br><span class="line">    lv.iSubItem = 2;</span><br><span class="line">    // SendMessage(HwndList, LVM_INSERTCOLUMN, 2, (DWORD)&amp;lv);</span><br><span class="line">    ListView_InsertColumn(HwndList, 2, &amp;lv);</span><br><span class="line"></span><br><span class="line">    // 设置第四列</span><br><span class="line">    TCHAR Name4[] = TEXT(&quot;镜像大小&quot;);</span><br><span class="line">    lv.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_FMT | LVCF_SUBITEM;</span><br><span class="line">    lv.pszText = Name4;				//列标题</span><br><span class="line">    lv.fmt = LVCFMT_CENTER;</span><br><span class="line">    lv.cx = listWidth - 200 - 100*2;	// 这里列宽取剩余大小是为了防止有剩余导致多出一个空列</span><br><span class="line">    lv.iSubItem = 3;</span><br><span class="line">    // SendMessage(HwndList, LVM_INSERTCOLUMN, 3, (DWORD)&amp;lv);</span><br><span class="line">    ListView_InsertColumn(HwndList, 3, &amp;lv);</span><br><span class="line"></span><br><span class="line">    InsertInfo(hwndDlg);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">作用：插入信息到列表</span><br><span class="line">参数hwndDlg：对话框句柄</span><br><span class="line">*/</span><br><span class="line">void InsertInfo(HWND hwndDlg) &#123;</span><br><span class="line">    HWND hList = GetDlgItem(hwndDlg, IDC_LIST_PROCESS);</span><br><span class="line"></span><br><span class="line">    LVITEM lvi = &#123; 0 &#125;;</span><br><span class="line">    lvi.mask = LVIF_TEXT;</span><br><span class="line"></span><br><span class="line">    // 插入第 0 行</span><br><span class="line">    lvi.iItem = 0;</span><br><span class="line">    lvi.iSubItem = 0;</span><br><span class="line">    lvi.pszText = (LPWSTR)TEXT(&quot;test.exe&quot;);</span><br><span class="line">    ListView_InsertItem(hList, &amp;lvi);</span><br><span class="line"></span><br><span class="line">    // 设置其他列</span><br><span class="line">    ListView_SetItemText(hList, 0, 1, (LPWSTR)TEXT(&quot;100&quot;));</span><br><span class="line">    ListView_SetItemText(hList, 0, 2, (LPWSTR)TEXT(&quot;0x77ffee&quot;));</span><br><span class="line">    ListView_SetItemText(hList, 0, 3, (LPWSTR)TEXT(&quot;0x100&quot;));</span><br><span class="line"></span><br><span class="line">    // 插入第 1 行</span><br><span class="line">    lvi.iItem = 1;</span><br><span class="line">    lvi.iSubItem = 0;</span><br><span class="line">    lvi.pszText = (LPWSTR)TEXT(&quot;MyWin32.exe&quot;);</span><br><span class="line">    ListView_InsertItem(hList, &amp;lvi);</span><br><span class="line"></span><br><span class="line">    // 设置其他列</span><br><span class="line">    ListView_SetItemText(hList, 1, 1, (LPWSTR)TEXT(&quot;101&quot;));</span><br><span class="line">    ListView_SetItemText(hList, 1, 2, (LPWSTR)TEXT(&quot;0x77ff00&quot;));</span><br><span class="line">    ListView_SetItemText(hList, 1, 3, (LPWSTR)TEXT(&quot;0x200&quot;));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">作用：消息处理（点击时弹出PID信息）</span><br><span class="line">参数HwndList：列表句柄</span><br><span class="line">*/</span><br><span class="line">VOID EnumModules(HWND HwndList) &#123;</span><br><span class="line">    int Iitem = SendMessage(HwndList, LVM_GETNEXTITEM, -1, LVNI_SELECTED);</span><br><span class="line">    //int Iitem = ListView_GetNextItem(HwndList,-1, LVNI_SELECTED);</span><br><span class="line">    LV_ITEM lvi;</span><br><span class="line">    memset(&amp;lvi, 0, sizeof(LV_ITEM));</span><br><span class="line">    lvi.mask = LVIF_TEXT;</span><br><span class="line">    lvi.iItem = Iitem;</span><br><span class="line">    lvi.iSubItem = 1;</span><br><span class="line">    TCHAR szPid[20] = &#123; 0 &#125;;</span><br><span class="line">    lvi.pszText = szPid;</span><br><span class="line">    lvi.cchTextMax = 20;</span><br><span class="line">    SendMessage(HwndList, LVM_GETITEMTEXT, Iitem, (DWORD)&amp;lvi);</span><br><span class="line">    //ListView_GetItemText(HwndList,Iitem,1,szPid,20);</span><br><span class="line">    MessageBox(NULL, szPid, TEXT(&quot;PID&quot;), MB_OK);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 回调函数</span><br><span class="line">INT_PTR CALLBACK DialogProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)</span><br><span class="line">&#123;</span><br><span class="line">    switch (message) &#123;</span><br><span class="line">        case WM_INITDIALOG:   // 对话框初始化时对列表初始化</span><br><span class="line">            InitProcessList(hWnd);</span><br><span class="line">            return true;</span><br><span class="line">        case WM_COMMAND:</span><br><span class="line">        &#123;</span><br><span class="line">            WORD ButtonID = LOWORD(wParam);</span><br><span class="line">            WORD NotifCode = HIWORD(wParam);</span><br><span class="line">            switch (ButtonID) &#123;</span><br><span class="line">                case IDC_BUTTON_EXIT:</span><br><span class="line">                    EndDialog(hWnd, 0);</span><br><span class="line">                    return TRUE;</span><br><span class="line">                default:</span><br><span class="line">                    return false;</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        case WM_NOTIFY:</span><br><span class="line">        &#123;</span><br><span class="line">            NMHDR* notice = (NMHDR*)lParam;</span><br><span class="line">            if (wParam == IDC_LIST_PROCESS &amp;&amp; notice-&gt;code == NM_CLICK) &#123;  // 判断是否是目标列表的消息</span><br><span class="line">                HWND HwndList = NULL;</span><br><span class="line">                HwndList = GetDlgItem(hWnd, IDC_LIST_PROCESS);</span><br><span class="line">                EnumModules(HwndList);</span><br><span class="line">            &#125;</span><br><span class="line">            return TRUE;</span><br><span class="line">        &#125;</span><br><span class="line">        case WM_CLOSE:</span><br><span class="line">            EndDialog(hWnd, 0);</span><br><span class="line">            return TRUE;</span><br><span class="line">        default:</span><br><span class="line">            return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Win32/" rel="tag"><i class="fa fa-tag"></i> Win32</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/32955/" rel="prev" title="资源表">
+      <i class="fa fa-chevron-left"></i> 资源表
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%90%AD%E5%BB%BA%E5%AF%B9%E8%AF%9D%E6%A1%86"><span class="nav-number">1.</span> <span class="nav-text">一、搭建对话框</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A0%87%E5%87%86%E6%8E%A7%E4%BB%B6%E4%B8%8E%E9%80%9A%E7%94%A8%E6%8E%A7%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">二、标准控件与通用控件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E6%8E%A7%E4%BB%B6%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">标准控件：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E6%8E%A7%E4%BB%B6%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">通用控件：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WM-NOTIFY%E6%B6%88%E6%81%AF%EF%BC%9A"><span class="nav-number">2.2.1.</span> <span class="nav-text">WM_NOTIFY消息：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#wParam"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">wParam:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lParam%EF%BC%9A"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">lParam：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%8C%E5%96%84%E5%AF%B9%E8%AF%9D%E6%A1%86"><span class="nav-number">3.</span> <span class="nav-text">三、完善对话框</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%97%E8%A1%A8%E5%88%92%E5%88%86%E5%88%97%EF%BC%9A"><span class="nav-number">3.1.</span> <span class="nav-text">列表划分列：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">3.1.1.</span> <span class="nav-text">关键数据结构：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GetDlgItem%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="nav-number">3.1.1.1.</span> <span class="nav-text">GetDlgItem函数：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SendMessage%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="nav-number">3.1.1.2.</span> <span class="nav-text">SendMessage函数：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LVM-SETEXTENDEDLISTVIEWSTYLE%E6%B6%88%E6%81%AF%EF%BC%9A"><span class="nav-number">3.1.1.3.</span> <span class="nav-text">LVM_SETEXTENDEDLISTVIEWSTYLE消息：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LVM-INSERTCOLUMN%E6%B6%88%E6%81%AF%EF%BC%9A"><span class="nav-number">3.1.1.4.</span> <span class="nav-text">LVM_INSERTCOLUMN消息：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LV-COLUMN%E7%BB%93%E6%9E%84%E4%BD%93-%EF%BC%9A"><span class="nav-number">3.1.1.5.</span> <span class="nav-text">LV_COLUMN结构体 ：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ListView-InsertColumn%E5%AE%8F"><span class="nav-number">3.1.1.6.</span> <span class="nav-text">ListView_InsertColumn宏</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%EF%BC%9A"><span class="nav-number">3.1.2.</span> <span class="nav-text">代码实现：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%97%E8%A1%A8%E6%B7%BB%E5%8A%A0%E4%BF%A1%E6%81%AF"><span class="nav-number">3.2.</span> <span class="nav-text">列表添加信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">3.2.1.</span> <span class="nav-text">关键数据结构:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#LV-ITEM%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%9A"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">LV_ITEM结构体：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ListView-InsertItem%E5%AE%8F%EF%BC%9A"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">ListView_InsertItem宏：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LVM-INSERTITEM%E6%B6%88%E6%81%AF%EF%BC%9A"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">LVM_INSERTITEM消息：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ListView-SetItem%E5%AE%8F%EF%BC%9A"><span class="nav-number">3.2.1.4.</span> <span class="nav-text">ListView_SetItem宏：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LVM-SETITEM%E6%B6%88%E6%81%AF%EF%BC%9A"><span class="nav-number">3.2.1.5.</span> <span class="nav-text">LVM_SETITEM消息：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ListView-SetItemText%E5%AE%8F%EF%BC%9A"><span class="nav-number">3.2.1.6.</span> <span class="nav-text">ListView_SetItemText宏：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LVM-SETITEMTEXT%E6%B6%88%E6%81%AF%EF%BC%9A"><span class="nav-number">3.2.1.7.</span> <span class="nav-text">LVM_SETITEMTEXT消息：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%EF%BC%9A-1"><span class="nav-number">3.2.2.</span> <span class="nav-text">代码实现：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%A4%84%E7%90%86%EF%BC%9A"><span class="nav-number">3.3.</span> <span class="nav-text">消息处理：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A-1"><span class="nav-number">3.3.1.</span> <span class="nav-text">关键数据结构：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#LVM-GETNEXTITEM%E6%B6%88%E6%81%AF%EF%BC%9A"><span class="nav-number">3.3.1.1.</span> <span class="nav-text">LVM_GETNEXTITEM消息：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ListView-GetNextItem%E5%AE%8F%EF%BC%9A"><span class="nav-number">3.3.1.2.</span> <span class="nav-text">ListView_GetNextItem宏：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LVM-GETITEMTEXT%E6%B6%88%E6%81%AF%EF%BC%9A"><span class="nav-number">3.3.1.3.</span> <span class="nav-text">LVM_GETITEMTEXT消息：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ListView-GetItemText-%E5%AE%8F%EF%BC%9A"><span class="nav-number">3.3.1.4.</span> <span class="nav-text">ListView_GetItemText 宏：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.3.2.</span> <span class="nav-text">代码实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E4%BB%A3%E7%A0%81%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">最终代码：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="按钮创建按钮使用CreateWindow函数，但是参数与创建普通窗口略有不同： 12345678910111213HWND CreateWindow(  [in, optional] LPCWSTR   lpClassName,		&#x2F;&#x2F; 类名（按钮使用系统预定义的&quot;button&quot;类名）  [in, optional] LPCWSTR   lpWindowName,	&#x2F;&#x2F; 窗">
+<meta property="og:type" content="article">
+<meta property="og:title" content="子窗口">
+<meta property="og:url" content="http://example.com/posts/31163/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="按钮创建按钮使用CreateWindow函数，但是参数与创建普通窗口略有不同： 12345678910111213HWND CreateWindow(  [in, optional] LPCWSTR   lpClassName,		&#x2F;&#x2F; 类名（按钮使用系统预定义的&quot;button&quot;类名）  [in, optional] LPCWSTR   lpWindowName,	&#x2F;&#x2F; 窗">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-22T14:24:00.000Z">
+<meta property="article:modified_time" content="2025-07-28T12:18:58.306Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="Win32">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/posts/31163/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>子窗口 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/31163/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          子窗口
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-22 22:24:00" itemprop="dateCreated datePublished" datetime="2025-07-22T22:24:00+08:00">2025-07-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-28 20:18:58" itemprop="dateModified" datetime="2025-07-28T20:18:58+08:00">2025-07-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="按钮"><a href="#按钮" class="headerlink" title="按钮"></a>按钮</h1><p>创建按钮使用CreateWindow函数，但是参数与创建普通窗口略有不同：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">HWND CreateWindow(</span><br><span class="line">  [in, optional] LPCWSTR   lpClassName,		// 类名（按钮使用系统预定义的&quot;button&quot;类名）</span><br><span class="line">  [in, optional] LPCWSTR   lpWindowName,	// 窗口名称</span><br><span class="line">  [in]           DWORD     dwStyle,      // 窗口的样式（子窗口必须包含WS_CHILD）</span><br><span class="line">  [in]           int       x,			// 窗口左上角相对于父窗口左上角坐标横坐标</span><br><span class="line">  [in]           int       y,			// 窗口左上角相对于父窗口左上角坐标纵坐标</span><br><span class="line">  [in]           int       nWidth,		// 宽度</span><br><span class="line">  [in]           int       nHeight,     // 高度</span><br><span class="line">  [in, optional] HWND      hWndParent,		// 父进程句柄</span><br><span class="line">  [in, optional] HMENU     hMenu,			// 子窗口编号（标识符）</span><br><span class="line">  [in, optional] HINSTANCE hInstance,		// 当前应用程序的句柄  </span><br><span class="line">  [in, optional] LPVOID    lpParam			// 附加信息，一般为NULL	</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>其中与创建普通窗口不同的点在于一下三个参数：</p>
+<h2 id="lpClassName："><a href="#lpClassName：" class="headerlink" title="lpClassName："></a>lpClassName：</h2><p>类名，创建按钮时一般使用系统帮我们定义好的”button”类，可通过以下代码查看这个类的各个属性：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">TCHAR buffer[30] = &#123; 0 &#125;;</span><br><span class="line">int size = 30;</span><br><span class="line">size = GetClassName(HwndPushButton, buffer, size);</span><br><span class="line">DebugLog(TEXT(&quot;类名:%s\n&quot;), buffer);</span><br><span class="line">WNDCLASS wc = &#123; 0 &#125;;</span><br><span class="line">GetClassInfo(hInstance, buffer, &amp;wc);</span><br><span class="line">DebugLog(&quot;lpfnWndProc:%x\n&quot;, wc.lpfnWndProc);</span><br><span class="line">DebugLog(TEXT(&quot;lpszClassName:%s\n&quot;), wc.lpszClassName);</span><br></pre></td></tr></table></figure>
+
+<h2 id="dwStyle："><a href="#dwStyle：" class="headerlink" title="dwStyle："></a>dwStyle：</h2><p>样式。样式分为两种：</p>
+<h3 id="基础样式："><a href="#基础样式：" class="headerlink" title="基础样式："></a>基础样式：</h3><p>以”WS_”开头，适用于所有窗口类型（包括主窗口、对话框、控件等），定义窗口的<strong>基本框架特性</strong>（可见性、边框、滚动条等）。</p>
+<p>常用的基础样式有：</p>
+<table>
+<thead>
+<tr>
+<th align="center">样式</th>
+<th align="center">功能描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>WS_OVERLAPPED</code></td>
+<td align="center">创建顶层重叠窗口（非子窗口）</td>
+</tr>
+<tr>
+<td align="center"><code>WS_CAPTION</code></td>
+<td align="center">添加标题栏（包含 <code>WS_BORDER</code>）</td>
+</tr>
+<tr>
+<td align="center"><code>WS_SYSMENU</code></td>
+<td align="center">添加标题栏右侧的系统菜单（关闭按钮）</td>
+</tr>
+<tr>
+<td align="center"><code>WS_THICKFRAME</code></td>
+<td align="center">添加可调整大小的边框</td>
+</tr>
+<tr>
+<td align="center"><code>WS_MINIMIZEBOX</code></td>
+<td align="center">添加最小化按钮</td>
+</tr>
+<tr>
+<td align="center"><code>WS_MAXIMIZEBOX</code></td>
+<td align="center">添加最大化按钮</td>
+</tr>
+<tr>
+<td align="center"><code>WS_CHILD</code></td>
+<td align="center">窗口是子窗口（子窗口一定要添加）</td>
+</tr>
+<tr>
+<td align="center"><code>WS_VISIBLE</code></td>
+<td align="center">最初可见</td>
+</tr>
+<tr>
+<td align="center"><code>WS_TILEDWINDOW</code></td>
+<td align="center">常用于主窗口，是多个标准样式的组合，即&#96;WS_OVERLAPPED</td>
+</tr>
+</tbody></table>
+<p>当窗口是按钮时，最基础的配置是<code>WS_CHILD | WS_VISIBLE </code></p>
+<h3 id="专用样式："><a href="#专用样式：" class="headerlink" title="专用样式："></a>专用样式：</h3><p>仅当窗口类为某个固定样式时才会生效。当窗口类是”Button”时，用于定义按钮的<strong>具体类型和行为</strong>（普通按钮、复选框等）。</p>
+<p>常用的按钮专用样式为：</p>
+<p>基础按钮类型 (互斥类型，只能选其一)：</p>
+<table>
+<thead>
+<tr>
+<th>样式</th>
+<th>功能描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>BS_PUSHBUTTON</code></td>
+<td>标准下压按钮。</td>
+</tr>
+<tr>
+<td><code>BS_DEFPUSHBUTTON</code></td>
+<td>默认按钮（通常带粗边框）。按 Enter 键时也会触发此按钮。在一个对话框中只能有一个。</td>
+</tr>
+<tr>
+<td><code>BS_CHECKBOX</code></td>
+<td>复选框 （二元状态：选中&#x2F;未选中）。需手动处理状态切换。</td>
+</tr>
+<tr>
+<td><code>BS_AUTOCHECKBOX</code></td>
+<td>自动状态切换的复选框。点击时自动切换选中状态</td>
+</tr>
+<tr>
+<td><code>BS_RADIOBUTTON</code></td>
+<td>单选按钮（互斥选择）。 需手动管理组内互斥逻辑</td>
+</tr>
+<tr>
+<td><code>BS_AUTORADIOBUTTON</code></td>
+<td>自动单选按钮。自动管理组内互斥逻辑</td>
+</tr>
+<tr>
+<td><code>BS_3STATE</code> &#x2F; <code>BS_AUTO3STATE</code></td>
+<td>三态复选框 (未选&#x2F;选中&#x2F;灰显) ，用于”部分选中”状态（如文件夹选择）</td>
+</tr>
+</tbody></table>
+<p>除这些外，还有其他可组合样式。</p>
+<h2 id="hMenu："><a href="#hMenu：" class="headerlink" title="hMenu："></a>hMenu：</h2><p>如果窗口是子窗口，那么hMenu填的是子窗口编号，父窗口用来对子窗口进行标识，由自己指定，但是对于具有相同父窗口的所有子窗口，它必须是唯一的。</p>
+<h2 id="按钮回调函数："><a href="#按钮回调函数：" class="headerlink" title="按钮回调函数："></a>按钮回调函数：</h2><p>所有系统控件类（如 “button”、”edit”、”listbox”）都有内置的窗口过程，这个内置过程由 Windows 系统提供（在 user32.dll 中实现），开发者无需自己实现按钮的回调函数。当用户按下按钮时，会调用系统提供的按钮回调函数对消息进行处理，处理完后会向父窗口发送<code>WM_COMMAND</code>消息。</p>
+<p>发送的<code>WM_COMMAND</code>消息的成员wParam的低两个字节代表控件ID，即子窗口编号，高两个字节代表通知码；常用的通知码为BN_CLICKED，值为0，代表按钮被点击。成员lParam代表按钮句柄。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>目标：实现按钮事件的处理。</p>
+<p>首先创建3种按钮：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">void CreateButton(HWND ParentHwnd,HINSTANCE hInstance) &#123;</span><br><span class="line">    HWND HwndPushButton = CreateWindowA(</span><br><span class="line">        &quot;button&quot;,         // 窗口类名,button是系统预定义好的</span><br><span class="line">        &quot;普通按钮&quot;,    // 窗口名</span><br><span class="line">        WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,   // 窗口样式</span><br><span class="line">        10, 10,         // 窗口左上角相对于父窗口左上角坐标x,y</span><br><span class="line">        80, 20,         // 宽、高</span><br><span class="line">        ParentHwnd,     // 父窗口句柄</span><br><span class="line">        (HMENU)1002,    // 子窗口编号（标识符）</span><br><span class="line">        hInstance,      // 进程句柄</span><br><span class="line">        NULL            // 附加信息，一般为NULL</span><br><span class="line">        );</span><br><span class="line">    HWND HwndCheckBox = CreateWindowA(</span><br><span class="line">        &quot;button&quot;,         // 窗口类名</span><br><span class="line">        &quot;复选框&quot;,    // 窗口名</span><br><span class="line">        WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,   // 窗口样式</span><br><span class="line">        10, 40,         // 窗口左上角相对于父窗口左上角坐标x,y</span><br><span class="line">        80, 20,         // 宽、高</span><br><span class="line">        ParentHwnd,     // 父窗口句柄</span><br><span class="line">        (HMENU)1003,    // 子窗口编号（标识符）</span><br><span class="line">        hInstance,      // 进程句柄</span><br><span class="line">        NULL</span><br><span class="line">    );</span><br><span class="line">    HWND HwndRadioButton = CreateWindowA(</span><br><span class="line">        &quot;button&quot;,         // 窗口类名</span><br><span class="line">        &quot;单选按钮&quot;,     // 窗口名</span><br><span class="line">        WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON,   // 窗口样式</span><br><span class="line">        10, 70,         // 窗口左上角相对于父窗口左上角坐标x,y</span><br><span class="line">        80, 20,         // 宽、高</span><br><span class="line">        ParentHwnd,     // 父窗口句柄</span><br><span class="line">        (HMENU)1004,    // 子窗口编号（标识符）</span><br><span class="line">        hInstance,      // 进程句柄</span><br><span class="line">        NULL</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在主窗口（父窗口）回调函数里面的switch语句中加入一个分支：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">case WM_COMMAND:</span><br><span class="line">&#123;</span><br><span class="line">        WORD ButtonID = LOWORD(wParam);</span><br><span class="line">        WORD NotifCode = HIWORD(wParam);</span><br><span class="line">        switch (ButtonID) &#123;</span><br><span class="line">            case 1002:</span><br><span class="line">                if (NotifCode == BN_CLICKED) &#123;</span><br><span class="line">                    MessageBox(hWnd, L&quot;普通按钮&quot;, L&quot;Button&quot;, MB_OK);</span><br><span class="line">                &#125;</span><br><span class="line">                break;</span><br><span class="line">            case 1003:</span><br><span class="line">                if (NotifCode == BN_CLICKED) &#123;</span><br><span class="line">                    MessageBox(hWnd, L&quot;复选框&quot;, L&quot;Button&quot;, MB_OK);</span><br><span class="line">                &#125;</span><br><span class="line">                break;</span><br><span class="line">            case 1004:</span><br><span class="line">                if (NotifCode == BN_CLICKED) &#123;</span><br><span class="line">                    MessageBox(hWnd, L&quot;单选按钮&quot;, L&quot;Button&quot;, MB_OK);</span><br><span class="line">                &#125;</span><br><span class="line">                break;</span><br><span class="line">            default:</span><br><span class="line">    			return DefWindowProc(hWnd, message, wParam, lParam);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最终代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br></pre></td><td class="code"><pre><span class="line">// FirstWindow.cpp : 定义应用程序的入口点。</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#include &quot;framework.h&quot;</span><br><span class="line">#include &quot;FirstWindow.h&quot;</span><br><span class="line">#include &quot;Debug.h&quot;</span><br><span class="line"></span><br><span class="line">LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);</span><br><span class="line">void CreateButton(HWND ParentHwnd, HINSTANCE hInstance);</span><br><span class="line"></span><br><span class="line">int APIENTRY wWinMain(_In_ HINSTANCE hInstance,</span><br><span class="line">                     _In_opt_ HINSTANCE hPrevInstance,</span><br><span class="line">                     _In_ LPWSTR    lpCmdLine,</span><br><span class="line">                     _In_ int       nCmdShow)</span><br><span class="line">&#123;</span><br><span class="line">    // 1、注册窗口类</span><br><span class="line">    TCHAR Name[] = L&quot;My First Window&quot;;</span><br><span class="line">    WNDCLASS wnd = &#123; 0 &#125;;</span><br><span class="line">    wnd.lpfnWndProc = WndProc;          // 回调函数</span><br><span class="line">    wnd.lpszClassName = Name;           // 类名</span><br><span class="line">    wnd.hInstance = hInstance;         // 进程句柄</span><br><span class="line">    wnd.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1); // 背景色(白色)</span><br><span class="line">    wnd.hCursor = LoadCursor(NULL, IDC_ARROW);   // 箭头光标</span><br><span class="line">    RegisterClass(&amp;wnd);</span><br><span class="line"></span><br><span class="line">    // 2、创建窗口</span><br><span class="line">    HWND hwnd = CreateWindow(</span><br><span class="line">        Name,                   // 类名</span><br><span class="line">        TEXT(&quot;我的Win32窗口&quot;),          // 窗口标题</span><br><span class="line">        WS_OVERLAPPEDWINDOW,     // 标准窗口样式</span><br><span class="line">        CW_USEDEFAULT,     // 初始水平位置（默认居中）</span><br><span class="line">        CW_USEDEFAULT,      // 初始垂直位置</span><br><span class="line">        500,                // 宽度500px</span><br><span class="line">        300,                // 高度300px</span><br><span class="line">        NULL,       // 父窗口</span><br><span class="line">        NULL,       // 菜单</span><br><span class="line">        hInstance,  // 实例句柄</span><br><span class="line">        NULL</span><br><span class="line">        );</span><br><span class="line">    if (hwnd == NULL) &#123;</span><br><span class="line">        MessageBoxW(NULL, L&quot;窗口创建失败!&quot;, L&quot;错误&quot;, MB_OK | MB_ICONERROR);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    CreateButton(hwnd,hInstance);</span><br><span class="line"></span><br><span class="line">    // 3. 显示窗口</span><br><span class="line">    ShowWindow(hwnd, SW_SHOW); // 显示窗口</span><br><span class="line">   </span><br><span class="line">    // 4. 消息循环</span><br><span class="line">    MSG msg;</span><br><span class="line">    while (GetMessage(&amp;msg, NULL, 0, 0) &gt; 0) &#123;</span><br><span class="line">        TranslateMessage(&amp;msg); // 转换键盘消息</span><br><span class="line">        DispatchMessage(&amp;msg);  // 分发到窗口过程</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 创建按钮</span><br><span class="line">void CreateButton(HWND ParentHwnd,HINSTANCE hInstance) &#123;</span><br><span class="line">    HWND HwndPushButton = CreateWindowA(</span><br><span class="line">        &quot;button&quot;,         // 窗口类名,button是系统预定义好的</span><br><span class="line">        &quot;普通按钮&quot;,    // 窗口名</span><br><span class="line">        WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,   // 窗口样式，子窗口必须包含“WS_CHILD”，“WS_VISIBLE”代表窗口最初可见，</span><br><span class="line">        10, 10,         // 窗口左上角相对于父窗口左上角坐标x,y</span><br><span class="line">        80, 20,         // 宽、高</span><br><span class="line">        ParentHwnd,     // 父窗口句柄</span><br><span class="line">        (HMENU)1002,    // 子窗口编号（标识符）</span><br><span class="line">        hInstance,      // 进程句柄</span><br><span class="line">        NULL            // 附加信息，一般为NULL</span><br><span class="line">        );</span><br><span class="line">    HWND HwndCheckBox = CreateWindowA(</span><br><span class="line">        &quot;button&quot;,         // 窗口类名</span><br><span class="line">        &quot;复选框&quot;,    // 窗口名</span><br><span class="line">        WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,   // 窗口样式，子窗口必须包含“WS_CHILD”，“WS_VISIBLE”代表窗口最初可见，</span><br><span class="line">        10, 40,         // 窗口左上角相对于父窗口左上角坐标x,y</span><br><span class="line">        80, 20,         // 宽、高</span><br><span class="line">        ParentHwnd,     // 父窗口句柄</span><br><span class="line">        (HMENU)1003,    // 子窗口编号（标识符）</span><br><span class="line">        hInstance,      // 进程句柄</span><br><span class="line">        NULL</span><br><span class="line">    );</span><br><span class="line">    HWND HwndRadioButton = CreateWindowA(</span><br><span class="line">        &quot;button&quot;,         // 窗口类名</span><br><span class="line">        &quot;单选按钮&quot;,     // 窗口名</span><br><span class="line">        WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON,   // 窗口样式，子窗口必须包含“WS_CHILD”，“WS_VISIBLE”代表窗口最初可见</span><br><span class="line">        10, 70,         // 窗口左上角相对于父窗口左上角坐标x,y</span><br><span class="line">        80, 20,         // 宽、高</span><br><span class="line">        ParentHwnd,     // 父窗口句柄</span><br><span class="line">        (HMENU)1004,    // 子窗口编号（标识符）</span><br><span class="line">        hInstance,      // 进程句柄</span><br><span class="line">        NULL</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//</span><br><span class="line">//  函数: WndProc(HWND, UINT, WPARAM, LPARAM)</span><br><span class="line">//</span><br><span class="line">//  目标: 处理主窗口的消息。</span><br><span class="line">//</span><br><span class="line">//  WM_COMMAND  - 处理应用程序菜单</span><br><span class="line">//  WM_PAINT    - 绘制主窗口</span><br><span class="line">//  WM_DESTROY  - 发送退出消息并返回</span><br><span class="line">//</span><br><span class="line">//</span><br><span class="line">LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)</span><br><span class="line">&#123;</span><br><span class="line">    switch (message)</span><br><span class="line">    &#123;</span><br><span class="line">        case WM_CREATE:</span><br><span class="line">        &#123;</span><br><span class="line">            CREATESTRUCT* info = (CREATESTRUCT*)lParam;</span><br><span class="line">            DebugLog(L&quot;窗口创建成功，窗口类名为%s\n&quot;, info-&gt;lpszClass);</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        case WM_MOVE:</span><br><span class="line">        &#123;</span><br><span class="line">            POINTS point = MAKEPOINTS(lParam);</span><br><span class="line">            DebugLog(&quot;窗口移动到了(%d,%d)\n&quot;, point.x, point.y);</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        case WM_LBUTTONDOWN:</span><br><span class="line">        &#123;</span><br><span class="line">            POINTS point2 = MAKEPOINTS(lParam);</span><br><span class="line">            DebugLog(&quot;按下了左键,坐标为(%d,%d)\n&quot;, point2.x, point2.y);</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        case WM_KEYDOWN:</span><br><span class="line">            DebugLog(&quot;按下了键盘，wParam：%#x，lParam：%#x\n&quot;, wParam, lParam);</span><br><span class="line">            return 0;</span><br><span class="line">        case WM_CLOSE:</span><br><span class="line">            DebugLog(&quot;关闭窗口\n&quot;);</span><br><span class="line">            DestroyWindow(hWnd); // 销毁窗口</span><br><span class="line">            return 0;</span><br><span class="line">        case WM_DESTROY:</span><br><span class="line">            DebugLog(&quot;销毁窗口\n&quot;);</span><br><span class="line">            PostQuitMessage(0);</span><br><span class="line">            return 0;</span><br><span class="line">        case WM_COMMAND:</span><br><span class="line">        &#123;</span><br><span class="line">                WORD ButtonID = LOWORD(wParam);</span><br><span class="line">                WORD NotifCode = HIWORD(wParam);</span><br><span class="line">                switch (ButtonID) &#123;</span><br><span class="line">                    case 1002:</span><br><span class="line">                        if (NotifCode == BN_CLICKED) &#123;</span><br><span class="line">                            MessageBox(hWnd, L&quot;普通按钮&quot;, L&quot;Button&quot;, MB_OK);</span><br><span class="line">                        &#125;</span><br><span class="line">                        break;</span><br><span class="line">                    case 1003:</span><br><span class="line">                        if (NotifCode == BN_CLICKED) &#123;</span><br><span class="line">                            MessageBox(hWnd, L&quot;复选框&quot;, L&quot;Button&quot;, MB_OK);</span><br><span class="line">                        &#125;</span><br><span class="line">                        break;</span><br><span class="line">                    case 1004:</span><br><span class="line">                        if (NotifCode == BN_CLICKED) &#123;</span><br><span class="line">                            MessageBox(hWnd, L&quot;单选按钮&quot;, L&quot;Button&quot;, MB_OK);</span><br><span class="line">                        &#125;</span><br><span class="line">                        break;</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        default:</span><br><span class="line">            return DefWindowProc(hWnd, message, wParam, lParam);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Win32/" rel="tag"><i class="fa fa-tag"></i> Win32</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/21586/" rel="prev" title="图形化界面">
+      <i class="fa fa-chevron-left"></i> 图形化界面
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/27109/" rel="next" title="使用Dialog创建对话框">
+      使用Dialog创建对话框 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%89%E9%92%AE"><span class="nav-number">1.</span> <span class="nav-text">按钮</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#lpClassName%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">lpClassName：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dwStyle%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">dwStyle：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%A0%B7%E5%BC%8F%EF%BC%9A"><span class="nav-number">1.2.1.</span> <span class="nav-text">基础样式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%93%E7%94%A8%E6%A0%B7%E5%BC%8F%EF%BC%9A"><span class="nav-number">1.2.2.</span> <span class="nav-text">专用样式：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hMenu%EF%BC%9A"><span class="nav-number">1.3.</span> <span class="nav-text">hMenu：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%89%E9%92%AE%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="nav-number">1.4.</span> <span class="nav-text">按钮回调函数：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%EF%BC%9A"><span class="nav-number">1.5.</span> <span class="nav-text">代码实现：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
