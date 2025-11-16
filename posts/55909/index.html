@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="查找窗口​	使用FindWindow函数来查找指的窗口，返回窗口句柄： 1234HWND FindWindowA(  [in, optional] LPCSTR lpClassName,		&#x2F;&#x2F; 窗口类名  [in, optional] LPCSTR lpWindowName		&#x2F;&#x2F; 窗口名称（标题）);		&#x2F;&#x2F; 返回值：返回窗口句柄  如果事先不知道目标窗口的窗口类名或窗口名，可使用工具Sp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="窗口控制">
+<meta property="og:url" content="http://example.com/posts/55909/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="查找窗口​	使用FindWindow函数来查找指的窗口，返回窗口句柄： 1234HWND FindWindowA(  [in, optional] LPCSTR lpClassName,		&#x2F;&#x2F; 窗口类名  [in, optional] LPCSTR lpWindowName		&#x2F;&#x2F; 窗口名称（标题）);		&#x2F;&#x2F; 返回值：返回窗口句柄  如果事先不知道目标窗口的窗口类名或窗口名，可使用工具Sp">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250904200606933.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250904201059685.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250904203031075.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250904203059095.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250904211924914.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250904212733547.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250904212946690.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250904213121039.png">
+<meta property="og:image" content="http://example.com/posts/undefined/Figure_1.png">
+<meta property="article:published_time" content="2025-09-04T11:51:59.000Z">
+<meta property="article:modified_time" content="2025-09-05T13:39:30.286Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="Win32">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/undefined/image-20250904200606933.png">
+
+<link rel="canonical" href="http://example.com/posts/55909/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>窗口控制 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/55909/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          窗口控制
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-09-04 19:51:59" itemprop="dateCreated datePublished" datetime="2025-09-04T19:51:59+08:00">2025-09-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-05 21:39:30" itemprop="dateModified" datetime="2025-09-05T21:39:30+08:00">2025-09-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="查找窗口"><a href="#查找窗口" class="headerlink" title="查找窗口"></a>查找窗口</h1><p>​	使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-findwindowa">FindWindow</a>函数来查找指的窗口，返回窗口句柄：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HWND FindWindowA(</span><br><span class="line">  [in, optional] LPCSTR lpClassName,		// 窗口类名</span><br><span class="line">  [in, optional] LPCSTR lpWindowName		// 窗口名称（标题）</span><br><span class="line">);		// 返回值：返回窗口句柄</span><br></pre></td></tr></table></figure>
+
+<p>如果事先不知道目标窗口的窗口类名或窗口名，可使用工具Spy++来查看。打开方式：[VS2022-&gt;工具-&gt;Spy++(+)]。打开会显示所有打开的窗口。</p>
+<img src="/posts/undefined/image-20250904200606933.png" class="" title="image-20250904200606933">
+
+<p>点击[搜索-&gt;查找窗口]会打开如下窗口：</p>
+<img src="/posts/undefined/image-20250904201059685.png" class="" title="image-20250904201059685">
+
+<p>拖动中间那个靶子到目标窗口，可以查看该窗口的句柄、标题、类名（为空则代表没有）。</p>
+<p>注：窗口每次创建时句柄都不同，但是标题和类名是不变的，因此不要直接用Spy++提供的句柄，因为这样写出的程序在窗口下次打开时就会无效。应该在程序里面使用标题和类名动态获取句柄。</p>
+<h1 id="修改窗口标题："><a href="#修改窗口标题：" class="headerlink" title="修改窗口标题："></a>修改窗口标题：</h1><p>使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-setwindowtexta">SetWindowText</a>函数来给窗口设置标题：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL SetWindowTextA(</span><br><span class="line">  [in]           HWND   hWnd,			// 窗口句柄</span><br><span class="line">  [in, optional] LPCSTR lpString		// 新的标题</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	TCHAR szTitle[MAX_PATH] = &#123; 0 &#125;;</span><br><span class="line">	HWND hwnd = ::FindWindow(TEXT(&quot;#32770&quot;), TEXT(&quot;注册器&quot;));</span><br><span class="line">	if (hwnd != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		//修改窗口标题							</span><br><span class="line">		::SetWindowText(hwnd, L&quot;新的窗口标题&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		::MessageBox(NULL, TEXT(&quot;窗口没有找到&quot;), TEXT(&quot;[ERROR]&quot;), MB_OK);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行前：</p>
+<img src="/posts/undefined/image-20250904203031075.png" class="" title="image-20250904203031075">
+
+<p>运行后：</p>
+<img src="/posts/undefined/image-20250904203059095.png" class="" title="image-20250904203059095">
+
+<h1 id="窗口置顶"><a href="#窗口置顶" class="headerlink" title="窗口置顶"></a>窗口置顶</h1><p>使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-switchtothiswindow">SwitchToThisWindow</a>函数将目标窗口置于顶端。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void SwitchToThisWindow(</span><br><span class="line">  [in] HWND hwnd,			// 窗口句柄</span><br><span class="line">  [in] BOOL fUnknown		// 一般置false</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>此函数实现在user32.dll里面，定义在winuser.h里面，所以使用前需要包含此头文件（或显示导入）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;winuser.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	TCHAR szTitle[MAX_PATH] = &#123; 0 &#125;;</span><br><span class="line">	HWND hwnd = ::FindWindow(TEXT(&quot;#32770&quot;), TEXT(&quot;注册器&quot;));</span><br><span class="line">	if (hwnd != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		SwitchToThisWindow(hwnd, false);</span><br><span class="line"></span><br><span class="line">		Sleep(3000);</span><br><span class="line">		//关闭窗口 							</span><br><span class="line">		SendMessage(hwnd, WM_CLOSE, 0, 0);</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		MessageBox(NULL, TEXT(&quot;窗口没有找到&quot;), TEXT(&quot;[ERROR]&quot;), MB_OK);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="查找子窗口"><a href="#查找子窗口" class="headerlink" title="查找子窗口"></a>查找子窗口</h1><h3 id="法一：使用FindWindowEx函数"><a href="#法一：使用FindWindowEx函数" class="headerlink" title="法一：使用FindWindowEx函数"></a>法一：使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-findwindowexa">FindWindowEx</a>函数</h3><p>当已知子窗口名称和类型时，可使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-findwindowexa">FindWindowEx</a>函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">HWND FindWindowExA(</span><br><span class="line">  [in, optional] HWND   hWndParent,			// 父窗口</span><br><span class="line">  [in, optional] HWND   hWndChildAfter,		// 搜索的起始子窗口。如果为NULL则从第一个子窗口开始</span><br><span class="line">  [in, optional] LPCSTR lpszClass,			// 类名</span><br><span class="line">  [in, optional] LPCSTR lpszWindow			// 窗口名</span><br><span class="line">);			// 返回值：子窗口句柄</span><br></pre></td></tr></table></figure>
+
+<p>注：如果有多个子窗口满足条件，则按第一个找到的子窗口来。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;winuser.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	TCHAR szTitle[MAX_PATH] = &#123; 0 &#125;;</span><br><span class="line">	HWND hwnd = FindWindow(TEXT(&quot;#32770&quot;), TEXT(&quot;注册器&quot;));</span><br><span class="line">	if (hwnd != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		//查找子窗口						</span><br><span class="line">		HWND hEdit1 = FindWindowEx(hwnd, NULL, L&quot;Edit&quot;, NULL);</span><br><span class="line">		HWND hEdit2 = FindWindowEx(hwnd, hEdit1, L&quot;Edit&quot;, NULL);</span><br><span class="line">		//修改内容						</span><br><span class="line">		SendMessage(hEdit1, WM_SETTEXT, 0, (LPARAM)L&quot;新的内容1&quot;);</span><br><span class="line">		SendMessage(hEdit2, WM_SETTEXT, 0, (LPARAM)L&quot;新的内容2&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		MessageBox(NULL, TEXT(&quot;窗口没有找到&quot;), TEXT(&quot;[ERROR]&quot;), MB_OK);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>效果：</p>
+<img src="/posts/undefined/image-20250904211924914.png" class="" title="image-20250904211924914">
+
+<h3 id="法二：使用GetDlgItem函数"><a href="#法二：使用GetDlgItem函数" class="headerlink" title="法二：使用GetDlgItem函数"></a>法二：使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-getdlgitem">GetDlgItem</a>函数</h3><p>上面那种情况一旦控件多了，就容易冲突，因为标题和类名都可重复。但是，在一个对话框的所有控件里面，每一个控件的ID是唯一的，于是可以使用控件ID获取控件句柄。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HWND GetDlgItem(</span><br><span class="line">  [in, optional] HWND hDlg,				// 主窗口句柄</span><br><span class="line">  [in]           int  nIDDlgItem		// 控件ID</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>如果不知道控件ID，可以使用Spy++的搜索。在获取主窗口的信息后，点击确定，Spy++的窗口里面的树形图就会定位到此窗口的位置。（如果显示搜索失败，则需要右键刷新再进行搜索）：</p>
+<img src="/posts/undefined/image-20250904212733547.png" class="" title="image-20250904212733547">
+
+<p>此窗口的子项就是其子窗口，【右键-&gt;属性】即可查看子窗口的ID：</p>
+<img src="/posts/undefined/image-20250904212946690.png" class="" title="image-20250904212946690">
+
+<p>然后可使用GetDlgItem函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//查找子窗口						</span><br><span class="line">HWND hEdit = GetDlgItem(hwnd, 0x3ED);</span><br><span class="line">//修改内容						</span><br><span class="line">SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)L&quot;新的内容&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>效果：</p>
+<img src="/posts/undefined/image-20250904213121039.png" class="" title="image-20250904213121039">
+
+<h1 id="枚举子窗口"><a href="#枚举子窗口" class="headerlink" title="枚举子窗口"></a>枚举子窗口</h1><p>使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-enumchildwindows">EnumChildWindows</a>函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BOOL EnumChildWindows(</span><br><span class="line">  [in, optional] HWND        hWndParent,			// 父窗口句柄</span><br><span class="line">  [in]           WNDENUMPROC lpEnumFunc,			// 回调函数</span><br><span class="line">  [in]           LPARAM      lParam					// 传给回调函数的参数</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>通过将每个子窗口的句柄依次传递给应用程序定义的回调函数，枚举属于指定父窗口的子窗口。此函数会一直持续到枚举最后一个子窗口或回调函数返回 <strong>FALSE</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/previous-versions/windows/desktop/legacy/ms633493(v=vs.85)">EnumChildProc</a>回调函数的标准为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL CALLBACK EnumChildProc(</span><br><span class="line">  _In_ HWND   hwnd,				// 子窗口句柄，由EnumChildWindows函数枚举</span><br><span class="line">  _In_ LPARAM lParam			// 参数</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;winuser.h&gt;</span><br><span class="line"></span><br><span class="line">BOOL CALLBACK EnumChildProc(HWND hWnd, LPARAM lParam)</span><br><span class="line">&#123;</span><br><span class="line">	TCHAR szTitle[MAX_PATH] = &#123; 0 &#125;;</span><br><span class="line">	GetWindowText(hWnd, szTitle, MAX_PATH);</span><br><span class="line">	MessageBox(NULL, szTitle, L&quot;[子窗口]&quot;, MB_OK);</span><br><span class="line">	return true;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	TCHAR szTitle[MAX_PATH] = &#123; 0 &#125;;</span><br><span class="line">	HWND hwnd = FindWindow(TEXT(&quot;#32770&quot;), TEXT(&quot;注册器&quot;));</span><br><span class="line">	if (hwnd != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		EnumChildWindows(hwnd, EnumChildProc, 0);</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		MessageBox(NULL, TEXT(&quot;窗口没有找到&quot;), TEXT(&quot;[ERROR]&quot;), MB_OK);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面这段代码会将父窗口的所有子窗口的名称显示出来。</p>
+<h1 id="枚举窗口"><a href="#枚举窗口" class="headerlink" title="枚举窗口"></a>枚举窗口</h1><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-enumwindows">EnumWindows</a>函数通过将句柄传递给应用程序定义的回调函数，枚举屏幕上的所有顶级窗口。 <strong>枚举窗口</strong> 将一直持续到最后一个顶级窗口被枚举或回调函数返回 <strong>FALSE</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL EnumWindows(</span><br><span class="line">  [in] WNDENUMPROC lpEnumFunc,		// 回调函数</span><br><span class="line">  [in] LPARAM      lParam			// 参数</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>回调函数 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/previous-versions/windows/desktop/legacy/ms633498(v=vs.85)">EnumWindowsProc</a>的标准为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL CALLBACK EnumWindowsProc(</span><br><span class="line">  _In_ HWND   hwnd,					// 窗口句柄</span><br><span class="line">  _In_ LPARAM lParam				// 参数</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;winuser.h&gt;</span><br><span class="line"></span><br><span class="line">BOOL CALLBACK EnumOpenWindowProc(HWND hWnd, LPARAM lParam)</span><br><span class="line">&#123;</span><br><span class="line">	TCHAR szTitle[MAX_PATH] = &#123; 0 &#125;;</span><br><span class="line">	GetWindowText(hWnd, szTitle, MAX_PATH);</span><br><span class="line">	if (wcscmp(szTitle, L&quot;注册器&quot;) == 0)</span><br><span class="line">	&#123;</span><br><span class="line">		MessageBox(NULL, szTitle, L&quot;[窗口]&quot;, MB_OK);</span><br><span class="line">		return FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">	return TRUE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	EnumWindows(EnumOpenWindowProc, NULL);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="模拟鼠标点击"><a href="#模拟鼠标点击" class="headerlink" title="模拟鼠标点击"></a>模拟鼠标点击</h1><h2 id="关键函数"><a href="#关键函数" class="headerlink" title="关键函数"></a>关键函数</h2><h3 id="GetWindowRect函数"><a href="#GetWindowRect函数" class="headerlink" title="GetWindowRect函数"></a><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-getwindowrect">GetWindowRect</a>函数</h3><p>先使用GetWindowRect函数获取窗口的位置（相对于左上角）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL GetWindowRect(</span><br><span class="line">  [in]  HWND   hWnd,			// 窗口句柄</span><br><span class="line">  [out] LPRECT lpRect			// 指向 RECT 结构的指针，该结构接收窗口左上角和右下角的屏幕坐标。</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>参数2的 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/api/windef/ns-windef-rect">RECT</a> 结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagRECT &#123;</span><br><span class="line">  LONG left;				// 矩形左上的x</span><br><span class="line">  LONG top;					// 左上的y</span><br><span class="line">  LONG right;				// 右上的x</span><br><span class="line">  LONG bottom;				// 右上的y</span><br><span class="line">&#125; RECT, *PRECT, *NPRECT, *LPRECT;</span><br></pre></td></tr></table></figure>
+
+<h3 id="SetCursorPos函数"><a href="#SetCursorPos函数" class="headerlink" title="SetCursorPos函数"></a><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-setcursorpos">SetCursorPos</a>函数</h3><p>用于设置鼠标的位置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL SetCursorPos(</span><br><span class="line">  [in] int X,</span><br><span class="line">  [in] int Y</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="SendInput函数"><a href="#SendInput函数" class="headerlink" title="SendInput函数"></a><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-sendinput">SendInput</a>函数</h3><p>用于合成键击、鼠标动作和按钮单击。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">UINT SendInput(</span><br><span class="line">  [in] UINT    cInputs,			// pInputs 数组中的结构个数</span><br><span class="line">  [in] LPINPUT pInputs,			// INPUT 结构的数组。 每个结构都表示要插入键盘或鼠标输入流的事件。</span><br><span class="line">  [in] int     cbSize			// INPUT 结构的大小（以字节为单位）</span><br><span class="line">);		// 函数返回成功插入键盘或鼠标输入流的事件数</span><br></pre></td></tr></table></figure>
+
+<p>参数2的<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/api/winuser/ns-winuser-input">INPUT</a> 结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagINPUT &#123;</span><br><span class="line">  DWORD type;					// 事件类型</span><br><span class="line">  union &#123;</span><br><span class="line">    MOUSEINPUT    mi;			// 有关模拟鼠标事件的信息。</span><br><span class="line">    KEYBDINPUT    ki;			// 有关模拟键盘事件的信息。</span><br><span class="line">    HARDWAREINPUT hi;			// 有关模拟硬件事件的信息。</span><br><span class="line">  &#125; DUMMYUNIONNAME;</span><br><span class="line">&#125; INPUT, *PINPUT, *LPINPUT;</span><br></pre></td></tr></table></figure>
+
+<p>其中的 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/api/winuser/ns-winuser-mouseinput">MOUSEINPUT</a>结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagMOUSEINPUT &#123;</span><br><span class="line">  LONG      dx;					// 鼠标的x的绝对数据</span><br><span class="line">  LONG      dy;					// 鼠标的y的绝对数据</span><br><span class="line">  DWORD     mouseData;			// 滚轮移动量或X按钮按下及抬起</span><br><span class="line">  DWORD     dwFlags;			// 一组位标志，代表发生了什么</span><br><span class="line">  DWORD     time;				// 时间戳。常设为0</span><br><span class="line">  ULONG_PTR dwExtraInfo;		// 附加值</span><br><span class="line">&#125; MOUSEINPUT, *PMOUSEINPUT, *LPMOUSEINPUT;</span><br></pre></td></tr></table></figure>
+
+<p>其中的dwFlags是一个关键的标志位：</p>
+<table>
+<thead>
+<tr>
+<th align="left">标志</th>
+<th align="left">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>MOUSEEVENTF_ABSOLUTE</code></td>
+<td align="left">表示 <code>dx</code> 和 <code>dy</code> 是<strong>绝对坐标</strong>，而非相对于当前位置的相对坐标</td>
+</tr>
+<tr>
+<td align="left"><code>MOUSEEVENTF_MOVE</code></td>
+<td align="left">移动鼠标</td>
+</tr>
+<tr>
+<td align="left"><code>MOUSEEVENTF_LEFTDOWN</code></td>
+<td align="left">按下<strong>左键</strong></td>
+</tr>
+<tr>
+<td align="left"><code>MOUSEEVENTF_LEFTUP</code></td>
+<td align="left">释放<strong>左键</strong></td>
+</tr>
+<tr>
+<td align="left"><code>MOUSEEVENTF_RIGHTDOWN</code></td>
+<td align="left">按下<strong>右键</strong></td>
+</tr>
+<tr>
+<td align="left"><code>MOUSEEVENTF_RIGHTUP</code></td>
+<td align="left">释放<strong>右键</strong></td>
+</tr>
+<tr>
+<td align="left"><code>MOUSEEVENTF_MIDDLEDOWN</code></td>
+<td align="left">按下<strong>中键</strong></td>
+</tr>
+<tr>
+<td align="left"><code>MOUSEEVENTF_MIDDLEUP</code></td>
+<td align="left">释放<strong>中键</strong></td>
+</tr>
+<tr>
+<td align="left"><code>MOUSEEVENTF_WHEEL</code></td>
+<td align="left">滚动滚轮（数据在 <code>mouseData</code> 中）</td>
+</tr>
+</tbody></table>
+<p>注：绝大多数API采用的都是像素坐标，但是，当标志位设置为了<code>MOUSEEVENTF_ABSOLUTE</code>时，SendInput函数会使用规范化的绝对坐标。</p>
+<ul>
+<li>像素坐标的是以像素点为基本单位，一切值都是指“多少个像素点”。这种坐标系统与屏幕分辨率有关。</li>
+<li>规范化的绝对坐标是一个与屏幕分辨率<strong>无关</strong>的抽象坐标系统。无论你的屏幕是 1024x768 还是 4K 分辨率，这个系统的范围都是固定的。它的坐标范围被<strong>固定</strong>为 <strong>0 到 65535</strong> (即 <code>0xFFFF</code>)。<code>0</code> 代表屏幕最左边或最上边，<code>65535</code> 代表屏幕最右边或最下边。</li>
+</ul>
+<h2 id="实现："><a href="#实现：" class="headerlink" title="实现："></a>实现：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;winuser.h&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	TCHAR szTitle[MAX_PATH] = &#123; 0 &#125;;</span><br><span class="line">	HWND hwnd = FindWindow(TEXT(&quot;#32770&quot;), TEXT(&quot;注册器&quot;));</span><br><span class="line">	SwitchToThisWindow(hwnd, false);</span><br><span class="line">	if (hwnd != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		HWND hButton = FindWindowEx(hwnd, NULL, L&quot;Button&quot;, L&quot;确认&quot;);</span><br><span class="line">		RECT rc = &#123; 0 &#125;;</span><br><span class="line">		GetWindowRect(hButton, &amp;rc);</span><br><span class="line">		INPUT inputs[3] = &#123; 0 &#125;;</span><br><span class="line">		inputs[0].type = INPUT_MOUSE;</span><br><span class="line">		inputs[1].type = INPUT_MOUSE;</span><br><span class="line">		inputs[2].type = INPUT_MOUSE;</span><br><span class="line"></span><br><span class="line">		// 计算控件中间位置</span><br><span class="line">		int x = (rc.left + rc.right) / 2;</span><br><span class="line">		int y = (rc.bottom + rc.top) / 2;</span><br><span class="line"></span><br><span class="line">		// 获取屏幕的像素尺寸</span><br><span class="line">		int screenWidth = GetSystemMetrics(SM_CXSCREEN) - 1;  // 例如 1919 (1920x1080屏幕)</span><br><span class="line">		int screenHeight = GetSystemMetrics(SM_CYSCREEN) - 1; // 例如 1079 (1920x1080屏幕)</span><br><span class="line"></span><br><span class="line">		// 从像素坐标转换为标准坐标</span><br><span class="line">		int absoluteX = x * 65535 / screenWidth;</span><br><span class="line">		int absoluteY = y * 65535 / screenHeight;</span><br><span class="line"></span><br><span class="line">		// 移动鼠标</span><br><span class="line">		inputs[0].type = INPUT_MOUSE;</span><br><span class="line">		inputs[0].mi.dx = absoluteX;</span><br><span class="line">		inputs[0].mi.dy = absoluteY;</span><br><span class="line">		inputs[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;</span><br><span class="line"></span><br><span class="line">		// 按下左键</span><br><span class="line">		inputs[1].type = INPUT_MOUSE;</span><br><span class="line">		inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;</span><br><span class="line"></span><br><span class="line">		// 松开左键</span><br><span class="line">		inputs[2].type = INPUT_MOUSE;</span><br><span class="line">		inputs[2].mi.dwFlags = MOUSEEVENTF_LEFTUP;</span><br><span class="line"></span><br><span class="line">		// 发送</span><br><span class="line">		UINT uSent = SendInput(3, inputs, sizeof(INPUT));</span><br><span class="line">		if (uSent != 3) &#123;</span><br><span class="line">			std::cout &lt;&lt; &quot;SendInput 失败: &quot; &lt;&lt; GetLastError() &lt;&lt; std::endl;</span><br><span class="line">		&#125;</span><br><span class="line">		else &#123;</span><br><span class="line">			std::cout &lt;&lt; &quot;点击已发送！\n&quot;;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		MessageBox(NULL, TEXT(&quot;窗口没有找到&quot;), TEXT(&quot;[ERROR]&quot;), MB_OK);</span><br><span class="line">	&#125;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="模拟键击"><a href="#模拟键击" class="headerlink" title="模拟键击"></a>模拟键击</h1><p>先理清两个概念：扫描码与虚拟键码。</p>
+<h2 id="扫描码与虚拟键码："><a href="#扫描码与虚拟键码：" class="headerlink" title="扫描码与虚拟键码："></a>扫描码与虚拟键码：</h2><ul>
+<li>扫描码：物理键盘中每一个按键都对应一个编码，称为扫描码。当物理键盘中某个按键被按下时，键盘会通过USB发送被按下的按键对应的扫描码给电脑操作系统。扫描码实际上是向操作系统说明，是左起第某排第某个键被按下。</li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/inputdev/virtual-key-codes">虚拟键码</a>：是由操作系统抽象出来的、与某个按键绑定的键值。例如，0x31代表键盘“1”键。这个虚拟键码表与键盘布局、输入法、当前语言环境相关。当操作系统收到键盘发出的扫描码时，会根据当前环境的【扫描码-虚拟键码对应表】来将扫描码转化为对应的虚拟键码。</li>
+</ul>
+<p>那么，为什么还要有扫描码这样的中间码呢？键盘直接将键帽与虚拟键码对应，然后直接发送虚拟键码给操作系统不行吗？</p>
+<p>键盘的电路结构和按键矩阵基本是统一的，因此相同物理位置的按键会发出相同的扫描码，结构如下图所示(蓝色数字代表扫描码)：</p>
+<img src="/posts/undefined/Figure_1.png" class="" title="Figure_1">
+
+<p>但是，各个语言环境的<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/globalization/windows-keyboard-layouts">键盘布局</a>却不相同。举个例子，在美式或中文键盘里，扫描码为0x10对应的虚拟键码是0x51，代表”Q”键。而法语键盘中，扫描码为0x10对应的虚拟键码是0x41，代表”A”键。</p>
+<p>如果操作系统不做转换，那么键盘有两种方式维持功能：</p>
+<p>- </p>
+<ol>
+<li>一个键盘只专注于一种语言环境，在敲击按键后直接发送虚拟键码而不是扫描码</li>
+<li>转换表由键盘来维护，键盘根据当前语言环境选择转换表</li>
+</ol>
+<p>这两种方式都有缺点：方法1，键盘不支持多语言输入法，没有通用性，你需要买多个不同语言的键盘来完成英文和中文输入；方法2，等于把键盘布局映射表塞进键盘硬件，破坏了硬件简洁性。因此，键盘只需发送扫描码，映射逻辑交由操作系统维护，才能保持通用性。</p>
+<p>在应用程序中，大多数时候都忽视扫描码，而是使用虚拟键码来解释击键消息。但是，在一些情况下，扫描码被使用来规避键盘布局带来的问题。例如，在大多数游戏前后左右移动都是使用WASD四个按键，这4个按键在美式键盘中扫描码对应0x11、0x1E、0x1F、0x20，这4个按键挨在一起。但是，在法式键盘中，WASD对应的是0x2D、0x10、0x1E、0x20，这4个按键位置分散，操作手感完全不同。如果一个游戏使用虚拟键码WASD来判断玩家操作，那么对于法国玩家来说，体验感会相当不好。如果使用扫描码0x11、0x1E、0x1F、0x20来判断玩家操作，那么无论是哪种键盘布局，都是对应键盘上的那几个位置，只不过操作的不再是WASD，而是ZQSD了。</p>
+<h2 id="关键函数-1"><a href="#关键函数-1" class="headerlink" title="关键函数"></a>关键函数</h2><p>模拟键盘敲击也是使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-sendinput">SendInput</a>函数，只是其<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/api/winuser/ns-winuser-input">INPUT</a> 结构用的是 **<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/api/winuser/ns-winuser-keybdinput">KEYBDINPUT</a>**：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagKEYBDINPUT &#123;</span><br><span class="line">    WORD      wVk;          // 虚拟键码 (Virtual-Key Code)</span><br><span class="line">    WORD      wScan;        // 硬件扫描码 (Scan Code)</span><br><span class="line">    DWORD     dwFlags;      // 标志位，指定按键行为</span><br><span class="line">    DWORD     time;         // 时间戳（通常设为0）</span><br><span class="line">    ULONG_PTR dwExtraInfo;  // 附加信息（通常设为0）</span><br><span class="line">&#125; KEYBDINPUT, *PKEYBDINPUT, *LPKEYBDINPUT;</span><br></pre></td></tr></table></figure>
+
+<p>标志位：</p>
+<table>
+<thead>
+<tr>
+<th align="left">值</th>
+<th align="left">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>KEYEVENTF_EXTENDEDKEY</strong>0x0001</td>
+<td align="left">扩展键标志。如果指定， <strong>则 wScan</strong> 扫描代码由两个字节组成的序列组成，其中第一个字节的值为 0xE0。 有关详细信息 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/inputdev/about-keyboard-input#extended-key-flag">，请参阅扩展键标志</a> 。</td>
+</tr>
+<tr>
+<td align="left"><strong>KEYEVENTF_KEYUP</strong>0x0002</td>
+<td align="left">如果指定，则释放密钥。 如果未指定，则按键。</td>
+</tr>
+<tr>
+<td align="left"><strong>KEYEVENTF_SCANCODE</strong>0x0008</td>
+<td align="left">如果指定， <strong>wScan</strong> 将标识密钥，并忽略 <strong>wVk</strong> 。</td>
+</tr>
+<tr>
+<td align="left"><strong>KEYEVENTF_UNICODE</strong>0x0004</td>
+<td align="left">如果指定，系统会合成 <strong>VK_PACKET</strong> 击键。使用这个标志后，<strong>wVk</strong> 参数必须为零，wScan用来存储字符的码点，例如填入”我”的码点，相当于按下了一个虚拟的”我”按键。在抬起此虚拟按键时需要与KEYEVENTF_KEYUP配合使用。</td>
+</tr>
+</tbody></table>
+<p>在大多数情况下这个标志位都设置为0（代表按下）或KEYEVENTF_KEYUP（代表抬起）。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;winuser.h&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	TCHAR szTitle[MAX_PATH] = &#123; 0 &#125;;</span><br><span class="line">	HWND hwnd = FindWindow(TEXT(&quot;#32770&quot;), TEXT(&quot;注册器&quot;));</span><br><span class="line">	SwitchToThisWindow(hwnd, false);</span><br><span class="line">	if (hwnd != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		HWND hEdit = FindWindowEx(hwnd, NULL, L&quot;Edit&quot;, NULL);</span><br><span class="line">		RECT rc = &#123; 0 &#125;;</span><br><span class="line">		GetWindowRect(hEdit, &amp;rc);</span><br><span class="line">		// 计算控件中间位置</span><br><span class="line">		int x = (rc.left + rc.right) / 2;</span><br><span class="line">		int y = (rc.bottom + rc.top) / 2;</span><br><span class="line"></span><br><span class="line">		// 获取屏幕的像素尺寸</span><br><span class="line">		int screenWidth = GetSystemMetrics(SM_CXSCREEN) - 1;  // 例如 1919 (1920x1080屏幕)</span><br><span class="line">		int screenHeight = GetSystemMetrics(SM_CYSCREEN) - 1; // 例如 1079 (1920x1080屏幕)</span><br><span class="line"></span><br><span class="line">		// 从像素坐标转换为标准坐标</span><br><span class="line">		int absoluteX = x * 65535 / screenWidth;</span><br><span class="line">		int absoluteY = y * 65535 / screenHeight;</span><br><span class="line"></span><br><span class="line">		INPUT inputs[3] = &#123; 0 &#125;;</span><br><span class="line">		inputs[0].type = INPUT_MOUSE;</span><br><span class="line">		inputs[1].type = INPUT_MOUSE;</span><br><span class="line">		inputs[2].type = INPUT_MOUSE;</span><br><span class="line"></span><br><span class="line">		// 移动鼠标</span><br><span class="line">		inputs[0].type = INPUT_MOUSE;</span><br><span class="line">		inputs[0].mi.dx = absoluteX;</span><br><span class="line">		inputs[0].mi.dy = absoluteY;</span><br><span class="line">		inputs[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;</span><br><span class="line"></span><br><span class="line">		// 按下左键</span><br><span class="line">		inputs[1].type = INPUT_MOUSE;</span><br><span class="line">		inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;</span><br><span class="line">		// 松开左键</span><br><span class="line">		inputs[2].type = INPUT_MOUSE;</span><br><span class="line">		inputs[2].mi.dwFlags = MOUSEEVENTF_LEFTUP;</span><br><span class="line"></span><br><span class="line">		SendInput(3, inputs, sizeof(INPUT));</span><br><span class="line"></span><br><span class="line">		INPUT board[4] = &#123; 0 &#125;;</span><br><span class="line">		// 按下shift</span><br><span class="line">		board[0].type = INPUT_KEYBOARD;</span><br><span class="line">		board[0].ki.dwFlags = 0;</span><br><span class="line">		board[0].ki.wVk = VK_SHIFT;</span><br><span class="line">		// 按下&quot;A&quot;键</span><br><span class="line">		board[1].type = INPUT_KEYBOARD;</span><br><span class="line">		board[1].ki.dwFlags = 0;</span><br><span class="line">		board[1].ki.wVk = &#x27;A&#x27;;</span><br><span class="line">		// 松开&quot;A&quot;键</span><br><span class="line">		board[2].type = INPUT_KEYBOARD;</span><br><span class="line">		board[2].ki.dwFlags = KEYEVENTF_KEYUP;</span><br><span class="line">		board[2].ki.wVk = &#x27;A&#x27;;</span><br><span class="line">		// 松开shift键</span><br><span class="line">		board[3].type = INPUT_KEYBOARD;</span><br><span class="line">		board[3].ki.dwFlags = KEYEVENTF_KEYUP;</span><br><span class="line">		board[3].ki.wVk = VK_SHIFT;</span><br><span class="line"></span><br><span class="line">		SendInput(4, board, sizeof(INPUT));</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		MessageBox(NULL, TEXT(&quot;窗口没有找到&quot;), TEXT(&quot;[ERROR]&quot;), MB_OK);</span><br><span class="line">	&#125;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Win32/" rel="tag"><i class="fa fa-tag"></i> Win32</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/22045/" rel="prev" title="加密壳">
+      <i class="fa fa-chevron-left"></i> 加密壳
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/8729/" rel="next" title="快速幂算法">
+      快速幂算法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E7%AA%97%E5%8F%A3"><span class="nav-number">1.</span> <span class="nav-text">查找窗口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E7%AA%97%E5%8F%A3%E6%A0%87%E9%A2%98%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">修改窗口标题：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AA%97%E5%8F%A3%E7%BD%AE%E9%A1%B6"><span class="nav-number">3.</span> <span class="nav-text">窗口置顶</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%AD%90%E7%AA%97%E5%8F%A3"><span class="nav-number">4.</span> <span class="nav-text">查找子窗口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%95%E4%B8%80%EF%BC%9A%E4%BD%BF%E7%94%A8FindWindowEx%E5%87%BD%E6%95%B0"><span class="nav-number">4.0.1.</span> <span class="nav-text">法一：使用FindWindowEx函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%95%E4%BA%8C%EF%BC%9A%E4%BD%BF%E7%94%A8GetDlgItem%E5%87%BD%E6%95%B0"><span class="nav-number">4.0.2.</span> <span class="nav-text">法二：使用GetDlgItem函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BE%E5%AD%90%E7%AA%97%E5%8F%A3"><span class="nav-number">5.</span> <span class="nav-text">枚举子窗口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BE%E7%AA%97%E5%8F%A3"><span class="nav-number">6.</span> <span class="nav-text">枚举窗口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E6%8B%9F%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB"><span class="nav-number">7.</span> <span class="nav-text">模拟鼠标点击</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0"><span class="nav-number">7.1.</span> <span class="nav-text">关键函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GetWindowRect%E5%87%BD%E6%95%B0"><span class="nav-number">7.1.1.</span> <span class="nav-text">GetWindowRect函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SetCursorPos%E5%87%BD%E6%95%B0"><span class="nav-number">7.1.2.</span> <span class="nav-text">SetCursorPos函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SendInput%E5%87%BD%E6%95%B0"><span class="nav-number">7.1.3.</span> <span class="nav-text">SendInput函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%EF%BC%9A"><span class="nav-number">7.2.</span> <span class="nav-text">实现：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E6%8B%9F%E9%94%AE%E5%87%BB"><span class="nav-number">8.</span> <span class="nav-text">模拟键击</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%AB%E6%8F%8F%E7%A0%81%E4%B8%8E%E8%99%9A%E6%8B%9F%E9%94%AE%E7%A0%81%EF%BC%9A"><span class="nav-number">8.1.</span> <span class="nav-text">扫描码与虚拟键码：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0-1"><span class="nav-number">8.2.</span> <span class="nav-text">关键函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">8.3.</span> <span class="nav-text">实现</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

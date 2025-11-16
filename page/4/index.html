@@ -231,7 +231,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/64455/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/38541/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar_2.gif">
@@ -245,7 +245,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/posts/64455/" class="post-title-link" itemprop="url">楚慧杯2024wp</a>
+            <a href="/posts/38541/" class="post-title-link" itemprop="url">PE解析器</a>
         </h2>
 
         <div class="post-meta">
@@ -255,14 +255,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2024-12-20 17:17:48" itemprop="dateCreated datePublished" datetime="2024-12-20T17:17:48+08:00">2024-12-20</time>
+              <time title="创建时间：2025-07-04 15:56:28" itemprop="dateCreated datePublished" datetime="2025-07-04T15:56:28+08:00">2025-07-04</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-12-23 16:44:20" itemprop="dateModified" datetime="2024-12-23T16:44:20+08:00">2024-12-23</time>
+                <time title="修改时间：2025-07-30 15:03:00" itemprop="dateModified" datetime="2025-07-30T15:03:00+08:00">2025-07-30</time>
               </span>
 
           
@@ -276,15 +276,20 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <hr>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/64455/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <span id="more"></span>
+
+<h1 id="PE解析器"><a href="#PE解析器" class="headerlink" title="PE解析器"></a>PE解析器</h1><p>主要功能：</p>
+<ol>
+<li>打印PE头</li>
+<li>打印节表</li>
+<li>打印数据目录表</li>
+</ol>
+<p>在终端中将PE文件路径传入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include &lt;windows.h&gt;</span><br><span class="line">IMAGE_DOS_HEADER* dos;</span><br><span class="line">IMAGE_FILE_HEADER* fheader;</span><br><span class="line">IMAGE_OPTIONAL_HEADER32* oheader;</span><br><span class="line">IMAGE_SECTION_HEADER* sheader;</span><br><span class="line">void DOS_head(unsigned char *pfile)&#123;</span><br><span class="line">    dos=(IMAGE_DOS_HEADER*)pfile;</span><br><span class="line">    printf(&quot;DOS头:\n&quot;);</span><br><span class="line">    printf(&quot;e_magic:%#06x\te_lfanew:%#010x\n\n&quot;,dos-&gt;e_magic,dos-&gt;e_lfanew);</span><br><span class="line">&#125;</span><br><span class="line">void file_header(unsigned char *pfile)&#123;</span><br><span class="line">    fheader=(IMAGE_FILE_HEADER*)pfile;</span><br><span class="line">    printf(&quot;FILE头:\n&quot;);</span><br><span class="line">    printf(&quot;Machine: %#06x\n&quot;, fheader-&gt;Machine);</span><br><span class="line">    printf(&quot;NumberOfSections: %#06x\n&quot;, fheader-&gt;NumberOfSections);</span><br><span class="line">    printf(&quot;TimeDateStamp: %#010x\n&quot;, fheader-&gt;TimeDateStamp);</span><br><span class="line">    printf(&quot;PointerToSymbolTable: %#010x\n&quot;, fheader-&gt;PointerToSymbolTable);</span><br><span class="line">    printf(&quot;NumberOfSymbols: %#010x\n&quot;, fheader-&gt;NumberOfSymbols);</span><br><span class="line">    printf(&quot;SizeOfOptionalHeader: %#06x\n&quot;, fheader-&gt;SizeOfOptionalHeader);</span><br><span class="line">    printf(&quot;Characteristics: %#06x\n\n\n&quot;, fheader-&gt;Characteristics);</span><br><span class="line">&#125;</span><br><span class="line">void optional_header(unsigned char* pfile)&#123;</span><br><span class="line">    oheader = (IMAGE_OPTIONAL_HEADER32*)pfile;</span><br><span class="line">    printf(&quot;optional头:\n&quot;);</span><br><span class="line">    printf(&quot;SizeOfCode:%#010x\n&quot;,oheader-&gt;SizeOfCode);</span><br><span class="line">    printf(&quot;SizeOfInitializedData:%#010x\n&quot;,oheader-&gt;SizeOfInitializedData);</span><br><span class="line">    printf(&quot;SizeOfUninitializedData:%#010x\n&quot;,oheader-&gt;SizeOfUninitializedData);</span><br><span class="line">    printf(&quot;AddressOfEntryPoint:%#010x\n&quot;,oheader-&gt;AddressOfEntryPoint);</span><br><span class="line">    printf(&quot;BaseOfCode:%#010x\n&quot;,oheader-&gt;BaseOfCode);</span><br><span class="line">    printf(&quot;BaseOfData:%#010x\n&quot;,oheader-&gt;BaseOfData);</span><br><span class="line">    printf(&quot;ImageBase:%#010x\n&quot;,oheader-&gt;ImageBase);</span><br><span class="line">    printf(&quot;SectionAlignment:%#010x\n&quot;,oheader-&gt;SectionAlignment);</span><br><span class="line">    printf(&quot;FileAlignment:%#010x\n&quot;,oheader-&gt;FileAlignment);</span><br><span class="line">    printf(&quot;SizeOfImage:%#010x\n&quot;,oheader-&gt;SizeOfImage);</span><br><span class="line">    printf(&quot;SizeOfHeaders:%#010x\n\n\n&quot;,oheader-&gt;SizeOfHeaders);</span><br><span class="line">&#125;</span><br><span class="line">void directory_print()&#123;</span><br><span class="line">    printf(&quot;Directory:\n&quot;);</span><br><span class="line">    printf(&quot;Name                           RVA              size\n&quot;);</span><br><span class="line">    printf(&quot;Export Directory               %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[0].VirtualAddress,oheader-&gt;DataDirectory[0].Size);</span><br><span class="line">    printf(&quot;Import Directory               %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[1].VirtualAddress,oheader-&gt;DataDirectory[1].Size);</span><br><span class="line">    printf(&quot;Resource Directory             %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[2].VirtualAddress,oheader-&gt;DataDirectory[2].Size);</span><br><span class="line">    printf(&quot;Exception Directory            %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[3].VirtualAddress,oheader-&gt;DataDirectory[3].Size);</span><br><span class="line">    printf(&quot;Security Directory             %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[4].VirtualAddress,oheader-&gt;DataDirectory[4].Size);</span><br><span class="line">    printf(&quot;Base Relocation Table          %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[5].VirtualAddress,oheader-&gt;DataDirectory[5].Size);</span><br><span class="line">    printf(&quot;Debug Directory                %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[6].VirtualAddress,oheader-&gt;DataDirectory[6].Size);</span><br><span class="line">    printf(&quot;Architecture Specific Data     %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[7].VirtualAddress,oheader-&gt;DataDirectory[7].Size);</span><br><span class="line">    printf(&quot;RVA of GP                      %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[8].VirtualAddress,oheader-&gt;DataDirectory[8].Size);</span><br><span class="line">    printf(&quot;TLS Directory                  %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[9].VirtualAddress,oheader-&gt;DataDirectory[9].Size);</span><br><span class="line">    printf(&quot;Load Config Directory          %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[10].VirtualAddress,oheader-&gt;DataDirectory[10].Size);</span><br><span class="line">    printf(&quot;Bound Import Directory         %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[11].VirtualAddress,oheader-&gt;DataDirectory[11].Size);</span><br><span class="line">    printf(&quot;Import Address Table           %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[12].VirtualAddress,oheader-&gt;DataDirectory[12].Size);</span><br><span class="line">    printf(&quot;Delay Import Descriptors       %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[13].VirtualAddress,oheader-&gt;DataDirectory[13].Size);</span><br><span class="line">    printf(&quot;COM Runtime descriptor         %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[14].VirtualAddress,oheader-&gt;DataDirectory[14].Size);</span><br><span class="line">    printf(&quot;Reserved                       %#010x       %#010x\n&quot;,oheader-&gt;DataDirectory[15].VirtualAddress,oheader-&gt;DataDirectory[15].Size);</span><br><span class="line">&#125;</span><br><span class="line">void section_header(unsigned char *pfile)&#123;</span><br><span class="line">    int num = fheader-&gt;NumberOfSections;</span><br><span class="line">    sheader = (IMAGE_SECTION_HEADER*)pfile;</span><br><span class="line">    int i=0;</span><br><span class="line">    IMAGE_SECTION_HEADER* p=NULL;</span><br><span class="line">    printf(&quot;节表:\n&quot;);</span><br><span class="line">    for(i=0;i&lt;num;i++)&#123;</span><br><span class="line">        p = &amp;sheader[i];</span><br><span class="line">        printf(&quot;name:%s\n&quot;,p-&gt;Name);</span><br><span class="line">        printf(&quot;VirtualSize:%#010x\n&quot;,p-&gt;Misc);</span><br><span class="line">        printf(&quot;VirtualAddress:%#010x\n&quot;,p-&gt;VirtualAddress);</span><br><span class="line">        printf(&quot;SizeOfRawData:%#010x\n&quot;,p-&gt;SizeOfRawData);</span><br><span class="line">        printf(&quot;PointerToRawData:%#010x\n&quot;,p-&gt;PointerToRawData);</span><br><span class="line">        printf(&quot;Characteristics:%#010x\n\n&quot;,p-&gt;Characteristics);</span><br><span class="line">    &#125;</span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">int main(int argc, char* argv[])&#123;</span><br><span class="line">    if(argc != 2) &#123;</span><br><span class="line">        printf(&quot;用法: %s &lt;PE文件路径&gt;\n&quot;, argv[0]);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    const char* pe_path = argv[1];</span><br><span class="line">    FILE* pf=fopen(pe_path,&quot;rb&quot;);</span><br><span class="line">    if(!pf) &#123;printf(&quot;打开文件失败！！\n&quot;);return 0;&#125;</span><br><span class="line">    fseek(pf, 0, SEEK_END);</span><br><span class="line">    int psize=ftell(pf);</span><br><span class="line">    fseek(pf, 0, SEEK_SET); </span><br><span class="line">    unsigned char* file_buf=(unsigned char *)malloc(psize);</span><br><span class="line">    fread(file_buf,1,psize,pf);</span><br><span class="line">    fclose(pf);</span><br><span class="line">    DOS_head(file_buf);</span><br><span class="line">    unsigned char* offset = file_buf + dos-&gt;e_lfanew;</span><br><span class="line">    if (memcmp(offset, &quot;PE\0\0&quot;, 4) != 0) &#123;</span><br><span class="line">        printf(&quot;不是有效的PE文件\n&quot;);</span><br><span class="line">        free(file_buf);</span><br><span class="line">        free(dos);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    offset += 4; // 定位到file头</span><br><span class="line">    file_header(offset);</span><br><span class="line">    offset += sizeof(IMAGE_FILE_HEADER); // 定位到可选头</span><br><span class="line">    optional_header(offset);</span><br><span class="line">    offset += sizeof(IMAGE_OPTIONAL_HEADER32);  // 定位到节表</span><br><span class="line">    section_header(offset);</span><br><span class="line">    directory_print();</span><br><span class="line">    free(file_buf);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="RVA与FOA转化器"><a href="#RVA与FOA转化器" class="headerlink" title="RVA与FOA转化器"></a>RVA与FOA转化器</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;windows.h&gt;</span><br><span class="line">IMAGE_DOS_HEADER* dos;</span><br><span class="line">IMAGE_FILE_HEADER* fheader;</span><br><span class="line">IMAGE_OPTIONAL_HEADER32* oheader;</span><br><span class="line">IMAGE_SECTION_HEADER* sheader;</span><br><span class="line">DWORD FOA_to_RVA(DWORD foa)&#123;</span><br><span class="line">    DWORD rva=0;</span><br><span class="line">    if(foa&lt;oheader-&gt;SizeOfHeaders) &#123;</span><br><span class="line">        rva = foa;</span><br><span class="line">        return rva;</span><br><span class="line">    &#125;</span><br><span class="line">    int i=0;</span><br><span class="line">    for(i=0;i&lt;fheader-&gt;NumberOfSections;i++)&#123;</span><br><span class="line">        if(foa&gt;=sheader[i].PointerToRawData&amp;&amp;foa&lt;(sheader[i].PointerToRawData+sheader[i].SizeOfRawData))</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">    int offset=foa-sheader[i].PointerToRawData;</span><br><span class="line">    rva = sheader[i].VirtualAddress + offset;</span><br><span class="line">    return rva;</span><br><span class="line">&#125;</span><br><span class="line">DWORD RVA_to_FOA(DWORD rva)&#123;</span><br><span class="line">    DWORD foa=0;</span><br><span class="line">    if(rva&lt;oheader-&gt;SizeOfHeaders) &#123;</span><br><span class="line">        foa = rva;</span><br><span class="line">        return foa;</span><br><span class="line">    &#125;</span><br><span class="line">    int i=0;</span><br><span class="line">    for(i=0;i&lt;fheader-&gt;NumberOfSections;i++)&#123;</span><br><span class="line">        if(rva&gt;=sheader[i].VirtualAddress&amp;&amp;rva&lt;(sheader[i].VirtualAddress+sheader[i].Misc.VirtualSize))</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">    if(i == fheader-&gt;NumberOfSections) &#123;printf(&quot;没有对应的FOA\n&quot;);return 0;&#125;</span><br><span class="line">    int offset=rva-sheader[i].VirtualAddress;</span><br><span class="line">    foa=sheader[i].PointerToRawData+offset;</span><br><span class="line">    return foa;</span><br><span class="line">&#125;</span><br><span class="line">int main(int argc, char* argv[])&#123;</span><br><span class="line">    if(argc != 2) &#123;</span><br><span class="line">        printf(&quot;用法: %s &lt;PE文件路径&gt;\n&quot;, argv[0]);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    const char* pe_path = argv[1];</span><br><span class="line">    FILE* pf=fopen(pe_path,&quot;rb&quot;);</span><br><span class="line">    if(!pf) &#123;printf(&quot;打开文件失败！！\n&quot;);return 0;&#125;</span><br><span class="line">    fseek(pf, 0, SEEK_END);</span><br><span class="line">    int fsize=ftell(pf);    </span><br><span class="line">    fseek(pf, 0, SEEK_SET); </span><br><span class="line">    unsigned char* file_buf=(unsigned char *)malloc(fsize);</span><br><span class="line">    fread(file_buf,1,fsize,pf);</span><br><span class="line">    fclose(pf);</span><br><span class="line">    unsigned char *buffer=file_buf;</span><br><span class="line">    dos=(IMAGE_DOS_HEADER*)buffer;</span><br><span class="line">    buffer+=dos-&gt;e_lfanew+4;  // 定位文件头</span><br><span class="line">    fheader=(IMAGE_FILE_HEADER*)buffer;</span><br><span class="line">    buffer+=20;      // 定位可选头</span><br><span class="line">    oheader = (IMAGE_OPTIONAL_HEADER32*)buffer;</span><br><span class="line">    buffer += sizeof(IMAGE_OPTIONAL_HEADER32);   // 定位节表</span><br><span class="line">    int size = fheader-&gt;NumberOfSections * sizeof(IMAGE_SECTION_HEADER);</span><br><span class="line">    sheader = (IMAGE_SECTION_HEADER*)buffer;</span><br><span class="line">    int flag=0;</span><br><span class="line">    DWORD foa=0,rva=0;</span><br><span class="line">    while(1)&#123;</span><br><span class="line">        printf(&quot;请输入你需要进行的操作（FOA-&gt;RVA选择1,RVA-&gt;FOA选择2,退出选择-1）:\n&quot;);</span><br><span class="line">        scanf(&quot;%d&quot;,&amp;flag);</span><br><span class="line">        switch(flag)</span><br><span class="line">        &#123;</span><br><span class="line">            case 1:&#123;</span><br><span class="line">                printf(&quot;请输入FOA：&quot;);</span><br><span class="line">                scanf(&quot;%x&quot;,&amp;foa);</span><br><span class="line">                if(foa&gt;fsize||foa&lt;0) &#123;printf(&quot;超出范围!!!&quot;);return 0;&#125;</span><br><span class="line">                rva=FOA_to_RVA(foa);</span><br><span class="line">                printf(&quot;RVA为：%#x,VA为：%#x\n&quot;,rva,rva+oheader-&gt;ImageBase);</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            case 2:&#123;</span><br><span class="line">                printf(&quot;请输入RVA：&quot;);</span><br><span class="line">                scanf(&quot;%x&quot;,&amp;rva);</span><br><span class="line">                if(rva&lt;0||rva&gt;oheader-&gt;SizeOfImage) &#123;printf(&quot;超出范围!!!&quot;);return 0;&#125;</span><br><span class="line">                foa=RVA_to_FOA(rva);</span><br><span class="line">                printf(&quot;FOA为：%#x\n&quot;,foa);</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            default:</span><br><span class="line">                return 0;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    free(file_buf);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
       
     </div>
 
@@ -303,7 +308,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/55463/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/27687/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar_2.gif">
@@ -317,7 +322,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/posts/55463/" class="post-title-link" itemprop="url">CISCN2024wp</a>
+            <a href="/posts/27687/" class="post-title-link" itemprop="url">VScode中文乱码问题解决</a>
         </h2>
 
         <div class="post-meta">
@@ -326,10 +331,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2024-12-18 21:57:16 / 修改时间：23:22:58" itemprop="dateCreated datePublished" datetime="2024-12-18T21:57:16+08:00">2024-12-18</time>
+              <time title="创建时间：2025-07-02 21:35:06" itemprop="dateCreated datePublished" datetime="2025-07-02T21:35:06+08:00">2025-07-02</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-10 22:02:28" itemprop="dateModified" datetime="2025-07-10T22:02:28+08:00">2025-07-10</time>
+              </span>
 
           
 
@@ -342,15 +353,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <hr>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/55463/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <span id="more"></span>
+
+<h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>​	尝试了网上的很多方法，都有各种各样的问题，有将编码全改为utf-8的（缺点：外部运行时乱码，输入中文后输出为乱码），有将编码全改为gbk的（缺点：输入中文为乱码），有直接调用外部终端的（缺点：程序运行结束会直接关闭终端，导致看不到运行结果）。唯一一个貌似行得通的方法就是第三个，但是找了好久都没有让终端停下来的方法，最后在</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://blog.csdn.net/m0_73657663/article/details/134698209?ops_request_misc=%257B%2522request%255Fid%2522%253A%25229fea31e854124f56bd09f3e9533c4251%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&amp;request_id=9fea31e854124f56bd09f3e9533c4251&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-5-134698209-null-null.nonecase&amp;utm_term=vscode&amp;spm=1018.2226.3001.4450</span><br></pre></td></tr></table></figure>
+
+<p>这篇博客里面才知道可以将”type”改为”cppvsdbg”来使程序暂停。</p>
+<h1 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h1><p>1、右下角文件编码改为gbk</p>
+<p>2、tasks.json文件里面args加一个参数”-fexec-charset&#x3D;GBK”</p>
+<p>3、launch.json文件里面改为：”type”: “cppvsdbg”，”externalConsole”: true改为”console”: “externalTerminal”</p>
+<p>最后tasks.json：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;version&quot;: &quot;2.0.0&quot;,</span><br><span class="line">    &quot;tasks&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;type&quot;: &quot;cppbuild&quot;,</span><br><span class="line">            &quot;label&quot;: &quot;C/C++: gcc.exe 生成活动文件&quot;,</span><br><span class="line">            &quot;command&quot;: &quot;D:\\down\\mingw64\\bin\\g++.exe&quot;,</span><br><span class="line">            &quot;args&quot;: [</span><br><span class="line">                &quot;-fdiagnostics-color=always&quot;,</span><br><span class="line">                &quot;-g&quot;,</span><br><span class="line">                &quot;$&#123;file&#125;&quot;,</span><br><span class="line">                &quot;-o&quot;,</span><br><span class="line">                &quot;$&#123;fileDirname&#125;\\$&#123;fileBasenameNoExtension&#125;.exe&quot;,</span><br><span class="line">                &quot;-fexec-charset=GBK&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;options&quot;: &#123;</span><br><span class="line">                &quot;cwd&quot;: &quot;$&#123;fileDirname&#125;&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;problemMatcher&quot;: [</span><br><span class="line">                &quot;$gcc&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;group&quot;: &quot;build&quot;,</span><br><span class="line">            &quot;detail&quot;: &quot;编译器: D:\\down\\mingw64\\bin\\g++.exe&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>launch.json文件:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;configurations&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;C/C++: g++.exe 终端运行&quot;,</span><br><span class="line">            &quot;type&quot;: &quot;cppvsdbg&quot;,</span><br><span class="line">            &quot;request&quot;: &quot;launch&quot;,</span><br><span class="line">            &quot;program&quot;: &quot;$&#123;fileDirname&#125;\\$&#123;fileBasenameNoExtension&#125;.exe&quot;,</span><br><span class="line">            &quot;args&quot;: [],</span><br><span class="line">            &quot;stopAtEntry&quot;: false,</span><br><span class="line">            &quot;cwd&quot;: &quot;$&#123;fileDirname&#125;&quot;,</span><br><span class="line">            &quot;environment&quot;: [],</span><br><span class="line">            &quot;console&quot;: &quot;externalTerminal&quot;,</span><br><span class="line">            &quot;preLaunchTask&quot;: &quot;C/C++: gcc.exe 生成活动文件&quot;,</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;version&quot;: &quot;2.0.0&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
       
     </div>
 
@@ -369,7 +387,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/64193/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/51165/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar_2.gif">
@@ -383,7 +401,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/posts/64193/" class="post-title-link" itemprop="url">调用.exe爆破</a>
+            <a href="/posts/51165/" class="post-title-link" itemprop="url">计网</a>
         </h2>
 
         <div class="post-meta">
@@ -392,10 +410,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2024-12-16 20:54:18 / 修改时间：22:59:12" itemprop="dateCreated datePublished" datetime="2024-12-16T20:54:18+08:00">2024-12-16</time>
+              <time title="创建时间：2025-06-12 17:13:19" itemprop="dateCreated datePublished" datetime="2025-06-12T17:13:19+08:00">2025-06-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-10 22:02:28" itemprop="dateModified" datetime="2025-07-10T22:02:28+08:00">2025-07-10</time>
+              </span>
 
           
 
@@ -408,15 +432,276 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <hr>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/64193/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <span id="more"></span>
+
+<h1 id="一、概论"><a href="#一、概论" class="headerlink" title="一、概论"></a>一、概论</h1><hr>
+<h1 id="二、物理层"><a href="#二、物理层" class="headerlink" title="二、物理层"></a>二、物理层</h1><hr>
+<h1 id="三、数据链路层"><a href="#三、数据链路层" class="headerlink" title="三、数据链路层"></a>三、数据链路层</h1><p>以下关于以太网的描述,正确的是( C)</p>
+<ul>
+<li>A. 以太网提供差错检测和差错纠正的机制</li>
+<li>B. 以太网提供碰撞检测机制</li>
+<li>C. 以太网提供流量控制机制</li>
+<li>D. 以太网提供拥塞控制机制</li>
+</ul>
+<p>答案：B。传统半双工以太网（使用CSMA&#x2F;CD的），<strong>无流量控制机制</strong>，冲突时依靠随机退避重传，流量控制由上层（如TCP）实现。</p>
+<p><strong>DTE（终端设备）：</strong>Data Terminal Equipment，负责生成、处理或消费数据（如发送HTTP请求、运行应用程序）</p>
+<p>注意：路由器也是DTE，因为路由器也会生成报文（如发送路由协议报文：OSPF、BGP），或响应管理请求（如回复ICMP Ping），这符合DTE“生成数据”的特性。</p>
+<p><strong>DCE（数据通信设备）</strong>：Data Communication Device，负责转发或中继数据。（物理层和数据链路层）</p>
+<ul>
+<li>提供时钟同步（如调制解调器控制通信时序）。</li>
+<li>信号格式转换（如将数字信号转为模拟信号）。</li>
+<li>单纯转发数据（如交换机基于MAC地址转发帧）。</li>
+</ul>
+<p>特例：SOHO路由器的internet接口是DTE，LAN接口是DCE。</p>
+<table>
+<thead>
+<tr>
+<th>DTE设备</th>
+<th>DTE设备</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主机、路由器、服务器</td>
+<td>交换机、集线器、网桥、中继器</td>
+</tr>
+</tbody></table>
+<p>可以认为：<strong>物理层与数据链路层设备通常属于DCE</strong>，而<strong>网络层及以上设备通常属于DTE</strong>。</p>
+<p>相同类型设备之间使用交叉线，不同类型设备之间使用直通线。</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>特性</strong></th>
+<th align="center"><strong>基带传输 (Baseband)</strong></th>
+<th align="center"><strong>宽带传输 (Broadband)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>信号类型</strong></td>
+<td align="center">数字信号（直接0&#x2F;1脉冲）</td>
+<td align="center">模拟信号（调制后高频载波）</td>
+</tr>
+<tr>
+<td align="center"><strong>信道复用</strong></td>
+<td align="center">❌ 无复用，独占信道</td>
+<td align="center">✅ 频分复用（FDM），多路信号并行</td>
+</tr>
+<tr>
+<td align="center"><strong>传输距离</strong></td>
+<td align="center">短（&lt;500米）</td>
+<td align="center">长（可达20公里+）</td>
+</tr>
+<tr>
+<td align="center"><strong>典型速率</strong></td>
+<td align="center">10 Mbps ~ 10 Gbps（受距离限制）</td>
+<td align="center">50 Mbps ~ 1 Gbps（多业务共享总带宽）</td>
+</tr>
+<tr>
+<td align="center"><strong>设备需求</strong></td>
+<td align="center">网卡、交换机</td>
+<td align="center">调制解调器、放大器、分频器</td>
+</tr>
+<tr>
+<td align="center"><strong>适用场景</strong></td>
+<td align="center">短距离数字通信（如局域网）</td>
+<td align="center">长距离多业务融合（如电视+互联网）</td>
+</tr>
+<tr>
+<td align="center"><strong>代表技术</strong></td>
+<td align="center">10Base-T以太网、USB</td>
+<td align="center">DOCSIS 3.1（有线宽带）、CATV</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="四、网络层"><a href="#四、网络层" class="headerlink" title="四、网络层"></a>四、网络层</h1><p><strong>子网掩码与可用位数的关系：</strong><br>如果前8-n位为1，后n位为0的掩码十进制表示为<br>$$<br>2^8-2^n&#x3D;256-2^n<br>$$<br>如一个192.168.1.0&#x2F;24抽出5位划分子网，则其子网掩码第4部分为1111 1000 &#x3D; 256 - 8 &#x3D; 248，子网掩码为255.255.255.248</p>
+<p><strong>已知IP、掩码快速求网络号、主机号</strong></p>
+<p>例题：因特网上某主机的IP地址为128.200.68.101，子网掩码为255.255.255.240，该地址的主机号为？</p>
+<p>法一：掩码240，256-240&#x3D;16&#x3D;2^4，也就是前4为为网络号，101-&gt;0110 0101，故其网络号为0110 0000即96，主机号为101-96&#x3D;5；</p>
+<p>法二：掩码240，256-240&#x3D;16，101%16&#x3D;5，主机号5。101&#x2F;16&#x3D;6（子网号），网络号为16*6&#x3D;96。</p>
+<p>法二的原理：求101的网络号就等于求其前4位，101&gt;&gt;4&#x3D;0000 0110（6），6&lt;&lt;4&#x3D;0110 0000(96)，右移4位等于整除16。</p>
+<p>同时该网络：网络地址为128.200.68.96，可用主机数为256-240-2&#x3D;14，范围为128.200.68.97~128.200.68.110</p>
+<p>现将一个IP网络划分为3个子网，若其中一个子网是192.168.9.128&#x2F;26，则下列网络中，不可能是另外两个子网之一的是（  D  ）。 </p>
+<p>A、192.168.9.0&#x2F;25			B、192.168.9.192&#x2F;26</p>
+<p>C、192.168.9.192&#x2F;27		D、192.168.9.0&#x2F;26</p>
+<p>将一个网络划分为3个子网，要满足一下要求：</p>
+<ul>
+<li>3个子网互不包含</li>
+<li>3个子网可完全覆盖原网络</li>
+</ul>
+<p>原网络未知，由于192.168.9.128属于C类网络，暂定原网络为&#x2F;24，则&#x2F;26说明借了两位，128代表10.00 0000，前两位是10。</p>
+<p>分析A选项：192.168.9.0&#x2F;25 代表0.000 0000，相当于包含00和01，只需一个11即可完成覆盖</p>
+<p>分析B选项：192.168.9.192&#x2F;26代表11.00 0000，相当于11，刚好与A互补可完成覆盖</p>
+<p>分析C选项：192.168.9.192&#x2F;27代表110.0 0000，如果原网络为&#x2F;25，那么C代表10，192.168.9.128&#x2F;26代表0（00与01结合），只需一个					  11，即192.168.9.128&#x2F;27</p>
+<p>分析D选项：192.168.9.0&#x2F;26代表00，至少还需要11和01才可完全覆盖，而11和01不可聚合，所以不可能使用3个子网来划分，D错误</p>
+<p> 在给主机设置公网 IP 地址时,下面四个选项哪一个能使用 ( A )</p>
+<p>A、29.9.255.15		B、192.5.91.255</p>
+<p>C、127.21.19.109		D、220.103.256.56 (错误原因：256&gt;255)</p>
+<p>一个IP数据报总长度为4200字节(包含固定长度的首部)。现在需要经过某物理网络传送,但是该网络的MTU&#x3D;1000字节。则该数据报被分片后最后一个分片首部中的片偏移字段的值(用十进制表示)是（ B ）</p>
+<p>A、500 	B、488</p>
+<p>C、125	 D、122</p>
+<p>ip数据报数据长度为4200-20&#x3D;4180</p>
+<p>新数据报长度为1000-20&#x3D;980，但片偏移以8为单位，故数据报长度要为8的倍数，向下取976</p>
+<p>[4280&#x2F;976]&#x3D;5，5个分组</p>
+<p>一个分组片偏移为976&#x2F;8&#x3D;122，故4个分组片偏移为488</p>
+<p>路由表与转发表的区别：</p>
+<table>
+<thead>
+<tr>
+<th><strong>对比维度</strong></th>
+<th><strong>路由表 (RIB)</strong></th>
+<th><strong>转发表 (FIB)</strong></th>
+<th><strong>邻接表 (Adjacency Table)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>核心作用</strong></td>
+<td>存储<strong>所有已知路由</strong></td>
+<td>存储<strong>路由的最优路径</strong></td>
+<td>存储<strong>下一跳与MAC的映射关系</strong></td>
+</tr>
+<tr>
+<td><strong>工作层面</strong></td>
+<td>控制层面（软件决策）</td>
+<td>转发层面（硬件执行）</td>
+<td>数据链路层（L2封装）</td>
+</tr>
+<tr>
+<td><strong>核心内容</strong></td>
+<td>目标网络+掩码、下一跳IP、管理距离、度量值、路由来源</td>
+<td>目标网络+掩码、<strong>出接口</strong>、下一跳IP、<strong>邻接表指针</strong></td>
+<td><strong>下一跳IP</strong>、<strong>出接口</strong>、<strong>目标MAC地址</strong></td>
+</tr>
+<tr>
+<td><strong>生成方式</strong></td>
+<td>路由协议、静态配置、直连网络</td>
+<td>从路由表<strong>提取最优路径</strong>优化生成</td>
+<td>ARP（IPv4）、手动配置</td>
+</tr>
+<tr>
+<td><strong>更新频率</strong></td>
+<td>较高（路由变化时更新）</td>
+<td>较低（路由表最优路径变化时）</td>
+<td>最低（ARP缓存超时——20min、链路状态变化）</td>
+</tr>
+<tr>
+<td><strong>性能要求</strong></td>
+<td>中（CPU处理）</td>
+<td><strong>极高</strong>（硬件TCAM&#x2F;ASIC线速查找）</td>
+<td>高（需与FIB协同快速封装）</td>
+</tr>
+<tr>
+<td><strong>存储位置</strong></td>
+<td>控制处理器内存</td>
+<td>专用硬件（TCAM&#x2F;ASIC）</td>
+<td>硬件或高速内存</td>
+</tr>
+<tr>
+<td><strong>关键决策</strong></td>
+<td><strong>“数据包应该去哪？”</strong>（选择路径）</td>
+<td><strong>“从哪个接口发出？”</strong>（执行转发）</td>
+<td><strong>“如何封装数据帧？”</strong>（解决L2寻址）</td>
+</tr>
+<tr>
+<td><strong>类比</strong></td>
+<td>世界地图（含所有路线）</td>
+<td>导航路线（最优路径指引）</td>
+<td>本地通讯录（下一跳联系方式）</td>
+</tr>
+</tbody></table>
+<p>路由算法创建路由表-&gt;路由表中挑出到各网络最优的路径组成转发表</p>
+<p>分组到达-&gt;根据转发表找下一跳和接口-&gt;邻接表将下一条IP转换为MAC地址-&gt;发包</p>
+<table>
+<thead>
+<tr>
+<th><strong>维度</strong></th>
+<th><strong>RIP</strong></th>
+<th><strong>OSPF</strong></th>
+<th><strong>BGP</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>算法</strong></td>
+<td><strong>距离向量</strong></td>
+<td><strong>链路状态</strong></td>
+<td><strong>路径向量</strong></td>
+</tr>
+<tr>
+<td><strong>协议类型</strong></td>
+<td>IGP（内部网关协议）</td>
+<td>IGP（内部网关协议）</td>
+<td>EGP（外部网关协议）</td>
+</tr>
+<tr>
+<td><strong>协议层级</strong></td>
+<td><strong>应用层（UDP 520 端口）</strong></td>
+<td><strong>网络层（IP 协议号 89）</strong></td>
+<td><strong>应用层（TCP 179 端口）</strong></td>
+</tr>
+<tr>
+<td><strong>设计目标</strong></td>
+<td>小型网络简单路由</td>
+<td>大型网络快速收敛与分层设计</td>
+<td>跨自治系统（AS）的策略路由</td>
+</tr>
+<tr>
+<td><strong>度量标准</strong></td>
+<td>跳数，最大 15 跳</td>
+<td>链路开销</td>
+<td>AS 路径长度、政治等属性</td>
+</tr>
+<tr>
+<td><strong>更新机制</strong></td>
+<td>每 30 秒向邻居发送完整路由表</td>
+<td>触发更新（拓扑变化时洪泛 LSA）</td>
+<td>触发更新 + 增量更新</td>
+</tr>
+<tr>
+<td><strong>收敛速度</strong></td>
+<td>慢（分钟级）</td>
+<td>快（秒级）</td>
+<td>极慢（分钟到小时级）</td>
+</tr>
+<tr>
+<td><strong>防环机制</strong></td>
+<td>跳数限制</td>
+<td>SPF 算法（基于拓扑的无环计算）</td>
+<td>AS_PATH 属性（丢弃含自身 AS 的路由）</td>
+</tr>
+<tr>
+<td><strong>网络规模支持</strong></td>
+<td>极小（≤15 跳）</td>
+<td>大（通过区域划分扩展）</td>
+<td>极大（互联网级路由表）</td>
+</tr>
+<tr>
+<td><strong>配置复杂度</strong></td>
+<td>简单（无需拓扑规划）</td>
+<td>复杂（需设计区域、DR&#x2F;BDR）</td>
+<td>极复杂（策略定制、邻居管理）</td>
+</tr>
+<tr>
+<td><strong>典型应用场景</strong></td>
+<td>小型企业分支、临时网络</td>
+<td>企业内网、数据中心内部</td>
+<td>ISP 互联、跨国企业跨 AS 路由</td>
+</tr>
+</tbody></table>
+<p>OSPF中路由器获得的路由信息是：本区域完整拓扑图 + 其他区域路由摘要，由于OSPF使用组播地址，故其洪泛只在区域内。</p>
+<p>35.(单选题)OSPF协议可以有效的解决路由自环的问题,下面哪一条无法解释这一点()<br>A、OSPF支持路由验证         		 B、OSPF使用链路状态路由算法<br>C、OSPF使用了骨干区域	  		D、当其他区域无法和骨干区域物理直连是，OSPF可以使用虚连接</p>
+<p>A：路由验证是通过密码或密钥验证路由更新的来源，防止恶意路由，与防环无关</p>
+<p>B：每个路由器维护整个网络的链路状态数据库，并独立计算最短路径树，确保路径无环</p>
+<p>C：所有其他区域必须直接或间接连接到骨干区域。分层结构避免区域边界路由器间形成环路</p>
+<p>D：与C相同，分层结构避免区域边界路由器间形成环路</p>
+<hr>
+<h1 id="五、传输层"><a href="#五、传输层" class="headerlink" title="五、传输层"></a>五、传输层</h1><hr>
+<h1 id="六、应用层"><a href="#六、应用层" class="headerlink" title="六、应用层"></a>六、应用层</h1><hr>
+<h1 id="实验："><a href="#实验：" class="headerlink" title="实验："></a>实验：</h1><p>DHCP中继代理（让路由器将外部广播包转发到服务器）：ip helper-address +服务器ip</p>
+<p>DNS实验中：</p>
+<ul>
+<li>域名	A-record	ip</li>
+<li>域名	NS-record	权威域名服务器</li>
+<li>别名	C-NAME	原域名</li>
+</ul>
+
       
     </div>
 
@@ -435,7 +720,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/8147/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/54083/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar_2.gif">
@@ -449,7 +734,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/posts/8147/" class="post-title-link" itemprop="url">国城杯wp</a>
+            <a href="/posts/54083/" class="post-title-link" itemprop="url">ISCC区域赛wp</a>
         </h2>
 
         <div class="post-meta">
@@ -458,10 +743,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2024-12-11 22:51:40 / 修改时间：20:40:14" itemprop="dateCreated datePublished" datetime="2024-12-11T22:51:40+08:00">2024-12-11</time>
+              <time title="创建时间：2025-05-10 12:03:18" itemprop="dateCreated datePublished" datetime="2025-05-10T12:03:18+08:00">2025-05-10</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-05-28 15:59:21" itemprop="dateModified" datetime="2025-05-28T15:59:21+08:00">2025-05-28</time>
+              </span>
 
           
 
@@ -474,15 +765,140 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <hr>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/posts/8147/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <span id="more"></span>
+
+<h1 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h1><h2 id="faze"><a href="#faze" class="headerlink" title="faze"></a>faze</h2><p>主逻辑就是先生成迷宫图，然后调用dM7函数寻找路径，把路径保存在v9，最后与输入进行比较，把断点设置在这:</p>
+<img src="/posts/54083/image-20250510120643938.png" class="" title="image-20250510120643938">
+
+<p>动调查看v9的值：</p>
+<img src="/posts/54083/image-20250510120734428.png" class="" title="image-20250510120734428">
+
+<p>shift+e提取，这就是flag</p>
+<h2 id="greeting"><a href="#greeting" class="headerlink" title="greeting"></a>greeting</h2><p>主要加密流程：每个字节经过异或和循环左移操作，移位次数由索引值和某种除法结果决定</p>
+<img src="/posts/54083/image-20250513183726985.png" class="" title="image-20250513183726985">
+
+<p>经过上述加密后与密文比较。密文：</p>
+<img src="/posts/54083/image-20250513183800011.png" class="" title="image-20250513183800011">
+
+<img src="/posts/54083/image-20250513183838639.png" class="" title="image-20250513183838639">
+
+<img src="/posts/54083/image-20250513183906393.png" class="" title="image-20250513183906393">
+
+<p>写出解密脚本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def ror(n, shift):</span><br><span class="line">    return ((n &gt;&gt; (shift % 8)) | (n &lt;&lt; (8 - (shift % 8)))) &amp; 0xFF</span><br><span class="line"></span><br><span class="line">encrypted_data = [0x13,0x10,0x7C,0xF0,0x52,0x6C,0x56,0x10,0xA1,0x32,0x39,0x2A,0x94,0x19,0xB0,0x14]</span><br><span class="line">flag = []</span><br><span class="line">for i in range(16):</span><br><span class="line">    rol_amount = i % 5</span><br><span class="line">    byte = encrypted_data[i]</span><br><span class="line">    rotated = ror(byte, rol_amount)</span><br><span class="line">    original = rotated ^ (i + 0x5A)</span><br><span class="line">    flag.append(chr(original))</span><br><span class="line">print(&#x27;&#x27;.join(flag))</span><br></pre></td></tr></table></figure>
+
+<h2 id="SecretGrid"><a href="#SecretGrid" class="headerlink" title="SecretGrid"></a>SecretGrid</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line"></span><br><span class="line">void decrypt(char* input, char* output) &#123;</span><br><span class="line">    char key[] = &#123;&quot;ISCC&#123;s_ale_ru_upatu_prrlaullre_&#125;&quot;&#125;;</span><br><span class="line">    </span><br><span class="line">    for (int i = 0; i &lt; 30; i++) &#123;</span><br><span class="line">        if ((i &amp; 1) == 0) &#123;</span><br><span class="line">            output[i] = input[i] ^ (key[i] + 2);</span><br><span class="line">        &#125; else if (i % 3 == 0) &#123;</span><br><span class="line">            output[i] = input[i] ^ (key[i] + 5);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            output[i] = input[i] ^ key[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    output[30] = 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    char v[] = &#123;</span><br><span class="line">        6,39,125,4,13,49,14,52,41,94,27,11,49,110,0,4,10,64,84,116,43,57,53,74,7,31,3,25,43,6</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    char t[30];</span><br><span class="line">    decrypt(v, t);</span><br><span class="line">    </span><br><span class="line">    for (int i = 0; i &lt; 30; i++) &#123;</span><br><span class="line">        printf(&quot;%c&quot;, t[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="有趣的小游戏"><a href="#有趣的小游戏" class="headerlink" title="有趣的小游戏"></a>有趣的小游戏</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">import base64</span><br><span class="line">import struct</span><br><span class="line">from ctypes import c_uint32</span><br><span class="line">def xxtea_encrypt(n, v, key):</span><br><span class="line">    # 全部转为c_unit32格式</span><br><span class="line">    v = [c_uint32(i) for i in v]</span><br><span class="line">    r = 6 + 52 // n</span><br><span class="line">    v1 = v[n-1].value</span><br><span class="line">    delta = 0x9e3779b9</span><br><span class="line">    total = c_uint32(0)</span><br><span class="line">    for i in range(r):</span><br><span class="line">        total.value += delta</span><br><span class="line">        e = (total.value &gt;&gt; 2) &amp; 3</span><br><span class="line">        for j in range(n-1):</span><br><span class="line">            v0 = v[j+1].value</span><br><span class="line">            v[j].value += ((((v1 &gt;&gt; 5) ^ (v0 &lt;&lt; 2)) + ((v0 &gt;&gt; 3) ^ (v1 &lt;&lt; 4))) ^ ((total.value ^ v0) + (key[(j &amp; 3) ^ e] ^ v1)))</span><br><span class="line">            v1 = v[j].value</span><br><span class="line">        v0 = v[0].value</span><br><span class="line">        v[n-1].value += ((((v1 &gt;&gt; 5) ^ (v0 &lt;&lt; 2)) + ((v0 &gt;&gt; 3) ^ (v1 &lt;&lt; 4))) ^ ((total.value ^ v0) + (key[((n-1) &amp; 3) ^ e] ^ v1)))</span><br><span class="line">        v1 = v[n-1].value</span><br><span class="line">    return [i.value for i in v]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def xxtea_decrypt(n, v, key):</span><br><span class="line">    # 全部转为c_unit32格式</span><br><span class="line">    v = [c_uint32(i) for i in v]</span><br><span class="line">    r = 6 + 52 // n</span><br><span class="line">    v0 = v[0].value</span><br><span class="line">    delta = 0x9e3779b9</span><br><span class="line">    total = c_uint32(delta * r)</span><br><span class="line">    for i in range(r):</span><br><span class="line">        e = (total.value &gt;&gt; 2) &amp; 3</span><br><span class="line">        for j in range(n-1, 0, -1):</span><br><span class="line">            v1 = v[j-1].value</span><br><span class="line">            v[j].value -= ((((v1 &gt;&gt; 5) ^ (v0 &lt;&lt; 2)) + ((v0 &gt;&gt; 3) ^ (v1 &lt;&lt; 4))) ^ ((total.value ^ v0) + (key[(j &amp; 3) ^ e] ^ v1)))</span><br><span class="line">            v0 = v[j].value</span><br><span class="line">        v1 = v[n-1].value</span><br><span class="line">        v[0].value -= ((((v1 &gt;&gt; 5) ^ (v0 &lt;&lt; 2)) + ((v0 &gt;&gt; 3) ^ (v1 &lt;&lt; 4))) ^ ((total.value ^ v0) + (key[(0 &amp; 3) ^ e] ^ v1)))</span><br><span class="line">        v0 = v[0].value</span><br><span class="line">        total.value -= delta</span><br><span class="line">    return [i.value for i in v]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">k = [0x12345678, 0x9ABCDEF0, 0xFEDCBA98, 0x76543210]</span><br><span class="line">l = 30</span><br><span class="line">v = [0x8f644b67,0x8dc43994,0x7baf4ebb,0xe5b92cd4,0xe540e3f2,0xb81e24dc,0x3f7addc5,0xfb7aecb0,0x65520266,0xb42f1f86,0xda99ca47,0x75869f5d,0x8ca022e6,0x1f2270ea,0x48f3183c,0xc293f7dd,0xfee027a6,0xe5e5f139,0x189cf5bd,0xdfefdb8f,0xca3e03d0,0x9423c07c,0x30653ba2,0x44334245,0xf8e760fe,0x7225fa4d,0x7c119f87,0x34718b8c,0x5751fc75,0x63080380]</span><br><span class="line">for i in range(10000):</span><br><span class="line">    v = xxtea_decrypt(l, v, k)</span><br><span class="line">    # print(list(map(hex, v)))</span><br><span class="line">    out = b&quot;&quot;.join([struct.pack(&quot;&lt;I&quot;, i) for i in v])</span><br><span class="line">    try:</span><br><span class="line">        print(out.decode())</span><br><span class="line">        print(&quot;&quot;.join([chr(out[i:i+4][0]) for i in range(0, len(out), 4)]), end=&quot;&quot;)</span><br><span class="line">    except:</span><br><span class="line">        continue</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h1><p>两个压缩文件part1、part2</p>
+<p>part1:</p>
+<p>数据区加密标志位（偶数代表未加密）：</p>
+<img src="/posts/54083/image-20250512011547834.png" class="" title="image-20250512011547834">
+
+<p>目录段加密标志位（奇数代表是伪加密）：</p>
+<img src="/posts/54083/image-20250512011738345.png" class="" title="image-20250512011738345">
+
+<p>将70 00 改为00 00 即可正常解压。</p>
+<p>解压后打开文件：</p>
+<img src="/posts/54083/image-20250512012430449.png" class="" title="image-20250512012430449">
+
+<p>说明下一个压缩包是掩码爆破。开始爆破：</p>
+<img src="/posts/54083/image-20250512012545795.png" class="" title="image-20250512012545795">
+
+<p>得到密码：</p>
+<img src="/posts/54083/image-20250512012531176.png" class="" title="image-20250512012531176">
+
+<h1 id="Mobile"><a href="#Mobile" class="headerlink" title="Mobile"></a>Mobile</h1><h2 id="邦布出击"><a href="#邦布出击" class="headerlink" title="邦布出击"></a>邦布出击</h2><img src="/posts/54083/image-20250512022757837.png" class="" title="image-20250512022757837">
+
+<p>这里发现疑似base64密文，解密一下看看</p>
+<img src="/posts/54083/image-20250517011536825.png" class="" title="image-20250517011536825">
+
+<p>从这里的结果可以看到，要对前面三个字符串进行三次base64解密。将上面前三段字符串拼接在一起，进行三次base64解密，得到数据库解密密钥：</p>
+<img src="/posts/54083/image-20250512022912882.png" class="" title="image-20250512022912882">
+
+<p>使用sqlcipher工具进行数据库解密，得到解密后的数据库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PRAGMA key = &#x27;JINGLIU&#x27;;</span><br><span class="line">ATTACH DATABASE &#x27;plaintext.db&#x27; AS plaintext KEY &#x27;&#x27;;</span><br><span class="line">SELECT sqlcipher_export(&#x27;plaintext&#x27;);</span><br><span class="line">DETACH DATABASE plaintext;</span><br></pre></td></tr></table></figure>
+
+<img src="/posts/54083/image-20250512023105094.png" class="" title="image-20250512023105094">
+
+<p>把得到的数据库用DB Browser for SQLCipher打开：</p>
+<img src="/posts/54083/image-20250512023209496.png" class="" title="image-20250512023209496">
+
+<p>这里面这个key后面要用到。</p>
+<img src="/posts/54083/image-20250515135051283.png" class="" title="image-20250515135051283">
+
+<p>根据主函数逻辑，先使用a.a生成密文，然后使用getiv生成密钥，DESHelper().encrypt进行加密，拿加密结果与输入进行对比。因此可以通过frida的hook来直接得到加密后的结果。先尝试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Java.perform(function() &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        // Hook DESHelper.encrypt</span><br><span class="line">        var cls1 = Java.use(&quot;com.example.mobile01.DESHelper&quot;);</span><br><span class="line">        cls1.encrypt.implementation = function(data, key, iv) &#123;</span><br><span class="line">            var enc_data = this.encrypt(data, key, iv);</span><br><span class="line">            console.log(&quot;Flag: ISCC&#123;&quot; + enc_data + &quot;&#125;&quot;);</span><br><span class="line">            return enc_data;</span><br><span class="line">        &#125;;</span><br><span class="line">        console.log(&quot;[+] Hooked com.example.mobile01.DESHelper.encrypt()&quot;);</span><br><span class="line">    &#125; catch (err) &#123;</span><br><span class="line">        console.error(&quot;[-] Failed to hook DESHelper.encrypt: &quot; + err);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>发现程序会直接报错然后直接退出</p>
+<img src="/posts/54083/image-20250515135529398.png" class="" title="image-20250515135529398">
+
+<p>这样完全无法得到密文或者IV。采用控制变量法来探究为什么会出现报错。先hook让a.a不运行</p>
+<img src="/posts/54083/image-20250515135708911.png" class="" title="image-20250515135708911">
+
+<img src="/posts/54083/image-20250515135824540.png" class="" title="image-20250515135824540">
+
+<p>结果发现程序不会断开，而且IV能正常得到，这就说明问题在a.a里面。继续看a.a里面调用的b.b，试一试直接打印b.b返回值：</p>
+<img src="/posts/54083/image-20250515140117960.png" class="" title="image-20250515140117960">
+
+<p>发现能正常返回，说明不是b.b的问题。继续思考，在a.a里面的语句</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SecretKeySpec secretKeySpec = new SecretKeySpec(process(b.c()), &quot;Blowfish&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>中，b.c直接返回空字符串，然后将该空字符串设置为密钥。问题就在这，空的密钥会导致密钥填充失败，所以程序会直接报错闪退。那么拿什么填充密钥？前面数据库文件里面</p>
+<img src="/posts/54083/image-20250515140458909.png" class="" title="image-20250515140458909">
+
+<p>blowfish恰好对应a.a的加密方法，所以猜测这里面的key就是真正的key。使用frida将这个key hook到b.c的返回值，使它当key传入。代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Java.perform(function() &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        // Hook com.example.mobile01.b.c() </span><br><span class="line">        var cls2 = Java.use(&quot;com.example.mobile01.b&quot;);</span><br><span class="line">        cls2.c.implementation = function() &#123;</span><br><span class="line">            var res = &quot;AtBgCfDhEjFlGqHp&quot;;//把数据库里的key放入</span><br><span class="line">            console.log(&quot;[*] com.example.mobile01.b.b() called, returned: &quot; + res);</span><br><span class="line">            return res;</span><br><span class="line">        &#125;;</span><br><span class="line">        console.log(&quot;[+] Hooked com.example.mobile01.a.a()&quot;);</span><br><span class="line">    &#125; catch (err) &#123;</span><br><span class="line">        console.error(&quot;[-] Failed to hook com.example.mobile01.a.a(): &quot; + err);</span><br><span class="line">    &#125;</span><br><span class="line">    try &#123;</span><br><span class="line">        // Hook DESHelper.encrypt</span><br><span class="line">        var cls1 = Java.use(&quot;com.example.mobile01.DESHelper&quot;);</span><br><span class="line">        cls1.encrypt.implementation = function(data, key, iv) &#123;</span><br><span class="line">            var enc_data = this.encrypt(data, key, iv);</span><br><span class="line">            console.log(&quot;Flag: ISCC&#123;&quot; + enc_data + &quot;&#125;&quot;);</span><br><span class="line">            return enc_data;</span><br><span class="line">        &#125;;</span><br><span class="line">        console.log(&quot;[+] Hooked com.example.mobile01.DESHelper.encrypt()&quot;);</span><br><span class="line">    &#125; catch (err) &#123;</span><br><span class="line">        console.error(&quot;[-] Failed to hook DESHelper.encrypt: &quot; + err);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>输入指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frida -U -l hook_des.js -f com.example.mobile01</span><br></pre></td></tr></table></figure>
+
+<p>得到flag：</p>
+<img src="/posts/54083/image-20250515141140152.png" class="" title="image-20250515141140152">
+
+<h2 id="Detective"><a href="#Detective" class="headerlink" title="Detective"></a>Detective</h2><img src="/posts/54083/image-20250513083750267.png" class="" title="image-20250513083750267">
+
+<p>调用了native层的validatePassword函数</p>
+<img src="/posts/54083/image-20250513084030558.png" class="" title="image-20250513084030558">
+
+<p>是一个sha256，密码是4位。可以直接爆破：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line">import itertools</span><br><span class="line"></span><br><span class="line">data = &quot;23213b6f905655aaf0510c9054e4b14719d07c2c17c08d826a5f9139d8c234f9&quot;</span><br><span class="line">table = &#x27;ABCDEFGHIJKLMNOPQRSTUVWXYZ&#x27;</span><br><span class="line"></span><br><span class="line">for chars in itertools.product(table, repeat=4):</span><br><span class="line">    pwd = &#x27;&#x27;.join(chars)</span><br><span class="line">    sha256_hash = hashlib.sha256(pwd.encode()).hexdigest()</span><br><span class="line">    if sha256_hash == data:</span><br><span class="line">        result = pwd</span><br><span class="line">        break</span><br><span class="line">else:</span><br><span class="line">    result = None</span><br><span class="line"></span><br><span class="line">print(result)</span><br></pre></td></tr></table></figure>
+
+<p>得到密码SHER。再查看mainzctivity：</p>
+<img src="/posts/54083/image-20250513084718675.png" class="" title="image-20250513084718675">
+
+<p>主要在于最后一句话：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">str.length() &gt;= 8 &amp;&amp; (str.length() + 1) % 2 != 0 &amp;&amp; str.substring(0, 5).equals(&quot;ISCC&#123;&quot;) &amp;&amp; str.charAt(str.length() - 1) == &#x27;&#125;&#x27; &amp;&amp; stringFromJNI(a.a(str.substring(5, str.length() - 1))).equals(&quot;105C5A31214E50520020444E2F3A&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>这里的stringFromJNI函数和a函数对输入进行了加密。a函数：</p>
+<img src="/posts/54083/image-20250513085045386.png" class="" title="image-20250513085045386">
+
+<img src="/posts/54083/image-20250513085157635.png" class="" title="image-20250513085157635">
+
+<p>stringFromJNI函数（部分）:</p>
+<img src="/posts/54083/image-20250513090334219.png" class="" title="image-20250513090334219">
+
+<p>这里肯定用了异或，猜测Sherlock是作为密钥传入。<br>hook 4个函数，观察其行为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">Java.perform(function () &#123;</span><br><span class="line">    const MainActivity = Java.use(&quot;com.example.detective.MainActivity&quot;);</span><br><span class="line">    const detective_a = Java.use(&quot;com.example.detective.a&quot;);</span><br><span class="line">    const detective_b = Java.use(&quot;com.example.detective.b&quot;);</span><br><span class="line">    // Hook Java 层的 a.a</span><br><span class="line">    detective_a.a.implementation = function (input) &#123;</span><br><span class="line">        const result = this.a(input);</span><br><span class="line">        console.log(&quot;[*] a.a called&quot;);</span><br><span class="line">        console.log(&quot;    Input : &quot; + input);</span><br><span class="line">        console.log(&quot;    Output: &quot; + result);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    // Hook native 层的 stringFromJNI</span><br><span class="line">    MainActivity.stringFromJNI.implementation = function (input) &#123;</span><br><span class="line">        console.log(&quot;[*] stringFromJNI called&quot;);</span><br><span class="line">        console.log(&quot;    Input : &quot; + input);</span><br><span class="line">        const result = this.stringFromJNI(input);</span><br><span class="line">        console.log(&quot;    Output: &quot; + result);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    // Hook Java 层的 a.c</span><br><span class="line">    detective_a.c.implementation = function (input) &#123;</span><br><span class="line">        const result = this.c(input);</span><br><span class="line">        console.log(&quot;[*] a.c called&quot;);</span><br><span class="line">        console.log(&quot;    Input : &quot; + input);</span><br><span class="line">        console.log(&quot;    Output: &quot; + result);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    // Hook Java 层的 a.b</span><br><span class="line">    detective_a.b.implementation = function (input) &#123;</span><br><span class="line">        const result = this.b(input);</span><br><span class="line">        console.log(&quot;[*] a.b called&quot;);</span><br><span class="line">        console.log(&quot;    Input : &quot; + input);</span><br><span class="line">        console.log(&quot;    Output: &quot; + result);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    // Hook Java 层的 b.a</span><br><span class="line">    detective_b.a.implementation = function (input) &#123;</span><br><span class="line">        const result = this.a(input);</span><br><span class="line">        console.log(&quot;[*] b.a called&quot;);</span><br><span class="line">        console.log(&quot;    Input : &quot; + input);</span><br><span class="line">        console.log(&quot;    Output: &quot; + result);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    console.log(&quot;[+] Hooks installed on C0500a.m51a and stringFromJNI&quot;);</span><br><span class="line">&#125;);</span><br><span class="line">// frida -U -l hook_des.js -f com.example.detective</span><br></pre></td></tr></table></figure>
+
+<img src="/posts/54083/image-20250513142404847.png" class="" title="image-20250513142404847">
+
+<p>拿stringFromJNI函数输入进行异或得到：</p>
+<img src="/posts/54083/image-20250513142757999.png" class="" title="image-20250513142757999">
+
+<p>与hook得到的结果完全相同，意味着这个函数的作用就是将字符串异或后再转化为16进制字符串。再仔细分析一下其他函数，a.b函数貌似是将字符串转化为16进制串，然后补0；a.c是a.b的逆过程。b.a是一个加密过程，目前看不出来，得分析源码。</p>
+<p>代码中有两个String，sb和sb2，用于分别处理不同条件下的字符。外层循环遍历输入字符串的每个字符，根据i的奇偶性来决定将字符添加到sb还是sb2。这里i从0开始，所以i%2&#x3D;&#x3D;0对应的其实是奇数位置（因为索引从0开始）。不过i的初始值是0，每次循环i递增，因此在判断i%2&#x3D;&#x3D;0时，实际上是在处理偶数索引的位置（比如第0、2、4位），而奇数索引的字符被处理到sb中。</p>
+<p>接下来，当i%2&#x3D;&#x3D;0时，会检查i3的值是否为1或者(i3-1)是否能被3整除，如果是的话，并且当前字符是’0’，则替换为’3’，否则保留原字符。同样，在处理奇数索引时，i2的条件是是否为0或者能被3整除，同样替换’0’为’3’。</p>
+<p>然后，sb2被追加了sb的内容，合并后的结果被处理到sb3中。这里有一个循环，每次取两个字符charAt2和charAt3。如果charAt2不是’3’到’7’之间的字符，则交换这两个字符的位置，并追加”21”。否则，保持顺序不变。最后，生成的字符串通过正则表达式替换每两个字符为”$100”，然后截取去掉最后两个字符。</p>
+<p>解密脚本:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">def xor_decrypt(ciphertext_hex, key_str):</span><br><span class="line">    cipher_bytes = bytes.fromhex(ciphertext_hex)</span><br><span class="line">    key_bytes = bytes(key_str, &#x27;utf-8&#x27;)</span><br><span class="line">    </span><br><span class="line">    plain_bytes = bytearray()</span><br><span class="line">    for i in range(len(cipher_bytes)):</span><br><span class="line">        plain_bytes.append(cipher_bytes[i] ^ key_bytes[i % len(key_bytes)])</span><br><span class="line">    </span><br><span class="line">    return plain_bytes.hex()</span><br><span class="line"></span><br><span class="line">def process_hex_string(hex_str):</span><br><span class="line">    print(&quot;Processing hex:&quot;, hex_str)</span><br><span class="line">    buffer = []</span><br><span class="line">    ptr = 0</span><br><span class="line">    </span><br><span class="line">    while ptr &lt; len(hex_str):</span><br><span class="line">        curr_char = hex_str[ptr]</span><br><span class="line">        next_char = hex_str[ptr+1]</span><br><span class="line">        </span><br><span class="line">        # 检查特殊标记&quot;21&quot;和处理条件</span><br><span class="line">        if ptr + 4 &lt;= len(hex_str) and hex_str[ptr+2:ptr+4] == &#x27;21&#x27; and next_char not in &#x27;34567&#x27;:</span><br><span class="line">            buffer.append(next_char)</span><br><span class="line">            buffer.append(curr_char)</span><br><span class="line">            ptr += 4</span><br><span class="line">        else:</span><br><span class="line">            buffer.append(curr_char)</span><br><span class="line">            buffer.append(next_char)</span><br><span class="line">            ptr += 2</span><br><span class="line"></span><br><span class="line">    combined_str = &#x27;&#x27;.join(buffer)</span><br><span class="line">    split_pos = len(combined_str) // 2</span><br><span class="line">    first_part = combined_str[:split_pos]</span><br><span class="line">    second_part = combined_str[split_pos:]</span><br><span class="line">    </span><br><span class="line">    print(&#x27;First part:&#x27;, first_part)</span><br><span class="line">    print(&#x27;Second part:&#x27;, second_part)</span><br><span class="line">    </span><br><span class="line">    # 重构原始字符串</span><br><span class="line">    reconstructed = []</span><br><span class="line">    first_idx = second_idx = 0</span><br><span class="line">    counter_1 = counter_2 = 0</span><br><span class="line">    </span><br><span class="line">    for pos in range(len(combined_str)):</span><br><span class="line">        if pos % 2 == 0:  # 处理第二部分</span><br><span class="line">            if second_idx &gt;= len(second_part):</span><br><span class="line">                break</span><br><span class="line">            char = second_part[second_idx]</span><br><span class="line">            second_idx += 1</span><br><span class="line">            if (counter_2 == 0 or counter_2 % 3 == 0) and char == &#x27;3&#x27;:</span><br><span class="line">                reconstructed.append(&#x27;0&#x27;)</span><br><span class="line">            else:</span><br><span class="line">                reconstructed.append(char)</span><br><span class="line">            counter_2 += 1</span><br><span class="line">        else:             # 处理第一部分</span><br><span class="line">            char = first_part[first_idx]</span><br><span class="line">            first_idx += 1</span><br><span class="line">            if (counter_1 == 1 or (counter_1 - 1) % 3 == 0) and char == &#x27;3&#x27;:</span><br><span class="line">                reconstructed.append(&#x27;0&#x27;)</span><br><span class="line">            else:</span><br><span class="line">                reconstructed.append(char)</span><br><span class="line">            counter_1 += 1</span><br><span class="line">    </span><br><span class="line">    return &#x27;&#x27;.join(reconstructed)</span><br><span class="line"></span><br><span class="line"># 使用示例</span><br><span class="line">encrypted_data = &quot;105C5A31214E50520020444E2F3A&quot;</span><br><span class="line">decryption_key = &quot;Sherlock&quot;</span><br><span class="line"></span><br><span class="line"># 解密阶段</span><br><span class="line">decrypted_hex = xor_decrypt(encrypted_data, decryption_key)</span><br><span class="line">processed_hex = process_hex_string(decrypted_hex)</span><br><span class="line"></span><br><span class="line"># 最终转换</span><br><span class="line">print(&quot;\nFinal result:&quot;)</span><br><span class="line">for i in range(0, len(processed_hex), 3):</span><br><span class="line">    hex_triplet = processed_hex[i:i+3]</span><br><span class="line">    print(chr(int(hex_triplet, 16)), end=&#x27;&#x27;)</span><br></pre></td></tr></table></figure>
+
+
       
     </div>
 
@@ -501,7 +917,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/43303/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/40580/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar_2.gif">
@@ -515,7 +931,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/posts/43303/" class="post-title-link" itemprop="url">ESP定律脱壳</a>
+            <a href="/posts/40580/" class="post-title-link" itemprop="url">iscc</a>
         </h2>
 
         <div class="post-meta">
@@ -525,7 +941,497 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2024-12-06 22:51:40" itemprop="dateCreated datePublished" datetime="2024-12-06T22:51:40+08:00">2024-12-06</time>
+              <time title="创建时间：2025-05-01 19:53:27" itemprop="dateCreated datePublished" datetime="2025-05-01T19:53:27+08:00">2025-05-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-28 22:39:41" itemprop="dateModified" datetime="2025-07-28T22:39:41+08:00">2025-07-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <span id="more"></span>
+
+<h1 id="练武题"><a href="#练武题" class="headerlink" title="练武题"></a>练武题</h1><h2 id="RE"><a href="#RE" class="headerlink" title="RE"></a>RE</h2><h3 id="SR"><a href="#SR" class="headerlink" title="SR"></a>SR</h3><p>脱壳之后打开</p>
+<img src="/posts/40580/image-20250501195702098.png" class="" title="image-20250501195702098">
+
+<p>在比较函数处设置断点，动调得到flag</p>
+<img src="/posts/40580/image-20250501195758440.png" class="" title="image-20250501195758440">
+
+<h3 id="我爱看小品"><a href="#我爱看小品" class="headerlink" title="我爱看小品"></a>我爱看小品</h3><img src="/posts/40580/image-20250501202304564.png" class="" title="image-20250501202304564">
+
+<p>python写的elf文件，使用pyinstxtractor.py脚本处理（注意，必须要在3.8的环境）</p>
+<img src="/posts/40580/image-20250501202614840.png" class="" title="image-20250501202614840">
+
+<p>使用pycdc反编译pyc文件：</p>
+<img src="/posts/40580/image-20250501202730601.png" class="" title="image-20250501202730601">
+
+<p>引用了mypy和yourpy两个库。去PYZ-00.pyz_extracted文件夹下找，没找到同名pyc文件，但是有.pyc.encrypted文件</p>
+<p>。这种文件是加了密的pyc文件，加密密钥在pyimod00_crypto_key.pyc文件里面：</p>
+<img src="/posts/40580/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-2025-05-01-201705.png" class="" title="屏幕截图 2025-05-01 201705">
+
+<p>使用解密：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">import zlib, tinyaes</span><br><span class="line">from pathlib import Path</span><br><span class="line"></span><br><span class="line"># 配置参数</span><br><span class="line">CRYPT_BLOCK_SIZE = 16</span><br><span class="line">key = bytes(&#x27;yibaibayibei1801&#x27;, &#x27;utf-8&#x27;)  # 直接使用你的密钥</span><br><span class="line">input_file = Path(&quot;D:\\Re\\python逆向\\mypy.pyc.encrypted&quot;)   # 要运行两次脚本得到两个pyc文件</span><br><span class="line">output_file = input_file.with_suffix(&#x27;&#x27;)  # 输出路径为 mypy.pyc</span><br><span class="line"></span><br><span class="line"># 解密核心逻辑</span><br><span class="line">with open(input_file, &#x27;rb&#x27;) as inf, open(output_file, &#x27;wb&#x27;) as outf:</span><br><span class="line">    iv = inf.read(CRYPT_BLOCK_SIZE)  # 读取初始向量</span><br><span class="line">    cipher = tinyaes.AES(key, iv)</span><br><span class="line">    encrypted_data = inf.read()  # 读取加密数据</span><br><span class="line">    decrypted_data = cipher.CTR_xcrypt_buffer(encrypted_data)  # AES-CTR解密</span><br><span class="line">    plaintext = zlib.decompress(decrypted_data)  # 解压数据</span><br><span class="line">    </span><br><span class="line">    # 修复pyc文件头（需根据Python版本调整！）</span><br><span class="line">    # Python 3.8 示例：b&#x27;\x55\x0d\x0d\x0a\0\0\0\0\0\0\0\0\0\0\0\0&#x27;</span><br><span class="line">    pyc_header = b&#x27;\x55\x0d\x0d\x0a\0\0\0\0\0\0\0\0\0\0\0\0&#x27;  </span><br><span class="line">    outf.write(pyc_header + plaintext)</span><br><span class="line"></span><br><span class="line">print(f&quot;[+] 解密完成: &#123;output_file&#125;&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>得到两个.pyc文件</p>
+<img src="/posts/40580/image-20250501203831664.png" class="" title="image-20250501203831664">
+
+<p>分别反编译</p>
+<p>mypy.pyc:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">import time</span><br><span class="line"></span><br><span class="line">def myfun():</span><br><span class="line">    part1 = &#x27;ISCC&#123;&#x27;</span><br><span class="line">    part2 = &#x27;xxxxxxxxxxxxxxxxxxxxxxxxxxxx&#x27;</span><br><span class="line">    part3 = &#x27;&#125;&#x27;</span><br><span class="line">    tmp = &#x27;&#x27;</span><br><span class="line">    part2_1 = part2[:11]</span><br><span class="line">    part2_2 = part2[11:15]</span><br><span class="line">    part2_3 = part2[15:20]</span><br><span class="line">    part2_4 = part2[20:]</span><br><span class="line">    for i in range(len(part2_1)):</span><br><span class="line">        tmp += chr(ord(part2_1[i]) + 1)</span><br><span class="line">    for i in range(len(part2_2)):</span><br><span class="line">        if part2_2[i].isalpha():</span><br><span class="line">            tmp += chr(ord(part2_2[i]) ^ 32)</span><br><span class="line">            continue</span><br><span class="line">        tmp += chr(ord(part2_2[i]) + 0)</span><br><span class="line">    for i in range(len(part2_3)):</span><br><span class="line">        tmp += chr(ord(part2_3[i]) - 1)</span><br><span class="line">    for i in range(len(part2_4)):</span><br><span class="line">        tmp += chr(ord(part2_4[i]) + i % 2)</span><br><span class="line">    cipher = &#x27;qzjotubmmfs_IS_udqx^iotfrfsuiog&#x27;</span><br><span class="line">    true_flag = part1 + part2 + part3</span><br><span class="line">    print(time.strftime(&#x27;%Y-%m-%d %H:%M&#x27;, time.localtime(time.time())))</span><br><span class="line">    return true_flag</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    ss = myfun()</span><br><span class="line">    print(ss)</span><br></pre></td></tr></table></figure>
+
+<p>yourpy.pyc:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">def next():</span><br><span class="line">Unsupported opcode: BEGIN_FINALLY</span><br><span class="line">    useful = &#x27;\n\n                                                                                       ,---,\n                                                                                    ,`--.\&#x27; |\n  ,--,                            ,-.           ,---,                               |   :  :\n,--.\&#x27;|                        ,--/ /|         ,--.\&#x27; |                               \&#x27;   \&#x27;  ;\n|  | :     ,---.     ,---.  ,--. :/ |         |  |  :                __  ,-.        |   |  |\n:  : \&#x27;    \&#x27;   ,\&#x27;\\   \&#x27;   ,\&#x27;\\ :  : \&#x27; /          :  :  :              ,\&#x27; ,\&#x27;/ /|        \&#x27;   :  ;\n|  \&#x27; |   /   /   | /   /   ||  \&#x27;  /           :  |  |,--.   ,---.  \&#x27;  | |\&#x27; | ,---.  |   |  \&#x27;\n\&#x27;  | |  .   ; ,. :.   ; ,. :\&#x27;  |  :           |  :  \&#x27;   |  /     \\ |  |   ,\&#x27;/     \\ \&#x27;   :  |\n|  | :  \&#x27;   | |: :\&#x27;   | |: :|  |   \\          |  |   /\&#x27; : /    /  |\&#x27;  :  / /    /  |;   |  ;\n\&#x27;  : |__\&#x27;   | .; :\&#x27;   | .; :\&#x27;  : |. \\         \&#x27;  :  | | |.    \&#x27; / ||  | \&#x27; .    \&#x27; / |`---\&#x27;. |\n|  | \&#x27;.\&#x27;|   :    ||   :    ||  | \&#x27; \\ \\        |  |  \&#x27; | :\&#x27;   ;   /|;  : | \&#x27;   ;   /| `--..`;\n;  :    ;\\   \\  /  \\   \\  / \&#x27;  : |--\&#x27;         |  :  :_:,\&#x27;\&#x27;   |  / ||  , ; \&#x27;   |  / |.--,_\n|  ,   /  `----\&#x27;    `----\&#x27;  ;  |,\&#x27;            |  | ,\&#x27;    |   :    | ---\&#x27;  |   :    ||    |`.\n ---`-\&#x27;                     \&#x27;--\&#x27;              `--\&#x27;\&#x27;       \\   \\  /         \\   \\  / `-- -`, ;\n                                                           `----\&#x27;           `----\&#x27;    \&#x27;---`&quot;\n\n\n    \n&#x27;</span><br><span class="line">    tips = &#x27;Congratulations, you found the hidden tip!&#x27;</span><br><span class="line">    your_id = &#x27;TIPO&#x27; + str(len(tips)) + &#x27;PCDL&#x27;</span><br><span class="line"># WARNING: Decompyle incomplete</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    next()</span><br></pre></td></tr></table></figure>
+
+<img src="/posts/40580/image-20250501204050505.png" class="" title="image-20250501204050505">
+
+<p>flag和yourpy.pyc无关，只需要解mypy.pyc里面的加密就行，稍微改一下加密脚本就能实现解密：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">import time</span><br><span class="line"></span><br><span class="line">def myfun():</span><br><span class="line">    part1 = &#x27;ISCC&#123;&#x27;</span><br><span class="line">    part2 = &#x27;qzjotubmmfs_IS_udqx^iotfrfsuiog&#x27;</span><br><span class="line">    part3 = &#x27;&#125;&#x27;</span><br><span class="line">    tmp = &#x27;&#x27;</span><br><span class="line">    part2_1 = part2[:11]</span><br><span class="line">    part2_2 = part2[11:15]</span><br><span class="line">    part2_3 = part2[15:20]</span><br><span class="line">    part2_4 = part2[20:]</span><br><span class="line">    for i in range(len(part2_1)):</span><br><span class="line">        tmp += chr(ord(part2_1[i]) - 1)</span><br><span class="line">    for i in range(len(part2_2)):</span><br><span class="line">        if part2_2[i].isalpha():</span><br><span class="line">            tmp += chr(ord(part2_2[i]) ^ 32)</span><br><span class="line">            continue</span><br><span class="line">        tmp += chr(ord(part2_2[i]) + 0)</span><br><span class="line">    for i in range(len(part2_3)):</span><br><span class="line">        tmp += chr(ord(part2_3[i]) + 1)</span><br><span class="line">    for i in range(len(part2_4)):</span><br><span class="line">        tmp += chr(ord(part2_4[i]) - i % 2)</span><br><span class="line">    cipher = &#x27;qzjotubmmfs_IS_udqx^iotfrfsuiog&#x27;</span><br><span class="line">    true_flag = part1 + part2 + part3</span><br><span class="line">    print(time.strftime(&#x27;%Y-%m-%d %H:%M&#x27;, time.localtime(time.time())))</span><br><span class="line">    return tmp</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    ss = myfun()</span><br><span class="line">    print(ss)</span><br><span class="line"> //ISCC&#123;pyinstaller_is_very_interesting&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h2><h3 id="书法大师"><a href="#书法大师" class="headerlink" title="书法大师"></a>书法大师</h3><p>使用binwalk提取图片：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">binwalk -e attachment-5.jpg</span><br></pre></td></tr></table></figure>
+
+<p>得到_attachment-5.jpg.extracted文件夹。里面有一个压缩包，需要密码。使用在线网站查看图片注释，得到解压密码：</p>
+<img src="/posts/40580/image-20250502174522457.png" class="" title="image-20250502174522457">
+
+<p>解压得到message45.txt文件，里面是乱码</p>
+<img src="/posts/40580/image-20250502174725308.png" class="" title="image-20250502174725308">
+
+<p>每两个汉字的笔划组成一个字节，比如“右女”笔划数分别为5和3，组成0x53（这里的O代表笔划为0），通过此方法得到：</p>
+<p>SVNDQ3swVzdVTnpBZ0NofQ&#x3D;&#x3D;</p>
+<p>解码</p>
+<img src="/posts/40580/image-20250502182009921.png" class="" title="image-20250502182009921">
+
+<h2 id="mobile-安卓"><a href="#mobile-安卓" class="headerlink" title="mobile(安卓)"></a>mobile(安卓)</h2><h3 id="三进制战争"><a href="#三进制战争" class="headerlink" title="三进制战争"></a>三进制战争</h3><p>使用frida hook得flag，注入代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line">import frida</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">hook_code = &quot;&quot;&quot;</span><br><span class="line">Java.perform(function () &#123;</span><br><span class="line">    let MainActivity = Java.use(&quot;com.example.mobile02.MainActivity&quot;);</span><br><span class="line">    let flag1 = &#x27;&#x27;;</span><br><span class="line">    let key2 = &#x27;&#x27;;</span><br><span class="line">    let flag2_enc = &#x27;&#x27;;</span><br><span class="line">    let flag2 = &#x27;&#x27;;</span><br><span class="line">    var dictionary = [&#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;];</span><br><span class="line">    let context;</span><br><span class="line">    </span><br><span class="line">    // ====================================================</span><br><span class="line">    // 1. 修复：正确保存原始方法引用</span><br><span class="line">    // ====================================================</span><br><span class="line">    // 获取原始方法引用（未 Hook 前）</span><br><span class="line">    const stringFromJNlMethod = MainActivity[&quot;stringFromJNl&quot;].overload(</span><br><span class="line">        &#x27;java.lang.String&#x27;,</span><br><span class="line">        &#x27;java.lang.String&#x27;</span><br><span class="line">    );</span><br><span class="line">    const stringFromJNlMethod_1 = MainActivity[&quot;stringFromJNI&quot;].overload(</span><br><span class="line">        &#x27;java.lang.String&#x27;</span><br><span class="line">    );</span><br><span class="line">    </span><br><span class="line">    // ====================================================</span><br><span class="line">    // 2. Hook CHECK1 修改输入</span><br><span class="line">    // ====================================================</span><br><span class="line">    MainActivity[&quot;CHECK1&quot;].overload(&#x27;java.lang.String&#x27;).implementation = function (str) &#123;</span><br><span class="line">        console.log(`[CHECK1] Original input: $&#123;str&#125;`);</span><br><span class="line">        let fakeStr = &quot;ISCC&#123;BBBBBBBBBB&#125;&quot;; // 长度=5+10+1=16 &gt;13</span><br><span class="line">        </span><br><span class="line">        if (str.startsWith(&quot;ISCC&#123;&quot;) &amp;&amp; str.endsWith(&quot;&#125;&quot;)) &#123;</span><br><span class="line">            fakeStr = str;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        context = this;</span><br><span class="line">        console.log(`[CHECK1] Modified input: $&#123;fakeStr&#125;`);</span><br><span class="line">        this[&quot;CHECK2&quot;].call(this, fakeStr);</span><br><span class="line">        return this[&quot;CHECK1&quot;](fakeStr);</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    // ====================================================</span><br><span class="line">    // 3. Hook stringFromJNl 并调用原始方法</span><br><span class="line">    // ====================================================</span><br><span class="line">    stringFromJNlMethod.implementation = function (key, input) &#123;</span><br><span class="line">        console.log(`\\n===== Hooked stringFromJNl: key=$&#123;key&#125;, input=$&#123;input&#125; =====`);</span><br><span class="line">        if (key.length == 32) &#123;</span><br><span class="line">            key2 = key;</span><br><span class="line">        &#125;</span><br><span class="line">        return stringFromJNlMethod.call(this, key, input);</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    stringFromJNlMethod_1.implementation = function (key) &#123;</span><br><span class="line">        flag1 = stringFromJNlMethod_1.call(this, key);</span><br><span class="line">        console.log(`flag1: $&#123;flag1&#125;`);</span><br><span class="line">        return flag1;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    let Intrinsics = Java.use(&quot;kotlin.jvm.internal.Intrinsics&quot;);</span><br><span class="line">    Intrinsics[&quot;areEqual&quot;].overload(&#x27;java.lang.Object&#x27;, &#x27;java.lang.Object&#x27;).implementation = </span><br><span class="line">        function (obj, obj2) &#123;</span><br><span class="line">            console.log(`[areEqual] Comparing: $&#123;obj&#125; vs $&#123;obj2&#125;`);</span><br><span class="line">            </span><br><span class="line">            if (String(obj2).length == 36) &#123;</span><br><span class="line">                flag2_enc = String(obj2);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            const visibleChars = [];</span><br><span class="line">            </span><br><span class="line">            if (key2.length == 32 &amp;&amp; flag2_enc.length == 36) &#123;</span><br><span class="line">                for (let i = 0x20; i &lt;= 0x7e; i++) &#123;</span><br><span class="line">                    visibleChars.push(String.fromCharCode(i));</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                visibleChars.forEach(char =&gt; &#123;</span><br><span class="line">                    const inputStr = char.repeat(6);</span><br><span class="line">                    try &#123;</span><br><span class="line">                        const result = stringFromJNlMethod.call(context, key2, inputStr);</span><br><span class="line">                        console.log(result);</span><br><span class="line">                        </span><br><span class="line">                        for (let i = 0; i &lt; 6; i += 1) &#123;</span><br><span class="line">                            dictionary[i][result.substring(i * 6, (i + 1) * 6)] = inputStr.at(i);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; catch (e) &#123;</span><br><span class="line">                        console.log(`输入 &#x27;$&#123;inputStr&#125;&#x27; 加密失败: $&#123;e&#125;`);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">                </span><br><span class="line">                for (let i = 0; i &lt; 6; i += 1) &#123;</span><br><span class="line">                    flag2 += dictionary[i][flag2_enc.substring(i * 6, (i + 1) * 6)];</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                console.log(`flag2: $&#123;flag2&#125;`);</span><br><span class="line">                console.log(`flag: ISCC&#123;$&#123;flag1 + flag2&#125;&#125;`);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            return this[&quot;areEqual&quot;](obj, obj2);</span><br><span class="line">        &#125;;</span><br><span class="line">&#125;);</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def handle_message(msg, data):</span><br><span class="line">    if msg[&quot;type&quot;] == &#x27;send&#x27;:</span><br><span class="line">        print(&quot;[*] &#123;0&#125;&quot;.format(msg[&#x27;payload&#x27;]))</span><br><span class="line">    else:</span><br><span class="line">        print(msg)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">try:</span><br><span class="line">    device = frida.get_usb_device()</span><br><span class="line">    pid = device.spawn([&quot;com.example.mobile02&quot;])</span><br><span class="line">    session = device.attach(pid)</span><br><span class="line">    script = session.create_script(hook_code)</span><br><span class="line">    script.on(&quot;message&quot;, handle_message)</span><br><span class="line">    script.load()</span><br><span class="line">    device.resume(pid)</span><br><span class="line">    sys.stdin.read()</span><br><span class="line">except Exception as e:</span><br><span class="line">    print(f&quot;Error: &#123;e&#125;&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>注入流程：</p>
+<p>先打开模拟器</p>
+<p>然后电脑开启终端，依次输入以下指令来运行模拟器里面的frida_server：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">adb devices</span><br><span class="line">adb shell</span><br><span class="line">su</span><br><span class="line">cd data/local/tmp</span><br><span class="line">./f16</span><br></pre></td></tr></table></figure>
+
+<img src="/posts/40580/image-20250507123646619.png" class="" title="image-20250507123646619">
+
+<p>模拟器安装题目的apk文件，运行</p>
+<p>电脑运行脚本</p>
+<p>模拟器点击特定事件（比如submit)</p>
+<p>在终端上观察</p>
+<img src="/posts/40580/image-20250507124104236.png" class="" title="image-20250507124104236">
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/55434/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/55434/" class="post-title-link" itemprop="url">操作系统复习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-04-29 16:06:19" itemprop="dateCreated datePublished" datetime="2025-04-29T16:06:19+08:00">2025-04-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-28 23:06:48" itemprop="dateModified" datetime="2025-06-28T23:06:48+08:00">2025-06-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <span id="more"></span>
+
+<h1 id="第一章：操作系统引论"><a href="#第一章：操作系统引论" class="headerlink" title="第一章：操作系统引论"></a>第一章：操作系统引论</h1><h4 id="操作系统的定义："><a href="#操作系统的定义：" class="headerlink" title="操作系统的定义："></a>操作系统的定义：</h4><p>操作系统是<u>计算机系统中的一个系统软件</u>，它<u>统一管理计算机的软硬件资源和控制程序的执行</u>，<u>提供人机交互的接口和界面</u>。</p>
+<h4 id="操作系统发展阶段："><a href="#操作系统发展阶段：" class="headerlink" title="操作系统发展阶段："></a>操作系统发展阶段：</h4><ol>
+<li>手工操作阶段</li>
+<li>批处理操作系统</li>
+<li>多道批处理操作系统</li>
+<li>分时实时和通用操作系统</li>
+<li>现代操作系统</li>
+<li>未来操作系统</li>
+</ol>
+<p><strong>多道批处理操作系统和分时操作系统的出现，标志着操作系统的初步形成！</strong></p>
+<h4 id="批处理系统："><a href="#批处理系统：" class="headerlink" title="批处理系统："></a>批处理系统：</h4><p>单道批处理特点：自动性   、顺序性  、单道性</p>
+<p>多道批处理特点：多道 、宏观上并行  、微观上串行</p>
+<h4 id="操作系统功能："><a href="#操作系统功能：" class="headerlink" title="操作系统功能："></a>操作系统功能：</h4><ol>
+<li>处理器管理的功能</li>
+<li>存储管理的功能</li>
+<li>设备管理的功能</li>
+<li>文件管理的功能</li>
+<li>作业管理的功能</li>
+</ol>
+<h4 id="操作系统的特征："><a href="#操作系统的特征：" class="headerlink" title="操作系统的特征："></a>操作系统的特征：</h4><ol>
+<li>并发：宏观并行，微观串行</li>
+<li>共享：资源多进程共用</li>
+<li>虚拟：一个物理实体变为若干逻辑资源</li>
+<li>异步性：环境导致运行过程不同，但结果相同</li>
+</ol>
+<h4 id="操作系统的作用："><a href="#操作系统的作用：" class="headerlink" title="操作系统的作用："></a>操作系统的作用：</h4><ol>
+<li>作为用户与计算机硬件系统的接口</li>
+<li>作为计算机系统资源的管理者</li>
+<li>用作扩充机器（增强计算机性能）</li>
+</ol>
+<h1 id="第二章：进程管理"><a href="#第二章：进程管理" class="headerlink" title="第二章：进程管理"></a>第二章：进程管理</h1><h4 id="进程的定义："><a href="#进程的定义：" class="headerlink" title="进程的定义："></a>进程的定义：</h4><p>可并发执行的程序在一个数据集上的一次执行过程，它是系统进行资源分配的基本单位。</p>
+<h4 id="进程的基本特征："><a href="#进程的基本特征：" class="headerlink" title="进程的基本特征："></a>进程的基本特征：</h4><ol>
+<li>动态性：进程有一定生命周期（动态），程序只是一组有序指令的集合（静态）。进程是进程实体的执行过程。</li>
+<li>并发性：多个进程可同时运行</li>
+<li>独立性：进程实体是一个能独立运行的基本单位，也是系统中独立获得资源和独立调度的基本单位。</li>
+<li>异步性：不可预知速度，程序不可再现</li>
+<li>结构特征：进程实体 &#x3D; 程序段 + 数据段 + PCB</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th><strong>对比维度</strong></th>
+<th><strong>程序（Program）</strong></th>
+<th><strong>进程实体（Process Entity）</strong></th>
+<th><strong>进程（Process）</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>本质</strong></td>
+<td>静态的代码和数据集合</td>
+<td>进程在内存中的物理数据结构集合</td>
+<td>程序的动态执行过程</td>
+</tr>
+<tr>
+<td><strong>存储位置</strong></td>
+<td>磁盘（未运行时）</td>
+<td>内存（运行时）</td>
+<td>无固定存储位置，描述动态行为</td>
+</tr>
+<tr>
+<td><strong>生命周期</strong></td>
+<td>永久存在（除非被删除）</td>
+<td>随进程创建而分配，随进程终止而释放</td>
+<td>临时存在（从创建到终止）</td>
+</tr>
+<tr>
+<td><strong>资源占用</strong></td>
+<td>仅占用磁盘空间</td>
+<td>占用内存（存储PCB、代码段、数据段）</td>
+<td>运行时占用CPU、内存、I&#x2F;O设备等资源</td>
+</tr>
+<tr>
+<td><strong>动态性</strong></td>
+<td>静态，不可执行</td>
+<td>静态数据结构，支持动态执行</td>
+<td>动态，随执行状态变化（运行、阻塞、就绪等）</td>
+</tr>
+<tr>
+<td><strong>独立性</strong></td>
+<td>无独立运行能力</td>
+<td>是进程存在的物理载体</td>
+<td>独立调度和资源分配的基本单位</td>
+</tr>
+<tr>
+<td><strong>组成结构</strong></td>
+<td>代码（指令）+ 初始化数据</td>
+<td>PCB + 程序段 + 数据段</td>
+<td>无物理结构，由进程实体支持其动态行为</td>
+</tr>
+<tr>
+<td><strong>操作系统视角</strong></td>
+<td>文件系统中的一个可执行文件</td>
+<td>内存中需管理的资源块</td>
+<td>调度的基本单位</td>
+</tr>
+<tr>
+<td><strong>实例数量</strong></td>
+<td>一个程序可对应多个进程（多次运行）</td>
+<td>每个进程对应唯一的进程实体</td>
+<td>一个进程实体对应一个进程</td>
+</tr>
+</tbody></table>
+<p>进程可对应多个程序，程序可以对应多个进程</p>
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><p>三级调度：</p>
+<p>高级调度：作业调度</p>
+<p>中级调度：内存调度</p>
+<p>低级调度：进程调度</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/52115/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/52115/" class="post-title-link" itemprop="url">招新赛wp</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-04-23 23:11:07" itemprop="dateCreated datePublished" datetime="2025-04-23T23:11:07+08:00">2025-04-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-28 22:39:41" itemprop="dateModified" datetime="2025-07-28T22:39:41+08:00">2025-07-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <span id="more"></span>
+
+<h1 id="HOOK"><a href="#HOOK" class="headerlink" title="HOOK"></a>HOOK</h1><h2 id="出题流程"><a href="#出题流程" class="headerlink" title="出题流程"></a>出题流程</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;windows.h&gt;</span><br><span class="line">/*初始化函数*/</span><br><span class="line">void rc4_init(unsigned char*s, unsigned char*key, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0;</span><br><span class="line">    unsigned char k[256] = &#123; 0 &#125;;</span><br><span class="line">    unsigned char tmp = 0;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s[i] = i;</span><br><span class="line">        k[i] = key[i%Len];</span><br><span class="line">    &#125;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        j = (j + s[i] + k[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[i]和s[j]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line">/*加解密*/</span><br><span class="line">void rc4_crypt(unsigned char*s, unsigned char*Data, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 1, j = 0, t = 0;  //将i初始值魔改为1</span><br><span class="line">    unsigned long k = 0;</span><br><span class="line">    unsigned char tmp;</span><br><span class="line">    for (k = 0; k&lt;Len; k++)</span><br><span class="line">    &#123;</span><br><span class="line">        i = (i + 1) % 256;</span><br><span class="line">        j = (j + s[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[x]和s[y]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">        t = (s[i] + s[j]) % 256;</span><br><span class="line">        Data[k] ^= s[t];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">int __cdecl encode(char str[])&#123;</span><br><span class="line">	unsigned char *s;</span><br><span class="line">	s=(unsigned char*)str;</span><br><span class="line">    for(int i=0;i&lt;28;i++)&#123;</span><br><span class="line">        for(int j=21;j&lt;40 ;j+=2)&#123;</span><br><span class="line">            if(s[i]&amp;1==1)</span><br><span class="line">                s[i]^=j;</span><br><span class="line">            else</span><br><span class="line">                s[i]^=j+2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 28;</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">	int i=0;</span><br><span class="line">	unsigned char data[]=&#123;0x52,0xd1,0xd4,0x40,0xad,0xf9,0xa7,0x75,0x67,0x11,0x25,0x83,0xcd,0x10,0x62,0x61,0xa6,0xb6,0x74,0x94,0x4f,0x6f,0xb3,0xdd,0x94,0x33,0xd3,0x8b&#125;;</span><br><span class="line">	printf(&quot;请输入你的flag:&quot;);</span><br><span class="line">	unsigned char str[29];</span><br><span class="line">	scanf(&quot;%s&quot;,str);</span><br><span class="line">	int len=strlen((char*)str);</span><br><span class="line">	unsigned char s[256]=&#123;0&#125;;</span><br><span class="line">	unsigned char k[9]=&quot;Real-Key&quot;;</span><br><span class="line">	rc4_init(s,k,8);</span><br><span class="line">	rc4_crypt(s,str,len);</span><br><span class="line">//	encode1(str,28);</span><br><span class="line">	for(i=0;i&lt;len;i++)</span><br><span class="line">		if(str[i]!=data[i])&#123;</span><br><span class="line">			printf(&quot;wrong!\n&quot;);</span><br><span class="line">			return 0;</span><br><span class="line">		&#125;</span><br><span class="line">	printf(&quot;right!!!\n&quot;);</span><br><span class="line">	return 0;</span><br><span class="line">&#125; </span><br><span class="line">__attribute__((constructor)) void hook()&#123; </span><br><span class="line">		__asm__ __volatile__ (  //花指令</span><br><span class="line">			&quot;jz 1f\n\t&quot;</span><br><span class="line">			&quot;jnz 1f\n\t&quot;</span><br><span class="line">			&quot;.byte 0x22\n\t&quot;</span><br><span class="line">			&quot;1:\n\t&quot;</span><br><span class="line">    		&quot;call 1f\n\t&quot;              // 调用当前标签（向后引用）</span><br><span class="line">    		&quot;.byte 0xe8\n\t&quot;           // 插入机器码0xE8（call指令的Opcode）</span><br><span class="line">    		&quot;1:\n\t&quot;                   // 定义局部标签</span><br><span class="line">    		&quot;add $8, (%%esp)\n\t&quot;     // </span><br><span class="line">    		&quot;.byte 0x36\n\t&quot;</span><br><span class="line">    		&quot;ret\n\t&quot;</span><br><span class="line">    		&quot;.byte 0xe8&quot;               // 再次插入0xE8</span><br><span class="line">    		:                          // 无输出操作数</span><br><span class="line">    		:                          // 无输入操作数</span><br><span class="line">    		: &quot;memory&quot;, &quot;esp&quot;, &quot;cc&quot;    // 声明破坏列表：内存、栈指针、标志寄存器</span><br><span class="line">		);</span><br><span class="line">        // 步骤4：取消函数地址保护</span><br><span class="line">        DWORD oldProtect;  // 旧保护属性</span><br><span class="line">        VirtualProtect((LPVOID)strlen,0x1000,PAGE_EXECUTE_READWRITE,&amp;oldProtect);</span><br><span class="line"></span><br><span class="line">        // 步骤5：获取自定义函数地址</span><br><span class="line">        byte* funcAddr = (byte*)encode;</span><br><span class="line">        byte* strlen_add = (byte*)strlen;</span><br><span class="line"></span><br><span class="line">        // 步骤6：跳转到自定义函数</span><br><span class="line">        __asm__ __volatile__ (</span><br><span class="line">    		&quot;movl %0, %%eax \n\t&quot;</span><br><span class="line">		    &quot;movl %1, %%ebx \n\t&quot;</span><br><span class="line">		    &quot;subl %%eax, %%ebx \n\t&quot;</span><br><span class="line">		    &quot;subl $5, %%ebx \n\t&quot;</span><br><span class="line">		    &quot;movb $0xe9, (%%eax) \n\t&quot;</span><br><span class="line">		    &quot;movl %%ebx, 1(%%eax)&quot;</span><br><span class="line">		    : /* 无输出操作数 */</span><br><span class="line">		    : &quot;r&quot; (strlen_add), &quot;r&quot; (funcAddr)  // 输入操作数</span><br><span class="line">		    : &quot;eax&quot;, &quot;ebx&quot;, &quot;memory&quot;            // 破坏列表</span><br><span class="line">		);</span><br><span class="line">         DWORD floadprotect;</span><br><span class="line">         VirtualProtect((LPVOID)strlen,0x1000,oldProtect,&amp;floadprotect);</span><br><span class="line">&#125;注：此代码内联汇编是对32位寄存器操作，因此只能使用32位编译器编译</span><br></pre></td></tr></table></figure>
+
+<p>分析：</p>
+<p>第一部分：魔改的RC4，将加密部分的i初始魔改为1</p>
+<p>第二部分：hook strcmp函数，使用GCC扩展属性__attribute__((constructor))将hook函数标记为全局函数，先于main函数执行</p>
+<p><strong>注：三种使函数先于main函数执行的方法：</strong></p>
+<p>1、TLS函数</p>
+<p>2、使用GCC扩展属性__attribute__((constructor))，使用方法为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__attribute__((constructor)) void function()</span><br></pre></td></tr></table></figure>
+
+<p>3、使用全局变量调用函数，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int function()&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">int a=function();</span><br><span class="line">int main()&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行这段代码得到的exe文件，我再用另一种方式hook（手动hook），即利用xdbg修改hook函数开头几个字节，使其跳转到一个空白处，再在空白处写入被覆盖的代码，最后跳回hook函数：</p>
+<img src="/posts/52115/image-20250425205801010.png" class="" title="image-20250425205801010">
+
+<img src="/posts/52115/image-20250425210041906.png" class="" title="image-20250425210041906">
+
+<p>这样做的目的，就是让IDA分析的hook函数是断开的，从而无法反编译为伪代码，增加分析难度。</p>
+<p>最后，使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strip +文件名</span><br></pre></td></tr></table></figure>
+
+<p>把文件符号表去除，这样函数名就不会是“hook”，就得不到提示。</p>
+<p>最后hook函数的效果🥱:</p>
+<img src="/posts/52115/image-20250425210918537.png" class="" title="image-20250425210918537">
+
+<h2 id="解题"><a href="#解题" class="headerlink" title="解题"></a>解题</h2><p>打开观察main函数</p>
+<img src="/posts/52115/image-20250425211345949.png" class="" title="image-20250425211345949">
+
+<p>是一个魔改的rc4加密，魔改的是加密部分的索引初始值</p>
+<img src="/posts/52115/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-2025-04-25-211428.png" class="" title="屏幕截图 2025-04-25 211428">
+
+<p>解密会发现得到的并非flag，而是一串乱码。逻辑看起来确实也很简单，并没有出现其他加密。这个时候就要猜是不是有函数被hook了，一般而言，hook函数都要引用被Hook的函数，因此可以通过交叉引用判断某个函数是否被hook。对strlen函数交叉引用：</p>
+<img src="/posts/52115/image-20250425212547314.png" class="" title="image-20250425212547314">
+
+<p>第一个列出的函数是启动函数，系统自带的，不需要我们分析；后面几行有点奇怪，跟进去看看：</p>
+<img src="/posts/52115/image-20250425213138620.png" class="" title="image-20250425213138620">
+
+<p>首先定位汇编代码，有vitualprotect函数和strlen函数，说明很可能使用了Inline hook。想要反编译代码，但是函数开头既有花指令又有一个莫名奇妙的jmp</p>
+<img src="/posts/52115/image-20250425213356338.png" class="" title="image-20250425213356338">
+
+<p>跟进这个sub_401B43看看</p>
+<img src="/posts/52115/image-20250425213536378.png" class="" title="image-20250425213536378">
+
+<p>这个函数开头是正常的栈帧调用，然后预留局部变量空间，最后跳转到4019E2地址处，这个地址就是上面4019DD函数jmp后的第一个指令的地址，所以这里也是一个Inline hook，只不过这个是手动的，作用就是把4019DD函数一分为二，导致IDA无法识别函数后半段。</p>
+<p>程序流程图为：</p>
+<img src="/posts/52115/image-20250425214525222.png" class="" title="image-20250425214525222">
+
+<p>想要IDA重新正确识别，可以在xdbg里面修改，也可直接在IDA里面修改，这里选择在IDA里面修改：</p>
+<p>1、先把汇编指令提取出来：</p>
+<img src="/posts/52115/image-20250425214845634.png" class="" title="image-20250425214845634">
+
+<p>2、右键-&gt;pathing-&gt;change bytes，把刚才复制的硬编码粘贴上去，把从jmp一直到程序回来的位置的数据覆盖掉</p>
+<img src="/posts/52115/image-20250425215005936.png" class="" title="image-20250425215005936">
+
+<img src="/posts/52115/image-20250425215339751.png" class="" title="image-20250425215339751">
+
+<p>接下来去花指令，一共有两个花指令：</p>
+<p>第一个：</p>
+<img src="/posts/52115/image-20250425220627820.png" class="" title="image-20250425220627820">
+
+<p>第二个：</p>
+<img src="/posts/52115/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-2025-04-25-220727.png" class="" title="屏幕截图 2025-04-25 220727">
+
+<img src="/posts/52115/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-2025-04-25-220806.png" class="" title="屏幕截图 2025-04-25 220806">
+
+<img src="/posts/52115/image-20250425220947082.png" class="" title="image-20250425220947082">
+
+<p>得到伪代码</p>
+<img src="/posts/52115/image-20250425221612166.png" class="" title="image-20250425221612166">
+
+<p>这里是把strlen函数hook为了sub_401718函数，跟进去看看：</p>
+<img src="/posts/52115/image-20250425221706733.png" class="" title="image-20250425221706733">
+
+<p>这个加密函数看起来挺简单，但实际上并不容易，它每一次根据数据的奇偶性来决定，异或的目标。看起来我们根据加密后的数据无法判断他到底是走了哪条路径，那就无法逆向（当然，爆破也行）。但是实际上，j每一次循环都是奇数，j+2也是奇数，奇数^奇数&#x3D;偶数，偶数^奇数&#x3D;奇数。假如数据加密前是奇数，那么加密后会变为偶数；假如数据加密前是偶数，那么加密后变为奇数。反过来假如加密后是奇数，那么加密前是偶数，与j+2异或得到加密前的数据；如果加密后是偶数，那么加密前是奇数，与j异或得到加密前的数据。</p>
+<p>解密代码为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">void rc4_init(unsigned char*s, unsigned char*key, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0;</span><br><span class="line">    unsigned char k[256] = &#123; 0 &#125;;</span><br><span class="line">    unsigned char tmp = 0;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s[i] = i;</span><br><span class="line">        k[i] = key[i%Len];</span><br><span class="line">    &#125;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        j = (j + s[i] + k[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[i]和s[j]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line">void rc4_crypt(unsigned char*s, unsigned char*Data, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 1, j = 0, t = 0;  //将i初始值魔改为1</span><br><span class="line">    unsigned long k = 0;</span><br><span class="line">    unsigned char tmp;</span><br><span class="line">    for (k = 0; k&lt;Len; k++)</span><br><span class="line">    &#123;</span><br><span class="line">        i = (i + 1) % 256;</span><br><span class="line">        j = (j + s[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[x]和s[y]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">        t = (s[i] + s[j]) % 256;</span><br><span class="line">        Data[k] ^= s[t];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">void decode1(unsigned char s[],int len)&#123;</span><br><span class="line">    for(int i=0;i&lt;len;i++)&#123;</span><br><span class="line">        for(int j=39;j&gt;20;j-=2)&#123;</span><br><span class="line">            if(s[i]&amp;1==1)</span><br><span class="line">                s[i]^=j+2;</span><br><span class="line">            else</span><br><span class="line">                s[i]^=j;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">    unsigned char flag[]=&#123;0x52,0xd1,0xd4,0x40,0xad,0xf9,0xa7,0x75,0x67,0x11,0x25,0x83,0xcd,0x10,0x62,0x61,0xa6,0xb6,0x74,0x94,0x4f,0x6f,0xb3,0xdd,0x94,0x33,0xd3,0x8b&#125;;</span><br><span class="line">    int len=28;</span><br><span class="line">    unsigned char key[]=&quot;Real-Key&quot;;</span><br><span class="line">    unsigned char s[256]=&#123;0&#125;;</span><br><span class="line">    rc4_init(s,key,8);  </span><br><span class="line">    rc4_crypt(s,flag,28); </span><br><span class="line">    int i;</span><br><span class="line">    decode1(flag,len);</span><br><span class="line">    for(i=0;i&lt;28;i++)&#123;</span><br><span class="line">		printf(&quot;%c&quot;,flag[i]);</span><br><span class="line">	&#125; </span><br><span class="line">&#125;//FCTF&#123;dasgygfushfhihsfhsufbj&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="poetry"><a href="#poetry" class="headerlink" title="poetry"></a>poetry</h1><h2 id="源代码："><a href="#源代码：" class="headerlink" title="源代码："></a>源代码：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line">#include &lt;debugapi.h&gt;</span><br><span class="line">#include &lt;windows.h&gt;</span><br><span class="line"></span><br><span class="line">// 检查是否为UTF-8汉字的首字节</span><br><span class="line">int is_chinese(unsigned char c) &#123;</span><br><span class="line">    return (c &gt;= 0xE4 &amp;&amp; c &lt;= 0xE9);  // 对应三字节编码的汉字首字节</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 检查是否为UTF-8格式的汉字句号（0xE3 0x80 0x82）</span><br><span class="line">int is_period(const unsigned char* buf, int pos) &#123;</span><br><span class="line">    return (buf[pos] == 0xE3 &amp;&amp; buf[pos+1] == 0x80 &amp;&amp; buf[pos+2] == 0x82);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int file_operation(char key[]) &#123;</span><br><span class="line">    unsigned char data[]=&#123;0xa3,0xcb,0xff,0xae,0xb8,0xb2,0xd5,0xb6&#125;;</span><br><span class="line"></span><br><span class="line">    // 读取文件内容</span><br><span class="line">    FILE* fp = fopen(&quot;poetry.txt&quot;, &quot;rb&quot;);</span><br><span class="line">    if (!fp) &#123;</span><br><span class="line">        perror(&quot;文件打开失败&quot;);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fseek(fp, 0, SEEK_END);//将指针设置到文件尾</span><br><span class="line">    long size = ftell(fp);//获取文件字节数</span><br><span class="line">    fseek(fp, 0, SEEK_SET);//指针重新设置回文件头</span><br><span class="line"></span><br><span class="line">    unsigned char* buf = (unsigned char*)malloc(size + 1);</span><br><span class="line">    fread(buf, 1, size, fp);</span><br><span class="line">    buf[size] = &#x27;\0&#x27;;</span><br><span class="line">    fclose(fp);</span><br><span class="line"></span><br><span class="line">    // 处理内容</span><br><span class="line">    char result[size * 3 + 1];  // 预分配最大可能空间</span><br><span class="line">    int result_len = 0;</span><br><span class="line">    int count=0;</span><br><span class="line"></span><br><span class="line">    //接下来这段其实就是读取文件中每一个&quot;。&quot;前的一个汉字。utf-8里汉字占3个字节</span><br><span class="line">    for (int i = 0; i &lt; size; ) &#123;</span><br><span class="line">        // 检测句号（3字节）</span><br><span class="line">        if(count==300) break;//防止动调时死循环</span><br><span class="line">        if (i &lt;= size - 3 &amp;&amp; is_period(buf, i)) &#123;//检测句号</span><br><span class="line">            // 向前查找汉字（3字节）</span><br><span class="line">            if (i &gt;= 3 &amp;&amp; is_chinese(buf[i-3])) &#123;</span><br><span class="line">                memcpy(result + result_len, &amp;buf[i-3], 3);</span><br><span class="line">                result_len += 3;</span><br><span class="line">            &#125;</span><br><span class="line">            i += 3;  // 跳过句号</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            i+=1^IsDebuggerPresent();//反调试：在动调时i不变，不在动调i++</span><br><span class="line">            count++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    result[result_len] = &#x27;\0&#x27;;</span><br><span class="line">    for(int i=0;i&lt;8;i++)</span><br><span class="line">        if(((unsigned char)key[i]^(unsigned char)result[i])!=data[i])</span><br><span class="line">            exit(0);</span><br><span class="line">    free(buf);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">void tea_encrypt(uint32_t* v,uint32_t* key)</span><br><span class="line">&#123;</span><br><span class="line">	uint32_t k0,k1,k2,k3;</span><br><span class="line">	uint32_t v0,v1;</span><br><span class="line">	v0=v[0],v1=v[1];</span><br><span class="line">	k0=key[0],k1=key[1],k2=key[2],k3=key[3];</span><br><span class="line">	uint32_t delta=0x9E3779B9,sum=0;</span><br><span class="line">	for(int i=0;i&lt;32;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		sum+=delta;</span><br><span class="line">		v0+=((v1&lt;&lt;4) + k0) ^ (v1 + sum) ^ ((v1&gt;&gt;5) + k1);</span><br><span class="line">		v1+=((v0&lt;&lt;4) + k2) ^ (v0 + sum) ^ ((v0&gt;&gt;5) + k3); </span><br><span class="line">	&#125;</span><br><span class="line">	v[0]=v0,v[1]=v1;</span><br><span class="line">&#125;</span><br><span class="line">void rc4_init(unsigned char*s, char* key)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0;</span><br><span class="line">    unsigned char k[256] = &#123; 0 &#125;;</span><br><span class="line">    unsigned char tmp = 0;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s[i] = i;</span><br><span class="line">        k[i] = (unsigned char)key[i%8];</span><br><span class="line">    &#125;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        j = (j + s[i] + k[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[i]和s[j]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line">/*加解密*/</span><br><span class="line">void rc4_crypt(char* key,unsigned char*key2,  unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0, t = 0;</span><br><span class="line">    unsigned long k = 0;</span><br><span class="line">    unsigned char tmp;</span><br><span class="line">    unsigned char s[256];</span><br><span class="line">    rc4_init(s,key);</span><br><span class="line">    for(k = 0; k&lt;16; k++)</span><br><span class="line">    &#123;</span><br><span class="line">        i = (i + 1) % 256;</span><br><span class="line">        j = (j + s[i]) % 256;</span><br><span class="line">        tmp = s[i]^IsDebuggerPresent();</span><br><span class="line">        s[i] = s[j];//交换s[x]和s[y]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">        t = (s[i] + s[j]) % 256;</span><br><span class="line">        key2[k] = s[t];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">    printf(&quot;Hello, Comrade!!!\n&quot;);</span><br><span class="line">    printf(&quot;Please enter your key and start the struggle!!!\n&quot;);</span><br><span class="line">    char key[9];</span><br><span class="line">    scanf(&quot;%s&quot;,key);</span><br><span class="line">    file_operation(key);  //验证key</span><br><span class="line">    printf(&quot;please input your flag:\n&quot;);</span><br><span class="line">    char flag[49];</span><br><span class="line">    scanf(&quot;%s&quot;,flag);</span><br><span class="line">    unsigned char key2[16];</span><br><span class="line">    rc4_crypt(key,key2,20);  //利用rc4加密生成一个新的key</span><br><span class="line">    //接下来是SMC</span><br><span class="line">	int n; DWORD floadprotect;</span><br><span class="line">	byte* funcAddr = (byte*)tea_encrypt;//函数地址</span><br><span class="line">	VirtualProtect(&amp;tea_encrypt, 0xDF, PAGE_EXECUTE_READWRITE, &amp;floadprotect);//第二个参数为大小,</span><br><span class="line">	for (int i = 0; i &lt; 0xDF; i++)//解密操作 也需要修正大小 这里是修正后的</span><br><span class="line">		funcAddr[i] ^= 0x12;</span><br><span class="line">    for(int i=0;i&lt;48;i+=8)&#123;</span><br><span class="line">        tea_encrypt((uint32_t*)&amp;flag[i],(uint32_t*)key2); //tea加密</span><br><span class="line">    &#125;</span><br><span class="line">    unsigned char data[]=&#123;0x91,0xe5,0x27,0x31,0x2d,0x8c,0xf1,0x61,0x2,0xd8,0xf6,0xea,0xb4,</span><br><span class="line">                          0xba,0xf,0x2,0x97,0x22,0xa8,0x1a,0x1c,0xca,0x83,0x28,0xb1,0x3c,</span><br><span class="line">                          0x67,0x33,0xef,0x25,0x57,0x82,0x7f,0xc,0xac,0xf1,0x89,0xf6,0x45,</span><br><span class="line">                          0xae,0x49,0x53,0x3a,0xee,0x92,0xdd,0xb,0x48&#125;;</span><br><span class="line">    for(int i=0;i&lt;48;i++)&#123;</span><br><span class="line">        if((unsigned char)flag[i]!=data[i])</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;wrong!!!&quot;);</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    printf(&quot;right!!!&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="解题-1"><a href="#解题-1" class="headerlink" title="解题"></a>解题</h2><p>查找字符串定位到主函数</p>
+<img src="/posts/52115/image-20250606232108750.png" class="" title="image-20250606232108750">
+
+<p>查看file_operation函数</p>
+<img src="/posts/52115/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-2025-05-25-011759.png" class="" title="屏幕截图 2025-05-25 011759">
+
+<p>这个反调试不会直接退出，而是在检测到调试状态时使v10+&#x3D;0，也就是进入死循环，这样后面就没办法通过key的检验。前面一段操作是：以二进制形式读取文件，获取每一个句号前的一个汉字，将得到的汉字拼接为一个数组（一个汉字占3个字节）。将数组与输入的key进行异或，异或结果与数据进行比较。由于运行到第49行时12字节数组已经确定，所以可以直接动调获取。动调前可以采用keypatch绕过反调试：</p>
+<img src="/posts/52115/image-20250525012703047.png" class="" title="image-20250525012703047">
+
+<p>这里汇编代码的xor eax,1 其实就对应!IsDebuggerPresent()，因为eax寄存器存着函数返回值，在动调就返回1，1与1异或等于0，也就是v10+&#x3D;0，进入无限循环。想要绕过反调试，可以keypatch把1改为0，这样在调试时就不会进入无限循环。右键-&gt;keypatch</p>
+<img src="/posts/52115/image-20250525013209303.png" class="" title="image-20250525013209303">
+
+<p>点patch，然后edit-&gt;patch program-&gt;apply patches to…。然后开始动调获取数组v4的值（获取前8字节就行）：</p>
+<img src="/posts/52115/image-20250606233149284.png" class="" title="image-20250606233149284">
+
+<p>这个数组与明文异或可以得到密钥：FCTF2025</p>
+<p>回到主函数	</p>
+<img src="/posts/52115/image-20250606233507807.png" class="" title="image-20250606233507807">
+
+<p>这里rc4传入输入的密钥，生成一个新的密钥v3，然后把v3传入loc_7FF7940217CF函数。rc4函数这里有一个反调试：</p>
+<img src="/posts/52115/image-20250527090453821.png" class="" title="image-20250527090453821">
+
+<p>看汇编段：</p>
+<img src="/posts/52115/image-20250527090518668.png" class="" title="image-20250527090518668">
+
+<p>这里反调试逻辑就是，当不在调试状态时，IsDebuggerPresent()返回0，0与任何数异或等于原数；如果在调试状态，那么IsDebuggerPresent()返回1，与1异或会导致值改变。汇编里面eax存IsDebuggerPresent()函数返回值，140001B16处如果直接加mov eax,1由于指令大小为5字节，大于原指令xor eax,ebx（2字节），会覆盖掉后面的指令，所以要选择两字节的指令，我这里选择改为mov eax,ebx：</p>
+<img src="/posts/52115/image-20250527091813146.png" class="" title="image-20250527091813146">
+
+<p>一样，要记得保存。loc_7FF7940217CF函数使用了SMC隐藏。动调修复函数，同时获取经过rc4加密后的新密钥（这里key输入刚才得到的FCTF2025）：</p>
+<p>新密钥：</p>
+<img src="/posts/52115/image-20250525014624013.png" class="" title="image-20250525014624013">
+
+<p>修复后的函数：</p>
+<img src="/posts/52115/image-20250525014757066.png" class="" title="image-20250525014757066">
+
+<p>是一个tea加密，这里0x61C88647实际上是0x9E3779B9的反码，所以-0x61C88647实际上就是+0x9E3779B9。解密脚本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt; </span><br><span class="line">#include&lt;stdint.h&gt;</span><br><span class="line">void decrypt(uint32_t* v,uint32_t* key)</span><br><span class="line">&#123;</span><br><span class="line">	uint32_t k0,k2,k3,k1;</span><br><span class="line">	uint32_t v0,v1;</span><br><span class="line">	v0=v[0],v1=v[1];</span><br><span class="line">	k0=key[0],k1=key[1],k2=key[2],k3=key[3];</span><br><span class="line">	uint32_t delta=0x9E3779B9,sum=0x9E3779B9*32;</span><br><span class="line">	for(int i=0;i&lt;32;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		v1-=((v0&lt;&lt;4) + k2) ^ (v0 + sum) ^ ((v0&gt;&gt;5) + k3);</span><br><span class="line">		v0-=((v1&lt;&lt;4) + k0) ^ (v1 + sum) ^ ((v1&gt;&gt;5) + k1);</span><br><span class="line">		sum-=delta;</span><br><span class="line">	&#125;</span><br><span class="line">	v[0]=v0,v[1]=v1;</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	unsigned char s[]=&#123;0x91,0xe5,0x27,0x31,0x2d,0x8c,0xf1,0x61,0x2,0xd8,0xf6,0xea,0xb4,</span><br><span class="line">                      0xba,0xf,0x2,0x97,0x22,0xa8,0x1a,0x1c,0xca,0x83,0x28,0xb1,0x3c,</span><br><span class="line">                      0x67,0x33,0xef,0x25,0x57,0x82,0x7f,0xc,0xac,0xf1,0x89,0xf6,0x45,</span><br><span class="line">                      0xae,0x49,0x53,0x3a,0xee,0x92,0xdd,0xb,0x48&#125;;</span><br><span class="line">	unsigned char key[16]=&#123;0x28, 0x28, 0x7B, 0x33, 0x76, 0x67, 0x9D, 0xCD, 0x69, 0x3F, </span><br><span class="line">  							0xA7, 0xD1, 0x40, 0x62, 0x3C, 0xE7&#125;;</span><br><span class="line">	for(int i=0;i&lt;48;i+=8)</span><br><span class="line">	&#123;</span><br><span class="line">		decrypt((uint32_t*)&amp;s[i],(uint32_t*)key);	</span><br><span class="line">	&#125;</span><br><span class="line">	for(int i=0;i&lt;48;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		printf(&quot;%c&quot;,s[i]);	</span><br><span class="line">	&#125;	  </span><br><span class="line"> &#125;</span><br><span class="line"> //FCTF&#123;The_proletariat_all_over_the_world_unite!!&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Maze"><a href="#Maze" class="headerlink" title="Maze"></a>Maze</h1><h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include&lt;stdint.h&gt;</span><br><span class="line">#define row 8  // 行</span><br><span class="line">#define col 6  // 列</span><br><span class="line">char path[100];  // 路径</span><br><span class="line">int len = 0;   //路径长度</span><br><span class="line">int map[48]=&#123;0&#125;;</span><br><span class="line">int num=0;</span><br><span class="line">void search(char s[],int temp[])&#123;</span><br><span class="line">	char table[]=&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&quot;;</span><br><span class="line">	for(int i=0;i&lt;strlen(s);i++)&#123;</span><br><span class="line">		temp[i]=strchr(table,s[i])-table;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">void creat_map(int a[])&#123;  //将8个十进制数转化为8个6比特二进制数，组成8*6的迷宫地图</span><br><span class="line">	int temp;</span><br><span class="line">	for(int i=0;i&lt;8;i++)&#123; //行</span><br><span class="line">		temp=a[i];</span><br><span class="line">		for(int j=5;j&gt;=0;j--)&#123;  //列</span><br><span class="line">			map[i*6+j]=temp&amp;1;</span><br><span class="line">			temp&gt;&gt;=1;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">int judge(char path[])&#123;  //检验是否符合通路</span><br><span class="line">	const char *s[] = &#123;</span><br><span class="line">        &quot;ddddsdssaassassddd&quot;,</span><br><span class="line">        &quot;ddddsdssaawaaasssssddddd&quot;,</span><br><span class="line">        &quot;ssdddsssassddd&quot;,</span><br><span class="line">        &quot;sssssssddddd&quot;</span><br><span class="line">    &#125;;</span><br><span class="line">    for (int i = 0; i &lt; 4; i++) &#123;</span><br><span class="line">        if (!strcmp(path, s[i])) &#123;</span><br><span class="line">            return 1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">void find_road(int r, int c) &#123;</span><br><span class="line">    if (r &gt;= row || r &lt; 0 || c &gt;= col || c &lt; 0 || map[r * col + c] == 1)  return;  // 超出地图或撞上墙则返回</span><br><span class="line">    if (r * col + c == 47) &#123;   // 找到终点</span><br><span class="line">        if(!judge(path))</span><br><span class="line">		&#123;	</span><br><span class="line">			printf(&quot;wrong path!&quot;);</span><br><span class="line">			exit(0);</span><br><span class="line">		&#125;</span><br><span class="line">		num++;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    map[r * col + c] = 1;  // 标记为已访问，防止重复访问</span><br><span class="line">    // 尝试四个方向</span><br><span class="line">    path[len++] = &#x27;d&#x27;;</span><br><span class="line">    find_road(r, c + 1);  // 右</span><br><span class="line">    path[--len] = &#x27;\0&#x27;;</span><br><span class="line"></span><br><span class="line">    path[len++] = &#x27;a&#x27;;</span><br><span class="line">    find_road(r, c - 1);  // 左</span><br><span class="line">    path[--len] = &#x27;\0&#x27;;</span><br><span class="line"></span><br><span class="line">    path[len++] = &#x27;s&#x27;;</span><br><span class="line">    find_road(r + 1, c);  // 下</span><br><span class="line">    path[--len] = &#x27;\0&#x27;;</span><br><span class="line"></span><br><span class="line">    path[len++] = &#x27;w&#x27;;</span><br><span class="line">    find_road(r - 1, c);  // 上</span><br><span class="line">    path[--len] = &#x27;\0&#x27;;</span><br><span class="line"></span><br><span class="line">    map[r * col + c] = 0;  // 回溯</span><br><span class="line">&#125;</span><br><span class="line">int zero_num()&#123;</span><br><span class="line">	int sum=0;</span><br><span class="line">	for(int i=0;i&lt;48;i++)</span><br><span class="line">		if(map[i]==0) sum++;</span><br><span class="line">	return (sum==30)?1:0;</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">	int temp[8];</span><br><span class="line">	char s[14];</span><br><span class="line">	char input[14];</span><br><span class="line">	printf(&quot;请输入你的flag!!!:\n&quot;);</span><br><span class="line">	scanf(&quot;%s&quot;,input);</span><br><span class="line">	int slen=strlen(input);</span><br><span class="line">	if(memcmp(&quot;FCTF&#123;&quot;,input,5)||input[slen-1]!=&#x27;&#125;&#x27;)&#123;</span><br><span class="line">		printf(&quot;wrong!!&quot;);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	memcpy(s,input+5,slen-6);</span><br><span class="line">	search(s,temp);</span><br><span class="line">	creat_map(temp);</span><br><span class="line">	if(!zero_num())</span><br><span class="line">	&#123; printf(&quot;map wrong!!!&quot;);return 0;&#125;</span><br><span class="line">	find_road(0,0);</span><br><span class="line">	if(num==4)</span><br><span class="line">		printf(&quot;right!!!&quot;);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line">// FCTF&#123;BcCYbTXA&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/40555/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/posts/40555/" class="post-title-link" itemprop="url">TGCTF</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-04-18 18:30:58" itemprop="dateCreated datePublished" datetime="2025-04-18T18:30:58+08:00">2025-04-18</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -549,7 +1455,7 @@
           <hr>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/posts/43303/#more" rel="contents">
+              <a class="btn" href="/posts/40555/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -573,7 +1479,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/24481/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/31372/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar_2.gif">
@@ -587,7 +1493,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/posts/24481/" class="post-title-link" itemprop="url">函数调用过程</a>
+            <a href="/posts/31372/" class="post-title-link" itemprop="url">环境变量</a>
         </h2>
 
         <div class="post-meta">
@@ -597,24 +1503,15 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2024-12-04 19:01:02" itemprop="dateCreated datePublished" datetime="2024-12-04T19:01:02+08:00">2024-12-04</time>
+              <time title="创建时间：2025-04-14 23:10:17" itemprop="dateCreated datePublished" datetime="2025-04-14T23:10:17+08:00">2025-04-14</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-07-28 22:39:41" itemprop="dateModified" datetime="2025-07-28T22:39:41+08:00">2025-07-28</time>
+                <time title="修改时间：2025-05-28 15:59:21" itemprop="dateModified" datetime="2025-05-28T15:59:21+08:00">2025-05-28</time>
               </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B1%87%E7%BC%96/" itemprop="url" rel="index"><span itemprop="name">汇编</span></a>
-                </span>
-            </span>
 
           
 
@@ -630,7 +1527,7 @@
           <hr>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/posts/24481/#more" rel="contents">
+              <a class="btn" href="/posts/31372/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -654,7 +1551,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/posts/46980/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/1079/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar_2.gif">
@@ -668,7 +1565,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/posts/46980/" class="post-title-link" itemprop="url">蜀道山wp</a>
+            <a href="/posts/1079/" class="post-title-link" itemprop="url">操作系统</a>
         </h2>
 
         <div class="post-meta">
@@ -678,24 +1575,15 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2024-12-03 20:49:52" itemprop="dateCreated datePublished" datetime="2024-12-03T20:49:52+08:00">2024-12-03</time>
+              <time title="创建时间：2025-03-03 19:41:54" itemprop="dateCreated datePublished" datetime="2025-03-03T19:41:54+08:00">2025-03-03</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-07-28 22:39:41" itemprop="dateModified" datetime="2025-07-28T22:39:41+08:00">2025-07-28</time>
+                <time title="修改时间：2025-06-04 16:14:32" itemprop="dateModified" datetime="2025-06-04T16:14:32+08:00">2025-06-04</time>
               </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/wp/" itemprop="url" rel="index"><span itemprop="name">wp</span></a>
-                </span>
-            </span>
 
           
 
@@ -711,7 +1599,7 @@
           <hr>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/posts/46980/#more" rel="contents">
+              <a class="btn" href="/posts/1079/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -734,7 +1622,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -802,7 +1690,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">52</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

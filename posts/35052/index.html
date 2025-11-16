@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="第二关：精确扫描  扫描类型：精确数值 数值：100 数值类型：4字节。因为一般都使用int来存储，而int是4字节的。 然后进行首次扫描（查找存储了值100的所有地址）：   点击“打我”，健康值变为96。将搜索数值改为96，进行再次扫描（从上一次的结果里面找出存储的值变为96的地址）：   搜索结果只有一个，那么这个就是存储血量的地址。双击搜索出的结果，在下方的列表里面会添加这一项，点击这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CE使用教程">
+<meta property="og:url" content="http://example.com/posts/35052/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="第二关：精确扫描  扫描类型：精确数值 数值：100 数值类型：4字节。因为一般都使用int来存储，而int是4字节的。 然后进行首次扫描（查找存储了值100的所有地址）：   点击“打我”，健康值变为96。将搜索数值改为96，进行再次扫描（从上一次的结果里面找出存储的值变为96的地址）：   搜索结果只有一个，那么这个就是存储血量的地址。双击搜索出的结果，在下方的列表里面会添加这一项，点击这">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912132011150.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912132214346.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912132447180.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912132728695.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912133044845.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912133328508.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912133625705.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912134133066.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912134304333.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912134607921.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912134854793.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912135607756.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912135757248.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912140021249.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912140355037.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912145119463.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912145159617.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912145754688.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912145946889.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912150618102.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912153109765.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912153326353.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912153814134.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912153841446.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912153953900.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912155020067.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912155314839.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912155759521.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912155921979.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912160000977.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912161320720.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912162022171.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912162229106.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912162453758.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912164630187.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912165414183.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912165451946.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912165550048.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912171032020.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912171155009.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912171258048.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912171403023.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912172306193.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912172845472.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912173136729.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912173246607.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912173345787.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912173857855.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912174115143.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912174213625.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912174318845.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912174511676.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912192329282.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912192844806.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912210705295.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912211405223.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912211904889.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912214618474.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912214927578.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912221440981.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912223035849.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912223812539.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912223910567.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912224037134.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912224218637.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912225121022.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912232206535.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912232510687.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912232603574.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912232917850.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912234018789.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250912234118187.png">
+<meta property="article:published_time" content="2025-09-12T05:16:36.000Z">
+<meta property="article:modified_time" content="2025-09-12T16:06:38.997Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="Reverse">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/undefined/image-20250912132011150.png">
+
+<link rel="canonical" href="http://example.com/posts/35052/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CE使用教程 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/35052/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CE使用教程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-09-12 13:16:36" itemprop="dateCreated datePublished" datetime="2025-09-12T13:16:36+08:00">2025-09-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-13 00:06:38" itemprop="dateModified" datetime="2025-09-13T00:06:38+08:00">2025-09-13</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="第二关：精确扫描"><a href="#第二关：精确扫描" class="headerlink" title="第二关：精确扫描"></a>第二关：精确扫描</h1><img src="/posts/undefined/image-20250912132011150.png" class="" title="image-20250912132011150">
+
+<p>扫描类型：精确数值</p>
+<p>数值：100</p>
+<p>数值类型：4字节。因为一般都使用int来存储，而int是4字节的。</p>
+<p>然后进行首次扫描（查找存储了值100的所有地址）：</p>
+<img src="/posts/undefined/image-20250912132214346.png" class="" title="image-20250912132214346">
+
+<p>点击“打我”，健康值变为96。将搜索数值改为96，进行再次扫描（从上一次的结果里面找出存储的值变为96的地址）：</p>
+<img src="/posts/undefined/image-20250912132447180.png" class="" title="image-20250912132447180">
+
+<p>搜索结果只有一个，那么这个就是存储血量的地址。双击搜索出的结果，在下方的列表里面会添加这一项，点击这一项的数值，可直接改变其存储的值（血量）。</p>
+<img src="/posts/undefined/image-20250912132728695.png" class="" title="image-20250912132728695">
+
+<p>点击”激活“那一列的方框，这个修改后的值将不会再被程序修改，也就达到了锁血的效果。</p>
+<h1 id="第三关：未知的初始值"><a href="#第三关：未知的初始值" class="headerlink" title="第三关：未知的初始值"></a>第三关：未知的初始值</h1><img src="/posts/undefined/image-20250912133044845.png" class="" title="image-20250912133044845">
+
+<p>先点击”新的扫描“来清空先前框定的范围，重新开始。然后</p>
+<p>扫描类型：未知的初始值</p>
+<p>数值类型：4字节</p>
+<p>然后进行首次扫描</p>
+<img src="/posts/undefined/image-20250912133328508.png" class="" title="image-20250912133328508">
+
+<p>由于结果太多，因此左边结果列表不会显示。接下来点击游戏里的“打我”，显示血量-6。</p>
+<p>扫描类型：数值减少了</p>
+<p>数值类型：4字节</p>
+<p>数值：6</p>
+<p>进行再次扫描：</p>
+<img src="/posts/undefined/image-20250912133625705.png" class="" title="image-20250912133625705">
+
+<p>重复此操作，直到结果栏只剩一个满足条件的结果（题目说了数值在0~500之间）：</p>
+<img src="/posts/undefined/image-20250912134133066.png" class="" title="image-20250912134133066">
+
+<p>将这个值修改为5000，进入下一关。</p>
+<h1 id="第四关：浮点数"><a href="#第四关：浮点数" class="headerlink" title="第四关：浮点数"></a>第四关：浮点数</h1><img src="/posts/undefined/image-20250912134304333.png" class="" title="image-20250912134304333">
+
+<p>精确数值、单浮点、100，进行首次扫描，找到健康值，修改为5000</p>
+<img src="/posts/undefined/image-20250912134607921.png" class="" title="image-20250912134607921">
+
+<p>新的扫描，精确数值、双浮点、100，进行首次扫描，找到弹药，修改为5000</p>
+<img src="/posts/undefined/image-20250912134854793.png" class="" title="image-20250912134854793">
+
+<h1 id="第五关：代码查找"><a href="#第五关：代码查找" class="headerlink" title="第五关：代码查找"></a>第五关：代码查找</h1><img src="/posts/undefined/image-20250912135607756.png" class="" title="image-20250912135607756">
+
+<p>先通过精确数值找到存储血量的地址：</p>
+<img src="/posts/undefined/image-20250912135757248.png" class="" title="image-20250912135757248">
+
+<p>【右键-&gt;找出是什么改写了这个地址】，点击“改变数值，列表会出现改变了此地址存储的值的所有指令，双击可查看详细信息：</p>
+<img src="/posts/undefined/image-20250912140021249.png" class="" title="image-20250912140021249">
+
+<p>点击“替换”，可将指令nop掉。点击“改变数值”，进入下一关。</p>
+<h1 id="第六关：指针"><a href="#第六关：指针" class="headerlink" title="第六关：指针"></a>第六关：指针</h1><img src="/posts/undefined/image-20250912140355037.png" class="" title="image-20250912140355037">
+
+<h2 id="理论："><a href="#理论：" class="headerlink" title="理论："></a>理论：</h2><p>我们知道，存储变量可通过3种方式：</p>
+<ol>
+<li>全局变量存储。全局变量对于整个程序有效，且RVA在编译后就已经确定了（绝对地址），不会在每次程序打开时改变</li>
+<li>malloc分配。malloc从堆里面分配内存，每一次分配的都是随机的地址</li>
+<li>局部变量存储。局部变量是函数定义的变量，使用的是栈存储，在函数执行完成后自动释放，不可用于其他函数。</li>
+</ol>
+<p>像血量这样的数值，大多数时候都要被多个函数访问，如果使用局部变量存储，那么每次函数调用时都要将血量作为参数传入，函数十分臃肿。因此第3种方法几乎不会被用来存储这样的值。如果采用malloc分配，则需要使用一个全局变量来存储返回的指针，其他函数通过这个指针来访问血量，绝大多数程序都是采用这个方式。这个全局变量的地址在编译时就已经确定，每一次程序运行都不会改变，我们称之为“基址”，这种地址在CE里面使用绿色字体来标识。而其他的地址都是动态地址，每一次运行可能会不同，在CE里面使用黑色字体来标识。</p>
+<p>CE锁血的本质是<strong>持续监视并修改特定内存地址的值</strong>，使其保持在一个固定值。如果直接锁血动态地址（如malloc返回的地址），由于每次程序运行该地址都变化，锁血会失败。正确的方法是锁血通过<strong>基址和指针链</strong>找到的最终地址。基址（全局变量的地址）是固定的，CE每次运行都会从基址开始，跟随指针链找到当前的血量地址（动态地址），然后锁血该地址的值。更直白一点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">int * s;</span><br><span class="line">int main()&#123;</span><br><span class="line">	s = (int*)malloc(10 * sizeof(int));</span><br><span class="line">	// 动态地址锁血：锁血(0x12345678)</span><br><span class="line">	// 基址锁血：锁血(*s)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看这段代码，我指的第一种锁血（动态地址锁血）就是对malloc返回的地址进行锁血（事实上，通过数值扫描找到的第一个地址也就是这个地址），这个地址在每一次程序执行时都会改变，因此这个锁血是失败的。而第二种锁血（基址锁血），锁的其实是全局变量里面存储的地址，这个地址虽然每一次运行都会变动，但是CE每一次锁血时，都是通过这个指针链来查找的，找到的是更新后的地址，锁血因此是成功的。我们此关就是要通过动态地址来往上找，直到找到基址，然后构建指针链，让CE每次通过这个指针链找到血量，进行锁血。</p>
+<h2 id="实操："><a href="#实操：" class="headerlink" title="实操："></a>实操：</h2><p>先找到存储血量的地址（这里称为地址1）：</p>
+<img src="/posts/undefined/image-20250912145119463.png" class="" title="image-20250912145119463">
+
+<p>查找是什么改写了这个地址，查看详细信息：</p>
+<img src="/posts/undefined/image-20250912145159617.png" class="" title="image-20250912145159617">
+
+<p>分析指令，是将eax的值放入[rdx]里面。此时rdx存储了地址1，那么我们现在需要知道是谁将地址1赋值给rdx的。使用内存扫描找谁存储了地址1（注意数值一定要勾选Hex）：</p>
+<img src="/posts/undefined/image-20250912145754688.png" class="" title="image-20250912145754688">
+
+<p>可以看到，是一个绿色地址存储了地址1，这个绿色地址就是基址。接下来创建指针链：</p>
+<p>点击“手动添加地址”，然后在弹出的界面勾选指针：</p>
+<img src="/posts/undefined/image-20250912145946889.png" class="" title="image-20250912145946889">
+
+<p>在下面的空文本框输入基址，然后上面的偏移填入偏移（因为上面是[rdx]，故偏移为0），点击确定。地址列表会出现一个[P-&gt;xxx]格式的指针：</p>
+<img src="/posts/undefined/image-20250912150618102.png" class="" title="image-20250912150618102">
+
+<p>看这一项的”数值“列对应的值是否与血量相等，如果相等，则代表指针链构建成功。将数值改为5000并锁定，然后点击游戏里面”改变指针“进入下一关。</p>
+<h1 id="第七关：代码注入"><a href="#第七关：代码注入" class="headerlink" title="第七关：代码注入"></a>第七关：代码注入</h1><img src="/posts/undefined/image-20250912153109765.png" class="" title="image-20250912153109765">
+
+<p>先找到存储血量的地址，然后”找出是什么改写了这个地址”：</p>
+<img src="/posts/undefined/image-20250912153326353.png" class="" title="image-20250912153326353">
+
+
+
+<p>双击可打开调试程序：</p>
+<img src="/posts/undefined/image-20250912153814134.png" class="" title="image-20250912153814134">
+
+<p>点击[工具-&gt;自动汇编]</p>
+<img src="/posts/undefined/image-20250912153841446.png" class="" title="image-20250912153841446">
+
+<p>[模板-&gt;代码注入]，它会自动帮你生成一个Inline Hook的模板</p>
+<img src="/posts/undefined/image-20250912153953900.png" class="" title="image-20250912153953900">
+
+<p>修改这个模板：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">alloc(newmem,2048,&quot;Tutorial-x86_64.exe&quot;+2D897) </span><br><span class="line">label(returnhere)</span><br><span class="line">label(originalcode)</span><br><span class="line">label(exit)</span><br><span class="line"></span><br><span class="line">// 第一部分，跳转的新空间</span><br><span class="line">newmem: //this is allocated memory, you have read,write,execute access</span><br><span class="line">//place your code here</span><br><span class="line"></span><br><span class="line">originalcode:</span><br><span class="line">add dword ptr [rsi+000007E0],02</span><br><span class="line"></span><br><span class="line">exit:</span><br><span class="line">jmp returnhere</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 第二部分：原地址空间</span><br><span class="line">&quot;Tutorial-x86_64.exe&quot;+2D897:</span><br><span class="line">jmp newmem</span><br><span class="line">nop 2</span><br><span class="line">returnhere:</span><br></pre></td></tr></table></figure>
+
+<p>点击”execute”，代码就注入完成了。</p>
+<h1 id="第八关：多级指针"><a href="#第八关：多级指针" class="headerlink" title="第八关：多级指针"></a>第八关：多级指针</h1><h2 id="法一：手动跟踪"><a href="#法一：手动跟踪" class="headerlink" title="法一：手动跟踪"></a>法一：手动跟踪</h2><p>先查找存储血量的地址，是0x015A6958，然后查看谁修改了这个地址：</p>
+<img src="/posts/undefined/image-20250912155020067.png" class="" title="image-20250912155020067">
+
+<p>rsi+18等于0x015A6958，那么偏移为0x18。rsi &#x3D;  0x015A6958  - 0x18 &#x3D; 0x015A6940，接下来我们需要查找谁将0x015A6940赋值给了rsi。使用内存扫描，得到地址0x06D806F0：</p>
+<img src="/posts/undefined/image-20250912155314839.png" class="" title="image-20250912155314839">
+
+<p>为了查看偏移，我们使用“查看谁访问了这个地址”:</p>
+<p>注意：除第1级指针外，更高级的指针都不能使用“谁修改了这个地址”，因为当你点击改变数值时，这个指针链并不会改变，只有指针链末尾指向的数值才会改变，也就是只有最后一个指针指向的值才会改变。但是可用“谁访问了这个地址”，因为当程序顺着指针链修改末尾的数值时，会访问中间的所有指针。</p>
+<img src="/posts/undefined/image-20250912155759521.png" class="" title="image-20250912155759521">
+
+<p>选择“谁访问这个地址”时，可能会出现多个结果，这个时候就要分析每个结果的汇编语句，排除一些选项，比如：</p>
+<img src="/posts/undefined/image-20250912155921979.png" class="" title="image-20250912155921979">
+
+<p>这个比较并不会改变任何寄存器的值，因此不是我们要找的。</p>
+<img src="/posts/undefined/image-20250912160000977.png" class="" title="image-20250912160000977">
+
+<p>而这个是将RSI指向的数据传给RSI，会改变寄存器的值，是我们要找的。</p>
+<p>这里显示的RSI的值是0x015A6940，刚好是前面我们需要查找的地址，也就说明，现在显示的寄存器状态是这个指令执行完成后的状态。那么，执行前RSI的值就是0x06D806F0，偏移为0（因为是[rsi]）。接下来寻找谁存储的地址2，发现是0x06DD2508存储了地址2。为了查看偏移，查找谁访问了这个地址：</p>
+<img src="/posts/undefined/image-20250912161320720.png" class="" title="image-20250912161320720">
+
+<p>这里RSI+18等于0x06DD2508，那么偏移是0x18。在执行这条指令前，RSI &#x3D; 0x06DD2508 - 0x18 &#x3D; 0x06DD24F0，接下来查找谁存储了0x06DD24F0，发现是0x06DD1A20，找出是谁访问了该地址：</p>
+<img src="/posts/undefined/image-20250912162022171.png" class="" title="image-20250912162022171">
+
+<p>这里RSI+10等于0x06DD1A20，那么偏移是0x10。在执行这条指令前，RSI &#x3D; 0x06DD1A20 - 0x10&#x3D; 0x06DD1A10，接下来查找谁存储了0x06DD1A10</p>
+<img src="/posts/undefined/image-20250912162229106.png" class="" title="image-20250912162229106">
+
+<p>发现是一个绿色地址0x100325B00（基址）存储了这个地址，查看是谁访问了这个地址：</p>
+<img src="/posts/undefined/image-20250912162453758.png" class="" title="image-20250912162453758">
+
+<p>直接使用[100325B00]代表偏移是0。总结一下执行流程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mov rsi,[100325B00]</span><br><span class="line">mov rsi,[rsi+10]		// rsi == 0x06DD1A10</span><br><span class="line">mov rsi,[rsi+18]		// rsi == 0x06DD24F0</span><br><span class="line">mov rsi,[rsi]			// rsi == 0x06D806F0</span><br><span class="line">mov [rsi+18],eax		// rsi == 0x015A6940</span><br><span class="line"></span><br><span class="line">也就是：</span><br><span class="line">[100325B00] == 0x06DD1A10</span><br><span class="line">[0x06DD1A10 + 0X10] == 0x06DD24F0</span><br><span class="line">[0x06DD24F0 + 0X18] == 0x06D806F0</span><br><span class="line">[0x06D806F0] == 0x015A6940</span><br><span class="line">[0x015A6940 + 0X18] == 血量</span><br></pre></td></tr></table></figure>
+
+<p>构建指针链：</p>
+<img src="/posts/undefined/image-20250912164630187.png" class="" title="image-20250912164630187">
+
+<h2 id="法二：指针扫描"><a href="#法二：指针扫描" class="headerlink" title="法二：指针扫描"></a>法二：指针扫描</h2><p>先查找存储血量的地址，然后[右键-&gt;对这个地址进行指针扫描]</p>
+<img src="/posts/undefined/image-20250912165414183.png" class="" title="image-20250912165414183">
+
+
+
+<p>然后默认</p>
+<img src="/posts/undefined/image-20250912165451946.png" class="" title="image-20250912165451946">
+
+
+
+<p>选择地址保存</p>
+<img src="/posts/undefined/image-20250912165550048.png" class="" title="image-20250912165550048">
+
+<p>保存后文件会自动打开。接下来，我们需要改变指针（这题点击“改变指针”这个按钮就行，如果是真正的游戏就需要死亡或重新打开游戏即可），然后进行精确值扫描，记下新的地址。回到之前打开的文件，点击[指针扫描器-&gt;重新扫描内存]:</p>
+<img src="/posts/undefined/image-20250912171032020.png" class="" title="image-20250912171032020">
+
+<p>输入新指针：</p>
+<img src="/posts/undefined/image-20250912171155009.png" class="" title="image-20250912171155009">
+
+<p>点击确定后选择地址保存，它会自动筛选出正确的路径：</p>
+<img src="/posts/undefined/image-20250912171258048.png" class="" title="image-20250912171258048">
+
+<p>点击即可添加进地址列表</p>
+<img src="/posts/undefined/image-20250912171403023.png" class="" title="image-20250912171403023">
+
+
+
+<h1 id="第九关：注入-（共享代码）"><a href="#第九关：注入-（共享代码）" class="headerlink" title="第九关：注入++（共享代码）"></a>第九关：注入++（共享代码）</h1><img src="/posts/undefined/image-20250912172306193.png" class="" title="image-20250912172306193">
+
+<p>先找出4个健康值：</p>
+<img src="/posts/undefined/image-20250912172845472.png" class="" title="image-20250912172845472">
+
+<p>[右键-&gt;找出是什么改写了这个地址]，然后游戏里”攻击“，在改写列表里面双击出现的项查看详细信息，再双击进入调试器：</p>
+<img src="/posts/undefined/image-20250912173136729.png" class="" title="image-20250912173136729">
+
+<p>[右键-&gt;找出指令访问的地址]</p>
+<img src="/posts/undefined/image-20250912173246607.png" class="" title="image-20250912173246607">
+
+<p>然后对每一个玩家进行攻击，在列表里面可以看到4项：</p>
+<img src="/posts/undefined/image-20250912173345787.png" class="" title="image-20250912173345787">
+
+<p>这4个地址刚好是前面找出的4个健康值的地址，说明这4个玩家公用一段修改健康值的代码，如果我像第五关一样直接nop掉，那么敌人也会锁血。因此我们需要代码注入，判断需要修改的是队友还是敌人，如果是队友，那么不修改；如果是敌人，那么直接修改为0。为了方便判断，我们需要找出队友和敌人的区别。先将队友归为第一组：[右键-&gt;Find commonalities ….-&gt;Mark selection as group 1]</p>
+<img src="/posts/undefined/image-20250912173857855.png" class="" title="image-20250912173857855">
+
+<p>然后将敌人归于第2组：[右键-&gt;Find commonalities ….-&gt;Mark selection as group 2]</p>
+<img src="/posts/undefined/image-20250912174115143.png" class="" title="image-20250912174115143">
+
+<p>然后全选，[右键-&gt;Find commonalities ….-&gt;Scan for commonalities]</p>
+<img src="/posts/undefined/image-20250912174213625.png" class="" title="image-20250912174213625">
+
+<img src="/posts/undefined/image-20250912174318845.png" class="" title="image-20250912174318845">
+
+<p>由于汇编语句中是对rbx+8处的值进行修改，那么需要对比rbx存储的地址的附近的值，所以点击rbx那一项</p>
+<img src="/posts/undefined/image-20250912174511676.png" class="" title="image-20250912174511676">
+
+<p>点击扫描</p>
+
+
+<p>可以看到，在偏移为0x14的位置，貌似是阵营标签，可以拿这个来判断需要修改的是哪个阵营。接下来写注入代码：</p>
+<p>[工具-&gt;自动汇编]，然后模板可以先选择CT表框架（CT表就是之前说的地址列表），因为选择了这个之后就可保存在CT表里面，后续可以进行修改。然后再选择代码注入模板。注入脚本如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">[ENABLE]</span><br><span class="line">//code from here to &#x27;[DISABLE]&#x27; will be used to enable the cheat</span><br><span class="line">alloc(newmem,2048,&quot;Tutorial-x86_64.exe&quot;+2EF1D) </span><br><span class="line">label(returnhere)</span><br><span class="line">label(originalcode)</span><br><span class="line">label(exit)</span><br><span class="line"></span><br><span class="line">newmem: //this is allocated memory, you have read,write,execute access</span><br><span class="line">//place your code here</span><br><span class="line">pushfq</span><br><span class="line">cmp [rbx+14],1</span><br><span class="line">je exit</span><br><span class="line"></span><br><span class="line">originalcode:</span><br><span class="line">movss [rbx+08],xmm0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">exit:</span><br><span class="line">popfq</span><br><span class="line">jmp returnhere</span><br><span class="line"></span><br><span class="line">&quot;Tutorial-x86_64.exe&quot;+2EF1D:</span><br><span class="line">jmp newmem</span><br><span class="line">returnhere:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">[DISABLE]</span><br><span class="line">//code from here till the end of the code will be used to disable the cheat</span><br><span class="line">dealloc(newmem)</span><br><span class="line">&quot;Tutorial-x86_64.exe&quot;+2EF1D:</span><br><span class="line">movss [rbx+08],xmm0</span><br><span class="line">//Alt: db E9 DE 10 FC FF</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li>我们在注入是绝对不能改变当前寄存器的上下文，cmp指令会导致一些寄存器的值改变，因此在调用cmp指令前，需要使用pushfq来讲寄存器全部压入栈，在跳回前需要使用popfq恢复寄存器状态。</li>
+<li>使用CT模板后，需要点击[文件-&gt;分配到当前的CT表]才会保存到CT表中。在点击确认或注入后CE会立即进行注入，但是在CT表中，如果脚本未激活，则会执行脚本的[DISABLE]部分（取消空间分配然后执行原始代码）。因此如果想要注入生效，必须要激活脚本（点击CT表的第一列的方框）</li>
+</ul>
+<h2 id="脚本优化：特征码"><a href="#脚本优化：特征码" class="headerlink" title="脚本优化：特征码"></a>脚本优化：特征码</h2><p>前面提到的脚本每一次重开游戏都是有效的，但是如果游戏进行了更新，那么会重新编译，代码的偏移可能会不同，因此如果还是使用固定偏移来注入，版本更新会直接失效。版本更新时，大多数时候都是改变稍微一小部分指令，大部分的指令不会改变，只是位置发生了移动。因此可以把待注入地址处及附近的硬编码作为特征码来锁定目标位置，而不是用绝对地址，这样做在版本更新后依然有效。</p>
+<p>先在调试器界面复制指令硬编码，然后进行搜索：</p>
+<img src="/posts/undefined/image-20250912192329282.png" class="" title="image-20250912192329282">
+
+<p>注意：一定要把可写给关掉</p>
+<p>在版本更新时，操作类型基本是稳定的，但是操作数据可能会有改变，因此可以使用”xx”来代替操作数据进行搜索。一个”xx”代表一个字节：</p>
+<img src="/posts/undefined/image-20250912192844806.png" class="" title="image-20250912192844806">
+
+<p>注意，在实际AOB注入时，应该先在扫描界面搜索一下字节数组的搜索结果是否唯一，防止注入位置错误。</p>
+<p>代码注入：模板选择CT表+AOB注入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">&#123; Game   : Tutorial-x86_64.exe</span><br><span class="line">  Version: </span><br><span class="line">  Date   : 2025-09-12</span><br><span class="line">  Author : tzs</span><br><span class="line"></span><br><span class="line">  This script does blah blah blah</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[ENABLE]</span><br><span class="line">//code from here to &#x27;[DISABLE]&#x27; will be used to enable the cheat</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">aobscanmodule(INJECT,Tutorial-x86_64.exe,F3xxxxxxxx0Fxxxxxxxxxxxx7Axx75xx48xxxxxx48xxxxxxxxxxxx) // should be unique</span><br><span class="line">alloc(newmem,$1000,INJECT)</span><br><span class="line"></span><br><span class="line">label(Enemy)</span><br><span class="line">label(return)</span><br><span class="line">label(exit)</span><br><span class="line"></span><br><span class="line">newmem:</span><br><span class="line">pushfq</span><br><span class="line">cmp [rbx+14],1</span><br><span class="line">je exit</span><br><span class="line">Enemy:</span><br><span class="line">  movss [rbx+08],xmm0</span><br><span class="line">  jmp exit</span><br><span class="line"></span><br><span class="line">exit:</span><br><span class="line">popfq</span><br><span class="line">jmp return</span><br><span class="line"></span><br><span class="line">INJECT:</span><br><span class="line">  jmp newmem</span><br><span class="line">return:</span><br><span class="line">registersymbol(INJECT)</span><br><span class="line"></span><br><span class="line">[DISABLE]</span><br><span class="line">//code from here till the end of the code will be used to disable the cheat</span><br><span class="line">INJECT:</span><br><span class="line">  db F3 0F 11 43 08</span><br><span class="line"></span><br><span class="line">unregistersymbol(INJECT)</span><br><span class="line">dealloc(newmem)</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">// ORIGINAL CODE - INJECTION POINT: Tutorial-x86_64.exe+2EF1D</span><br><span class="line"></span><br><span class="line">Tutorial-x86_64.exe+2EEF3: E9 97 00 00 00           - jmp Tutorial-x86_64.exe+2EF8F</span><br><span class="line">Tutorial-x86_64.exe+2EEF8: F3 0F 2A C6              - cvtsi2ss xmm0,esi</span><br><span class="line">Tutorial-x86_64.exe+2EEFC: F3 0F 10 4B 08           - movss xmm1,[rbx+08]</span><br><span class="line">Tutorial-x86_64.exe+2EF01: F3 0F 5C C8              - subss xmm1,xmm0</span><br><span class="line">Tutorial-x86_64.exe+2EF05: 0F 2F 0D 3C 89 20 00     - comiss xmm1,[Tutorial-x86_64.exe+237848]</span><br><span class="line">Tutorial-x86_64.exe+2EF0C: 7A 0C                    - jp Tutorial-x86_64.exe+2EF1A</span><br><span class="line">Tutorial-x86_64.exe+2EF0E: 73 0A                    - jae Tutorial-x86_64.exe+2EF1A</span><br><span class="line">Tutorial-x86_64.exe+2EF10: F3 0F 10 05 30 89 20 00  - movss xmm0,[Tutorial-x86_64.exe+237848]</span><br><span class="line">Tutorial-x86_64.exe+2EF18: EB 03                    - jmp Tutorial-x86_64.exe+2EF1D</span><br><span class="line">Tutorial-x86_64.exe+2EF1A: 0F 28 C1                 - movaps xmm0,xmm1</span><br><span class="line">// ---------- INJECTING HERE ----------</span><br><span class="line">Tutorial-x86_64.exe+2EF1D: F3 0F 11 43 08           - movss [rbx+08],xmm0</span><br><span class="line">// ---------- DONE INJECTING  ----------</span><br><span class="line">Tutorial-x86_64.exe+2EF22: 0F 2F 05 1F 89 20 00     - comiss xmm0,[Tutorial-x86_64.exe+237848]</span><br><span class="line">Tutorial-x86_64.exe+2EF29: 7A 14                    - jp Tutorial-x86_64.exe+2EF3F</span><br><span class="line">Tutorial-x86_64.exe+2EF2B: 75 12                    - jne Tutorial-x86_64.exe+2EF3F</span><br><span class="line">Tutorial-x86_64.exe+2EF2D: 48 8B 4B 60              - mov rcx,[rbx+60]</span><br><span class="line">Tutorial-x86_64.exe+2EF31: 48 8B 15 00 BD 18 00     - mov rdx,[Tutorial-x86_64.exe+1BAC38]</span><br><span class="line">Tutorial-x86_64.exe+2EF38: E8 43 D7 07 00           - call Tutorial-x86_64.exe+AC680</span><br><span class="line">Tutorial-x86_64.exe+2EF3D: EB 42                    - jmp Tutorial-x86_64.exe+2EF81</span><br><span class="line">Tutorial-x86_64.exe+2EF3F: F3 0F 10 4B 08           - movss xmm1,[rbx+08]</span><br><span class="line">Tutorial-x86_64.exe+2EF44: 48 8D 4D E0              - lea rcx,[rbp-20]</span><br><span class="line">Tutorial-x86_64.exe+2EF48: E8 C3 BC 01 00           - call Tutorial-x86_64.exe+4AC10</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="实战练习："><a href="#实战练习：" class="headerlink" title="实战练习："></a>实战练习：</h1><img src="/posts/undefined/image-20250912210705295.png" class="" title="image-20250912210705295">
+
+<p>通过摧毁靶子选定要挑战的关卡</p>
+<h2 id="练习一："><a href="#练习一：" class="headerlink" title="练习一："></a>练习一：</h2><img src="/posts/undefined/image-20250912211405223.png" class="" title="image-20250912211405223">
+
+<p>规则：</p>
+<ol>
+<li>5发炮弹，打不掉靶子，换弹时靶子血量会回满</li>
+<li>空格发射，A和D控制火炮方向</li>
+</ol>
+<p>破解思路：可以将子弹数设置为无限，也可以修改靶子扣血逻辑，达到一击毙命。这里选择一击毙命的方式：</p>
+<p>先找存储靶子血量的地址。由于未知血量数值、类型，因此全部选择未知进行扫描：</p>
+<img src="/posts/undefined/image-20250912211904889.png" class="" title="image-20250912211904889">
+
+<p>可以通过以下操作进行筛选：</p>
+<ol>
+<li>打中靶子，筛选数值减少的</li>
+<li>空放炮弹，筛选数值不变的</li>
+<li>打完炮弹，筛选对比首次扫描数值不变的</li>
+</ol>
+<img src="/posts/undefined/image-20250912214618474.png" class="" title="image-20250912214618474">
+
+<p>最后得到了8个结果。其中0159E010的4字节和0159E070的单浮点数最像血量（因为初始值为100），使用”谁修改了这个地址“，定位汇编界面：</p>
+<img src="/posts/undefined/image-20250912214927578.png" class="" title="image-20250912214927578">
+
+<p>进行代码注入（简略版）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sub rsp, 16</span><br><span class="line">movups [rsp], xmm0</span><br><span class="line">xorps xmm0,xmm0</span><br><span class="line">movss [rax+50],xmm0</span><br><span class="line">movups xmm0, [rsp]</span><br><span class="line">add rsp, 16</span><br><span class="line">jmp return</span><br></pre></td></tr></table></figure>
+
+<p>实操发现最后血条变成空了，但是游戏并未结束，说明这个0159E070的单浮点数可能只是血条的显示数，不是真实的血条。</p>
+<img src="/posts/undefined/image-20250912221440981.png" class="" title="image-20250912221440981">
+
+<p>然后试试0159E010的4字节</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">&#123; Game   : gtutorial-x86_64.exe</span><br><span class="line">  Version: </span><br><span class="line">  Date   : 2025-09-12</span><br><span class="line">  Author : tzs</span><br><span class="line"></span><br><span class="line">  This script does blah blah blah</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[ENABLE]</span><br><span class="line">//code from here to &#x27;[DISABLE]&#x27; will be used to enable the cheat</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">aobscanmodule(INJECT,gtutorial-x86_64.exe,89xxxx48xxxxxxxx74xxF2) // should be unique</span><br><span class="line">alloc(newmem,$1000,INJECT)</span><br><span class="line"></span><br><span class="line">label(code)</span><br><span class="line">label(return)</span><br><span class="line"></span><br><span class="line">newmem:</span><br><span class="line"></span><br><span class="line">code:</span><br><span class="line">  mov [rax+70],0</span><br><span class="line">  cmp qword ptr [rax+68],00</span><br><span class="line">  jmp return</span><br><span class="line"></span><br><span class="line">INJECT:</span><br><span class="line">  jmp newmem</span><br><span class="line">  nop 3</span><br><span class="line">return:</span><br><span class="line">registersymbol(INJECT)</span><br><span class="line"></span><br><span class="line">[DISABLE]</span><br><span class="line">//code from here till the end of the code will be used to disable the cheat</span><br><span class="line">INJECT:</span><br><span class="line">  db 89 50 70 48 83 78 68 00</span><br><span class="line"></span><br><span class="line">unregistersymbol(INJECT)</span><br><span class="line">dealloc(newmem)</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">// ORIGINAL CODE - INJECTION POINT: gtutorial-x86_64.exe+3C1E3</span><br><span class="line"></span><br><span class="line">gtutorial-x86_64.exe+3C1D0: 8B 41 70                 - mov eax,[rcx+70]</span><br><span class="line">gtutorial-x86_64.exe+3C1D3: 85 C0                    - test eax,eax</span><br><span class="line">gtutorial-x86_64.exe+3C1D5: 7F 03                    - jg gtutorial-x86_64.exe+3C1DA</span><br><span class="line">gtutorial-x86_64.exe+3C1D7: B0 01                    - mov al,01</span><br><span class="line">gtutorial-x86_64.exe+3C1D9: C3                       - ret </span><br><span class="line">gtutorial-x86_64.exe+3C1DA: 30 C0                    - xor al,al</span><br><span class="line">gtutorial-x86_64.exe+3C1DC: C3                       - ret </span><br><span class="line">gtutorial-x86_64.exe+3C1DD: 00 00                    - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+3C1DF: 00 48 89                 - add [rax-77],cl</span><br><span class="line">gtutorial-x86_64.exe+3C1E2: C8                       - db C8 </span><br><span class="line">// ---------- INJECTING HERE ----------</span><br><span class="line">gtutorial-x86_64.exe+3C1E3: 89 50 70                 - mov [rax+70],edx</span><br><span class="line">// ---------- DONE INJECTING  ----------</span><br><span class="line">gtutorial-x86_64.exe+3C1E6: 48 83 78 68 00           - cmp qword ptr [rax+68],00</span><br><span class="line">gtutorial-x86_64.exe+3C1EB: 74 23                    - je gtutorial-x86_64.exe+3C210</span><br><span class="line">gtutorial-x86_64.exe+3C1ED: F2 0F 2A 40 70           - cvtsi2sd xmm0,[rax+70]</span><br><span class="line">gtutorial-x86_64.exe+3C1F2: F2 0F 2A 48 74           - cvtsi2sd xmm1,[rax+74]</span><br><span class="line">gtutorial-x86_64.exe+3C1F7: F2 0F 5E C1              - divsd xmm0,xmm1</span><br><span class="line">gtutorial-x86_64.exe+3C1FB: F2 0F 59 05 35 9F 27 00  - mulsd xmm0,[gtutorial-x86_64.exe+2B6138]</span><br><span class="line">gtutorial-x86_64.exe+3C203: 48 8B 40 68              - mov rax,[rax+68]</span><br><span class="line">gtutorial-x86_64.exe+3C207: F2 0F 5A C0              - cvtsd2ss xmm0,xmm0</span><br><span class="line">INJECT: E9 F0 3D FB FF           - jmp FFFF0000</span><br><span class="line">gtutorial-x86_64.exe+3C210: C3                       - ret </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>发现确实一击必杀，说明这个就是真正的血条，成功注入！</p>
+<h2 id="练习二："><a href="#练习二：" class="headerlink" title="练习二："></a>练习二：</h2><img src="/posts/undefined/image-20250912223035849.png" class="" title="image-20250912223035849">
+
+<p>规则：</p>
+<ol>
+<li>敌人2个，我攻击时它也攻击。敌人血条很厚，打不死。</li>
+<li>空格发射，A和D控制火炮方向</li>
+<li>敌人和我可能共用伤害计算指令</li>
+</ol>
+<p>思路：找到敌人和我的血条地址，分析差异，写出注入代码，对敌人一击必杀，对我不扣血。</p>
+<p>这里我的血量是知道的，因此可以把我的血量作为突破口，进行查找：</p>
+<img src="/posts/undefined/image-20250912223812539.png" class="" title="image-20250912223812539">
+
+<p>然后看谁改了这个地址，转入汇编界面：</p>
+<img src="/posts/undefined/image-20250912223910567.png" class="" title="image-20250912223910567">
+
+<p>然后查找指令访问的地址，就可得到敌人的血量：</p>
+<img src="/posts/undefined/image-20250912224037134.png" class="" title="image-20250912224037134">
+
+<p>然后又是分组、找不同</p>
+<img src="/posts/undefined/image-20250912224218637.png" class="" title="image-20250912224218637">
+
+<p>在70偏移处，看起来很像是分组标识。开始注入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">&#123; Game   : gtutorial-x86_64.exe</span><br><span class="line">  Version: </span><br><span class="line">  Date   : 2025-09-12</span><br><span class="line">  Author : tzs</span><br><span class="line"></span><br><span class="line">  This script does blah blah blah</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[ENABLE]</span><br><span class="line">//code from here to &#x27;[DISABLE]&#x27; will be used to enable the cheat</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">aobscanmodule(INJECT,gtutorial-x86_64.exe,29xxxxc3000000000000) // should be unique</span><br><span class="line">alloc(newmem,$1000,INJECT)</span><br><span class="line"></span><br><span class="line">label(enemy)</span><br><span class="line">label(return)</span><br><span class="line">label(exit)</span><br><span class="line"></span><br><span class="line">newmem:</span><br><span class="line"></span><br><span class="line">pushfq</span><br><span class="line">cmp [rax+70],1</span><br><span class="line">jne exit</span><br><span class="line">enemy:</span><br><span class="line">  mov [rax+60],0</span><br><span class="line">exit:</span><br><span class="line">  popfq</span><br><span class="line">  ret</span><br><span class="line">  add [rax],al</span><br><span class="line">  jmp return</span><br><span class="line"></span><br><span class="line">INJECT:</span><br><span class="line">  jmp newmem</span><br><span class="line">  nop</span><br><span class="line">return:</span><br><span class="line">registersymbol(INJECT)</span><br><span class="line"></span><br><span class="line">[DISABLE]</span><br><span class="line">//code from here till the end of the code will be used to disable the cheat</span><br><span class="line">INJECT:</span><br><span class="line">  db 29 50 60 C3 00 00</span><br><span class="line"></span><br><span class="line">unregistersymbol(INJECT)</span><br><span class="line">dealloc(newmem)</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">// ORIGINAL CODE - INJECTION POINT: gtutorial-x86_64.exe+400E3</span><br><span class="line"></span><br><span class="line">gtutorial-x86_64.exe+400CB: 90                 - nop </span><br><span class="line">gtutorial-x86_64.exe+400CC: 90                 - nop </span><br><span class="line">gtutorial-x86_64.exe+400CD: 66 0F 6F 74 24 20  - movdqa xmm6,[rsp+20]</span><br><span class="line">gtutorial-x86_64.exe+400D3: 48 8D 64 24 30     - lea rsp,[rsp+30]</span><br><span class="line">gtutorial-x86_64.exe+400D8: 5B                 - pop rbx</span><br><span class="line">gtutorial-x86_64.exe+400D9: C3                 - ret </span><br><span class="line">gtutorial-x86_64.exe+400DA: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400DC: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400DE: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400E0: 48 89 C8           - mov rax,rcx</span><br><span class="line">// ---------- INJECTING HERE ----------</span><br><span class="line">gtutorial-x86_64.exe+400E3: 29 50 60           - sub [rax+60],edx</span><br><span class="line">// ---------- DONE INJECTING  ----------</span><br><span class="line">gtutorial-x86_64.exe+400E6: C3                 - ret </span><br><span class="line">gtutorial-x86_64.exe+400E7: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400E9: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400EB: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400ED: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400EF: 00 53 56           - add [rbx+56],dl</span><br><span class="line">gtutorial-x86_64.exe+400F2: 48 8D 64 24 D8     - lea rsp,[rsp-28]</span><br><span class="line">gtutorial-x86_64.exe+400F7: 48 89 CB           - mov rbx,rcx</span><br><span class="line">gtutorial-x86_64.exe+400FA: 48 89 D6           - mov rsi,rdx</span><br><span class="line">gtutorial-x86_64.exe+400FD: 48 85 F6           - test rsi,rsi</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="练习三："><a href="#练习三：" class="headerlink" title="练习三："></a>练习三：</h2><img src="/posts/undefined/image-20250912225121022.png" class="" title="image-20250912225121022">
+
+<p>规则：</p>
+<ol>
+<li>空格跳起，AD左右移动，按P暂停</li>
+<li>需要躲避所有小车，踩完所有平台，门才会打开</li>
+</ol>
+<p>这个比之前的几个难，因为对象变多了，且每一个对象同时有x轴和y轴。我是能控制的，所以从自己下手。我们很难保证横向移动时完美回到初始点，但是纵向移动很容易，所以应该从纵轴开始下手。</p>
+<p>可以采取以下几种筛选方法：</p>
+<ul>
+<li>起跳半空中暂停，搜索值增加的</li>
+<li>下落时暂停，搜索值减少的</li>
+<li>落地后搜索与初始值相同的</li>
+</ul>
+<p>先使用这个方法筛选了一遍，发现没有满足条件的。这意味着往上跳他的y轴是减小的。于是换一种方法：</p>
+<ul>
+<li>起跳半空中暂停，搜索值减小的</li>
+<li>下落时暂停，搜索值增加的</li>
+<li>落地后搜索与初始值相同的</li>
+</ul>
+<p>搜索得到4个结果：</p>
+<img src="/posts/undefined/image-20250912232206535.png" class="" title="image-20250912232206535">
+
+<p>其他的要么数值太大，要么数值太小，只有01620698才像y轴坐标。[右键-&gt;浏览相关内存区域]，然后在下方就能看到该地址的内存情况：</p>
+<img src="/posts/undefined/image-20250912232510687.png" class="" title="image-20250912232510687">
+
+<p>[右键-&gt;显示类型-&gt;单浮点]</p>
+<img src="/posts/undefined/image-20250912232603574.png" class="" title="image-20250912232603574">
+
+<p>为了看y坐标附近是否有坐标x，需要将滚轮网上一点，将坐标y置于中央，然后上下左右移动，看哪些值会变化：</p>
+<img src="/posts/undefined/image-20250912232917850.png" class="" title="image-20250912232917850">
+
+<p>很明显，哪个-0.90就是x坐标了，并且往左减小，往右增大。根据这些信息，我们可以很容易定位小车的横轴（因为小车y轴一直不变，故不易定位）:</p>
+<img src="/posts/undefined/image-20250912234018789.png" class="" title="image-20250912234018789">
+
+<p>[右键-&gt;浏览相关内存区域]，查看内存附近区域是否有其他对象：</p>
+<img src="/posts/undefined/image-20250912234118187.png" class="" title="image-20250912234118187">
+
+<p>找出谁改写了这个地址，直接nop掉，让小车停止移动。</p>
+<p>然后接下来查找哪里存储了已点亮平台数，然后进行代码注入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[ENABLE]</span><br><span class="line">//code from here to &#x27;[DISABLE]&#x27; will be used to enable the cheat</span><br><span class="line">alloc(newmem,2048,&quot;gtutorial-x86_64.exe&quot;+4109D) </span><br><span class="line">label(returnhere)</span><br><span class="line">label(originalcode)</span><br><span class="line">label(exit)</span><br><span class="line"></span><br><span class="line">newmem: //this is allocated memory, you have read,write,execute access</span><br><span class="line">//place your code here</span><br><span class="line"></span><br><span class="line">originalcode:</span><br><span class="line">add dword ptr [rbx+00000088],c</span><br><span class="line"></span><br><span class="line">exit:</span><br><span class="line">jmp returnhere</span><br><span class="line"></span><br><span class="line">&quot;gtutorial-x86_64.exe&quot;+4109D:</span><br><span class="line">jmp newmem</span><br><span class="line">nop 2</span><br><span class="line">returnhere:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">[DISABLE]</span><br><span class="line">//code from here till the end of the code will be used to disable the cheat</span><br><span class="line">dealloc(newmem)</span><br><span class="line">&quot;gtutorial-x86_64.exe&quot;+4109D:</span><br><span class="line">add dword ptr [rbx+00000088],01</span><br><span class="line">//Alt: db 83 83 88 00 00 00 01</span><br></pre></td></tr></table></figure>
+
+<p>这样只需要踩一个平台就能开门。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Reverse/" rel="tag"><i class="fa fa-tag"></i> Reverse</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/8923/" rel="prev" title="湾区杯初赛wp">
+      <i class="fa fa-chevron-left"></i> 湾区杯初赛wp
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/32678/" rel="next" title="hgame2024">
+      hgame2024 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E5%85%B3%EF%BC%9A%E7%B2%BE%E7%A1%AE%E6%89%AB%E6%8F%8F"><span class="nav-number">1.</span> <span class="nav-text">第二关：精确扫描</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E5%85%B3%EF%BC%9A%E6%9C%AA%E7%9F%A5%E7%9A%84%E5%88%9D%E5%A7%8B%E5%80%BC"><span class="nav-number">2.</span> <span class="nav-text">第三关：未知的初始值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E5%85%B3%EF%BC%9A%E6%B5%AE%E7%82%B9%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">第四关：浮点数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E5%85%B3%EF%BC%9A%E4%BB%A3%E7%A0%81%E6%9F%A5%E6%89%BE"><span class="nav-number">4.</span> <span class="nav-text">第五关：代码查找</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E5%85%B3%EF%BC%9A%E6%8C%87%E9%92%88"><span class="nav-number">5.</span> <span class="nav-text">第六关：指针</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E8%AE%BA%EF%BC%9A"><span class="nav-number">5.1.</span> <span class="nav-text">理论：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%93%8D%EF%BC%9A"><span class="nav-number">5.2.</span> <span class="nav-text">实操：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%83%E5%85%B3%EF%BC%9A%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5"><span class="nav-number">6.</span> <span class="nav-text">第七关：代码注入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%85%AB%E5%85%B3%EF%BC%9A%E5%A4%9A%E7%BA%A7%E6%8C%87%E9%92%88"><span class="nav-number">7.</span> <span class="nav-text">第八关：多级指针</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%95%E4%B8%80%EF%BC%9A%E6%89%8B%E5%8A%A8%E8%B7%9F%E8%B8%AA"><span class="nav-number">7.1.</span> <span class="nav-text">法一：手动跟踪</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%95%E4%BA%8C%EF%BC%9A%E6%8C%87%E9%92%88%E6%89%AB%E6%8F%8F"><span class="nav-number">7.2.</span> <span class="nav-text">法二：指针扫描</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B9%9D%E5%85%B3%EF%BC%9A%E6%B3%A8%E5%85%A5-%EF%BC%88%E5%85%B1%E4%BA%AB%E4%BB%A3%E7%A0%81%EF%BC%89"><span class="nav-number">8.</span> <span class="nav-text">第九关：注入++（共享代码）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%84%9A%E6%9C%AC%E4%BC%98%E5%8C%96%EF%BC%9A%E7%89%B9%E5%BE%81%E7%A0%81"><span class="nav-number">8.1.</span> <span class="nav-text">脚本优化：特征码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E7%BB%83%E4%B9%A0%EF%BC%9A"><span class="nav-number">9.</span> <span class="nav-text">实战练习：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0%E4%B8%80%EF%BC%9A"><span class="nav-number">9.1.</span> <span class="nav-text">练习一：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0%E4%BA%8C%EF%BC%9A"><span class="nav-number">9.2.</span> <span class="nav-text">练习二：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0%E4%B8%89%EF%BC%9A"><span class="nav-number">9.3.</span> <span class="nav-text">练习三：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

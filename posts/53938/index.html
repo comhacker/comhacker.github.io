@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="PLUS有两个附件，一个pyd文件（python的动态链接库），一个py文件（相当大）。这个pyd文件只有在python3.9环境下才能使用！！ 先在终端查看pyd文件的信息：   可以看到：它重构了exec、exit、int函数，并新定义了一系列新函数，例如b、c、e、i、m、p。打开plus.py文件：   是一行极其长的代码。这样不好看，让AI重构一下：   代码非常长，但是大多都是固定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="羊城杯2025">
+<meta property="og:url" content="http://example.com/posts/53938/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="PLUS有两个附件，一个pyd文件（python的动态链接库），一个py文件（相当大）。这个pyd文件只有在python3.9环境下才能使用！！ 先在终端查看pyd文件的信息：   可以看到：它重构了exec、exit、int函数，并新定义了一系列新函数，例如b、c、e、i、m、p。打开plus.py文件：   是一行极其长的代码。这样不好看，让AI重构一下：   代码非常长，但是大多都是固定">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251012010727190.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251012011012915.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251012011102048.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251013102637418.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251013110353004.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251012163142156.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251012163636352.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251012163907884.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251012164009337.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251012164243803.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251012165009924.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251012165145537.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20251012165422077.png">
+<meta property="article:published_time" content="2025-10-11T16:59:34.000Z">
+<meta property="article:modified_time" content="2025-10-13T03:06:16.848Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="wp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/undefined/image-20251012010727190.png">
+
+<link rel="canonical" href="http://example.com/posts/53938/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>羊城杯2025 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/53938/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          羊城杯2025
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-12 00:59:34" itemprop="dateCreated datePublished" datetime="2025-10-12T00:59:34+08:00">2025-10-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-10-13 11:06:16" itemprop="dateModified" datetime="2025-10-13T11:06:16+08:00">2025-10-13</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="PLUS"><a href="#PLUS" class="headerlink" title="PLUS"></a>PLUS</h1><p>有两个附件，一个pyd文件（python的动态链接库），一个py文件（相当大）。这个pyd文件只有在python3.9环境下才能使用！！</p>
+<p>先在终端查看pyd文件的信息：</p>
+<img src="/posts/undefined/image-20251012010727190.png" class="" title="image-20251012010727190">
+
+<p>可以看到：它重构了exec、exit、int函数，并新定义了一系列新函数，例如b、c、e、i、m、p。打开plus.py文件：</p>
+<img src="/posts/undefined/image-20251012011012915.png" class="" title="image-20251012011012915">
+
+<p>是一行极其长的代码。这样不好看，让AI重构一下：</p>
+<img src="/posts/undefined/image-20251012011102048.png" class="" title="image-20251012011102048">
+
+<p>代码非常长，但是大多都是固定的结构。里面的int函数用法为int(一个数)，我们在终端尝试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; init.int(20)</span><br><span class="line">&#x27;20&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>可以猜到int函数是将十进制数字转换为字符串。因此，exit函数的用法为exit(字符串)，在终端尝试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; init.exit(&quot;293084&quot;)</span><br><span class="line">293084</span><br></pre></td></tr></table></figure>
+
+<p>那么，exit是将字符串重新转换为数字。所以exec函数的用法为exec(一个数)，在终端尝试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; init.exec(6768)</span><br><span class="line">&#x27;\x1ap&#x27;</span><br><span class="line">&gt;&gt;&gt; init.exec(97)</span><br><span class="line">&#x27;a&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>那么，exec是将数字转换为字节数组。</p>
+<p>接下来看m、p、i、e、c、b，这些函数的接收值（参数）都是字节数组，在终端尝试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; init.m</span><br><span class="line">&lt;class &#x27;operator.methodcaller&#x27;&gt;</span><br><span class="line">&gt;&gt;&gt; init.p</span><br><span class="line">&lt;built-in function print&gt;</span><br><span class="line">&gt;&gt;&gt; init.i</span><br><span class="line">&lt;built-in function input&gt;</span><br><span class="line">&gt;&gt;&gt; init.e</span><br><span class="line">&lt;unicorn.unicorn_py3.arch.intel.UcIntel object at 0x000002D337590880&gt;</span><br><span class="line">&gt;&gt;&gt; init.c</span><br><span class="line">&lt;class &#x27;unicorn.unicorn_py3.unicorn.Uc&#x27;&gt;</span><br><span class="line">&gt;&gt;&gt; init.b</span><br><span class="line">&lt;function b64encode at 0x000002D3374D0E50&gt;</span><br></pre></td></tr></table></figure>
+
+<p>由此，得出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">m - 方法调用器（工具函数），参数为方法名</span><br><span class="line"></span><br><span class="line">p - 打印函数（调试输出）</span><br><span class="line"></span><br><span class="line">i - 输入函数（用户交互）</span><br><span class="line"></span><br><span class="line">e - 当前的Unicorn引擎（模拟器）实例</span><br><span class="line"></span><br><span class="line">c - Unicorn类（用于创建新实例）</span><br><span class="line"></span><br><span class="line">b - base64加密</span><br></pre></td></tr></table></figure>
+
+<p>仅仅这些信息还是不够的，我们还需要知道plus.py调用了哪些方法、实现了哪些操作。</p>
+<p>我们可以hook关键函数，比如m、p、i，让他们在被调用时先打印出他们的参数，hook脚本如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from init import *</span><br><span class="line">import functools</span><br><span class="line">import inspect</span><br><span class="line"></span><br><span class="line">def hook_function(func):</span><br><span class="line">    @functools.wraps(func)</span><br><span class="line">    def wrapper(*args, **kwargs):</span><br><span class="line">        # 将参数打印为可读形式</span><br><span class="line">        arg_info = []</span><br><span class="line">        for i, a in enumerate(args):</span><br><span class="line">            arg_info.append(f&quot;arg&#123;i&#125;=&#123;a!r&#125;&quot;)</span><br><span class="line">        for k, v in kwargs.items():</span><br><span class="line">            arg_info.append(f&quot;&#123;k&#125;=&#123;v!r&#125;&quot;)</span><br><span class="line">        print(f&quot;[HOOK] Calling &#123;func.__name__&#125; with: &quot; + &quot;, &quot;.join(arg_info))</span><br><span class="line">        # 调用原函数并返回结果</span><br><span class="line">        result = func(*args, **kwargs)</span><br><span class="line">        # print(f&quot;[HOOK] &#123;func.__name__&#125; returned: &#123;result!r&#125;&quot;)</span><br><span class="line">        return result</span><br><span class="line">    return wrapper</span><br><span class="line"></span><br><span class="line"># 只替换我们关心的函数</span><br><span class="line">m = hook_function(m)</span><br><span class="line">p = hook_function(p)</span><br><span class="line">i = hook_function(i)</span><br></pre></td></tr></table></figure>
+
+<p>这段代码放在plus.py文件的最前面，让代码开始执行时就进行hook。运行结果：</p>
+<img src="/posts/undefined/image-20251013102637418.png" class="" title="image-20251013102637418">
+
+<p>带入回去就能拼凑出整体逻辑：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">m(&#x27;mem_map&#x27;, 16777216, 2097152)			// 申请存放硬编码的空间</span><br><span class="line">m(&#x27;mem_map&#x27;, 18874368, 65536)			// 申请存放输入的空间</span><br><span class="line">m(&#x27;mem_write&#x27;, 16777216, b&#x27;\xf3\x0f\x1e\xfaUH\x89\xe5H\x89&#125;\xe8\x89u\xe4\x89\xd0\x88E\xe0\xc7E\xfc\x00\x00\x00\x00\xebL\x8bU\xfcH\x8bE\xe8H\x01\xd0\x0f\xb6\x00\x8d\x0c\xc5\x00\x00\x00\x00\x8bU\xfcH\x8bE\xe8H\x01\xd0\x0f\xb6\x002E\xe0\x8d4\x01\x8bU\xfcH\x8bE\xe8H\x01\xd0\x0f\xb6\x00\xc1\xe0\x05\x89\xc1\x8bU\xfcH\x8bE\xe8H\x01\xd0\x8d\x14\x0e\x88\x10\x83E\xfc\x01\x8bE\xfc;E\xe4r\xac\x90\x90]&#x27;)				// 写入硬编码</span><br><span class="line">m(&#x27;mem_write&#x27;, 18878464,i([+]input your flag:))				// 将输入写入18878464地址处</span><br><span class="line">m(&#x27;reg_write&#x27;, 39, 18878464)							// 参数写入寄存器。参数1：输入的字符串的地址</span><br><span class="line">m(&#x27;reg_write&#x27;, 43, 44)									// 参数2：长度</span><br><span class="line">m(&#x27;reg_write&#x27;, 40, 7)									// 参数3：密钥</span><br><span class="line">m(&#x27;emu_start&#x27;, 16777216, 16777332)						// 开始执行硬编码</span><br><span class="line">m(&#x27;mem_read&#x27;, 18878464, 44)								// 读出经过硬编码加密后的数据</span><br><span class="line">if 数据再经过base64加密==&quot;425MvHMxtLqZ3ty3RZkw3mwwulNRjkswbpkDMK+3CDCOtbe6kzAqPyrcEAI=&quot;:</span><br><span class="line">	p(&quot;good&quot;)</span><br><span class="line">else:</span><br><span class="line">	p(&quot;no way&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>接下来，需要反编译硬编码来得到核心加密算法，先写脚本将字节数组写入一个新的二进制文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">b = b&#x27;\xf3\x0f\x1e\xfaUH\x89\xe5H\x89&#125;\xe8\x89u\xe4\x89\xd0\x88E\xe0\xc7E\xfc\x00\x00\x00\x00\xebL\x8bU\xfcH\x8bE\xe8H\x01\xd0\x0f\xb6\x00\x8d\x0c\xc5\x00\x00\x00\x00\x8bU\xfcH\x8bE\xe8H\x01\xd0\x0f\xb6\x002E\xe0\x8d4\x01\x8bU\xfcH\x8bE\xe8H\x01\xd0\x0f\xb6\x00\xc1\xe0\x05\x89\xc1\x8bU\xfcH\x8bE\xe8H\x01\xd0\x8d\x14\x0e\x88\x10\x83E\xfc\x01\x8bE\xfc;E\xe4r\xac\x90\x90]&#x27;</span><br><span class="line">with open(&quot;myrb.bin&quot;,&#x27;+bw&#x27;) as f:</span><br><span class="line">    f.write(b)</span><br></pre></td></tr></table></figure>
+
+<p>让IDA反编译生成的文件：</p>
+<img src="/posts/undefined/image-20251013110353004.png" class="" title="image-20251013110353004">
+
+<p>全部加密逻辑都已经知道了，接下来写脚本解密:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">import base64</span><br><span class="line"></span><br><span class="line">def decrypt_buffer(buffer: bytearray, key: int) -&gt; None:</span><br><span class="line">    key = key &amp; 0xFF  # 确保 key 是 8 位</span><br><span class="line">    for i in range(44):</span><br><span class="line">        y = buffer[i]  # 加密后的字节</span><br><span class="line">        # 枚举所有可能的 x (0-255)</span><br><span class="line">        for x in range(32,126):</span><br><span class="line">            xor_val = x ^ key</span><br><span class="line">            shift_val = x * 32 + x *8</span><br><span class="line">            if ((xor_val + shift_val) &amp; 0xFF) == y:</span><br><span class="line">                buffer[i] = x</span><br><span class="line">                break</span><br><span class="line"></span><br><span class="line"># 密文</span><br><span class="line">enc_b64 = &quot;425MvHMxtLqZ3ty3RZkw3mwwulNRjkswbpkDMK+3CDCOtbe6kzAqPyrcEAI=&quot;</span><br><span class="line">enc = base64.b64decode(enc_b64)</span><br><span class="line"></span><br><span class="line">key = 0x7</span><br><span class="line">b = bytearray(enc)</span><br><span class="line">dec = decrypt_buffer(b, key)</span><br><span class="line">print(b)</span><br></pre></td></tr></table></figure>
+
+<p>flag: DASCTF{un1c0rn_1s_u4fal_And_h0w_ab0ut_exec?}</p>
+<h1 id="GD1"><a href="#GD1" class="headerlink" title="GD1"></a>GD1</h1><img src="/posts/undefined/image-20251012163142156.png" class="" title="image-20251012163142156">
+
+<p>这是一个躲避爬虫的小游戏，如果被爬虫撞到，则游戏结束。正上方显示游戏进行时间，可以猜测时间到了某个值时flag会自动出现。</p>
+<p>使用CE查找时间的地址（由于时间一直在变化，且无法暂停，故建议开启变速精灵，然后每一次数值变化筛选数值增加了1），筛选2~3次就能找到：</p>
+<img src="/posts/undefined/image-20251012163636352.png" class="" title="image-20251012163636352">
+
+<p>既然时间是判断是否成功的条件，那么就一定会有一个线程在不断的将时间与某个值比较，这样做就一定会访问时间所在的地址。所以，[右键-&gt;找出是什么访问了这个地址]</p>
+<img src="/posts/undefined/image-20251012163907884.png" class="" title="image-20251012163907884">
+
+<img src="/posts/undefined/image-20251012164009337.png" class="" title="image-20251012164009337">
+
+<p>最后一个结果是一个比较，就是我们要找的。在汇编窗口打开：</p>
+<img src="/posts/undefined/image-20251012164243803.png" class="" title="image-20251012164243803">
+
+<p>这里先判断时间是否等于rax，如果相等，则将[r8+08]设置为1，否则设置为0。有两种实现方法：</p>
+<p>法一：修改时间</p>
+<p>当时间等于rax的值（下断点可以看到是0x1EE2，即十进制7906）时，flag就会弹出来。注意，这个判断只会在时间自动增加时触发，所以如果将时间改为7906，那么只有当再过去1s，也就时间变为7907时才会进行判断，此时判断将不会通过！！因此，时间必须改为小于7906的值。这里改为7905，然后等1s，当时间自动增加到7906时，flag就会弹出来：</p>
+<img src="/posts/undefined/image-20251012165009924.png" class="" title="image-20251012165009924">
+
+<p>法二：修改标志寄存器</p>
+<p>在比较这里设下断点，断下后单步步过</p>
+<img src="/posts/undefined/image-20251012165145537.png" class="" title="image-20251012165145537">
+
+<p>此时，由于时间不等于7906，故zf寄存器值为0，我们改为1，然后去掉断点继续运行，flag就会出现：</p>
+<img src="/posts/undefined/image-20251012165422077.png" class="" title="image-20251012165422077">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/wp/" rel="tag"><i class="fa fa-tag"></i> wp</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/19579/" rel="prev" title="PVZ修改器">
+      <i class="fa fa-chevron-left"></i> PVZ修改器
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PLUS"><span class="nav-number">1.</span> <span class="nav-text">PLUS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GD1"><span class="nav-number">2.</span> <span class="nav-text">GD1</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

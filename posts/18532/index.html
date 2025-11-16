@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="进程与线程​	源码编译得到的二进制文件（PE文件）叫程序，把程序拉伸到内存中得到的是内存映像，包括代码段、数据段、堆、栈等区域，在得到足够的条件后，程序就会跑起来，程序运行的过程称为进程。在进程执行时，按固定顺序执行的执行流称为线程。一个进程之中可以有多个线程，每一个线程在运行时需要分配一个cpu，一个进程的多个线程如果都分配到cpu，那么这些线程可以同时执行。 ​	每一个进程都有其专属的4G">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程">
+<meta property="og:url" content="http://example.com/posts/18532/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="进程与线程​	源码编译得到的二进制文件（PE文件）叫程序，把程序拉伸到内存中得到的是内存映像，包括代码段、数据段、堆、栈等区域，在得到足够的条件后，程序就会跑起来，程序运行的过程称为进程。在进程执行时，按固定顺序执行的执行流称为线程。一个进程之中可以有多个线程，每一个线程在运行时需要分配一个cpu，一个进程的多个线程如果都分配到cpu，那么这些线程可以同时执行。 ​	每一个进程都有其专属的4G">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/18532/image-20250813181437441.png">
+<meta property="og:image" content="http://example.com/posts/18532/image-20250813181325270.png">
+<meta property="og:image" content="http://example.com/posts/18532/image-20250813183321169.png">
+<meta property="article:published_time" content="2025-08-13T09:18:56.000Z">
+<meta property="article:modified_time" content="2025-08-22T18:24:46.626Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="Win32">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/18532/image-20250813181437441.png">
+
+<link rel="canonical" href="http://example.com/posts/18532/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>线程 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/18532/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          线程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-08-13 17:18:56" itemprop="dateCreated datePublished" datetime="2025-08-13T17:18:56+08:00">2025-08-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-08-23 02:24:46" itemprop="dateModified" datetime="2025-08-23T02:24:46+08:00">2025-08-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h1><p>​	源码编译得到的二进制文件（PE文件）叫程序，把程序拉伸到内存中得到的是内存映像，包括代码段、数据段、堆、栈等区域，在得到足够的条件后，程序就会跑起来，程序运行的过程称为进程。在进程执行时，<strong>按固定顺序执行的执行流称为线程</strong>。一个进程之中可以有多个线程，每一个线程在运行时需要分配一个cpu，一个进程的多个线程如果都分配到cpu，那么这些线程可以同时执行。</p>
+<p>​	每一个进程都有其专属的4G空间，互不影响。操作系统给每个进程分配一个唯一的进程标识符，即PID，Win32提供API通过进程PID来打开进程，获取进程句柄。这里的“打开”并不是指让程序运行，而是打开此进程的访问权限，使得本进程可与此进程通信。进程句柄与进程标识符不同，进程标识符是操作系统用来标记进程的一个4字节的编号，在进程创建之时就已经确定，且在进程的生命周期内不会改变；进程句柄类似于一张通行证，在使用OpenProcess打开进程后会得到一个进程的句柄，这个句柄就是与此进程通信的通行证。当你不需要与此进程通信时，使用CloseHandle来将此通行证归还(注意：此函数只是关闭句柄，并不会关闭进程)，归还后，此句柄将不能使用。当你下次再使用OpenProcess打开此进程时，得到的句柄并不一定相同。</p>
+<p>​	同样，线程也有一个线程标识符，在CreateThread创建线程后会返回一个线程句柄，使用CloseHandle关闭线程句柄后并不会关闭线程。</p>
+<h2 id="创建线程："><a href="#创建线程：" class="headerlink" title="创建线程："></a>创建线程：</h2><p>创建线程的关键函数为<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread">CreateThread</a>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HANDLE CreateThread(</span><br><span class="line">  [in, optional]  LPSECURITY_ATTRIBUTES   lpThreadAttributes,   // 安全描述符，一般设为NULL</span><br><span class="line">  [in]            SIZE_T                  dwStackSize,			// 堆栈的初始大小，若为零，则新线程使用默认大小</span><br><span class="line">  [in]            LPTHREAD_START_ROUTINE  lpStartAddress,		// 指向一个线程函数，作为线程的起始地址</span><br><span class="line">  [in, optional]  __drv_aliasesMem LPVOID lpParameter,			// 需要传入线程函数的参数</span><br><span class="line">  [in]            DWORD                   dwCreationFlags,		// 控制线程创建的标志。0代表创建后立即运行。</span><br><span class="line">  [out, optional] LPDWORD                 lpThreadId			// 用于接受线程标识符</span><br><span class="line">);	// 返回值为线程句柄</span><br></pre></td></tr></table></figure>
+
+<p>线程函数的标准为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DWORD WINAPI ThreadProc(</span><br><span class="line">  _In_ LPVOID lpParameter		// 参数</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>实例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">DWORD NewThread() &#123;</span><br><span class="line">	int i = 0;</span><br><span class="line">	while (i++ &lt; 50) &#123;</span><br><span class="line">		Sleep(1000);				// 暂停1s钟</span><br><span class="line">		printf(&quot;--------\n&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	NewThread();</span><br><span class="line">	int i = 0;</span><br><span class="line">	while (i++&lt;50) &#123;</span><br><span class="line">		Sleep(1000);				// 暂停1s钟</span><br><span class="line">		printf(&quot;++++++++\n&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​	观察这段代码，在执行NewThread时主函数会被阻塞，”+”和”-“无法同时打印，最后得到终端上一定是先打印完”-“，再打印”+”。</p>
+<img src="/posts/18532/image-20250813181437441.png" class="" title="image-20250813181437441">
+
+<p>这个程序只能是线性的执行，也就是这个程序就只有一个线程。</p>
+<p>​	假设我想让这两个打印动作并行，就需要再创建一个线程，主线程打印”+”，新线程打印”-“。如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">DWORD NewThread(LPVOID lpParameter) &#123;</span><br><span class="line">	int i = 0;</span><br><span class="line">	while (i++ &lt; 50) &#123;</span><br><span class="line">		Sleep(1000);				// 暂停1s钟</span><br><span class="line">		printf(&quot;--------\n&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void CreateNewThread() &#123;</span><br><span class="line">	HANDLE hThread = CreateThread(NULL, 0, NewThread, 0, 0, NULL);</span><br><span class="line">	CloseHandle(hThread);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	CreateNewThread();</span><br><span class="line">	int i = 0;</span><br><span class="line">	while (i++&lt;50) &#123;</span><br><span class="line">		Sleep(1000);				// 暂停1s钟</span><br><span class="line">		printf(&quot;++++++++\n&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="/posts/18532/image-20250813181325270.png" class="" title="image-20250813181325270">
+
+<p>打印”-“与打印”+”交替执行，说明两个线程完成了并行。</p>
+<h1 id="线程创建应用——计时器"><a href="#线程创建应用——计时器" class="headerlink" title="线程创建应用——计时器"></a>线程创建应用——计时器</h1><p>目标：创建一个计时器，在点击“开始”后，数字由1000开始，每一秒减1。</p>
+<img src="/posts/18532/image-20250813183321169.png" class="" title="image-20250813183321169">
+
+<p>写出初步代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">// testWin.cpp : 定义应用程序的入口点。</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#include &quot;framework.h&quot;</span><br><span class="line">#include &quot;testWin.h&quot;</span><br><span class="line">#include &quot;DebugPrint.h&quot;</span><br><span class="line"></span><br><span class="line">HWND hEDIT;</span><br><span class="line">VOID Clock()</span><br><span class="line">&#123;</span><br><span class="line">	//获取子窗口数值</span><br><span class="line">	TCHAR szBuffer[10];</span><br><span class="line">	DWORD dwTimer;</span><br><span class="line">	memset(szBuffer, 0, 10);</span><br><span class="line">	GetWindowText(hEDIT, szBuffer, 10);</span><br><span class="line">	//转成整型</span><br><span class="line">	dwTimer = _wtoi(szBuffer); // 把宽字符字符串转成整数</span><br><span class="line">	while (dwTimer &gt; 0)</span><br><span class="line">	&#123;</span><br><span class="line"></span><br><span class="line">		Sleep(1000);</span><br><span class="line">		wsprintf(szBuffer, L&quot;%d&quot;, --dwTimer);</span><br><span class="line"></span><br><span class="line">		SetWindowText(hEDIT, szBuffer);</span><br><span class="line">//		SendMessage(hEDIT, WM_SETTEXT, (WPARAM)0, (LPARAM)szBuffer);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">INT_PTR  CALLBACK DialogProc(</span><br><span class="line">	HWND hwndDlg,  // handle to dialog box			</span><br><span class="line">	UINT uMsg,     // message			</span><br><span class="line">	WPARAM wParam, // first message parameter			</span><br><span class="line">	LPARAM lParam  // second message parameter			</span><br><span class="line">)</span><br><span class="line">&#123;</span><br><span class="line">	switch (uMsg)</span><br><span class="line">	&#123;</span><br><span class="line">		case  WM_INITDIALOG:</span><br><span class="line">		&#123;</span><br><span class="line">			hEDIT = GetDlgItem(hwndDlg, IDC_EDIT_TIME);</span><br><span class="line">			SetWindowText(hEDIT, TEXT(&quot;1000&quot;));</span><br><span class="line">			return TRUE;</span><br><span class="line">		&#125;</span><br><span class="line">		case  WM_COMMAND:</span><br><span class="line">		&#123;</span><br><span class="line">			if (LOWORD(wParam) == IDC_BUTTON_TIME)</span><br><span class="line">				Clock();</span><br><span class="line">			return TRUE;</span><br><span class="line">		&#125;</span><br><span class="line">		case  WM_CLOSE:</span><br><span class="line"></span><br><span class="line">			EndDialog(hwndDlg, 0);</span><br><span class="line"></span><br><span class="line">			return TRUE;</span><br><span class="line">		default:</span><br><span class="line">			return FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">int CALLBACK WinMain(</span><br><span class="line">	_In_  HINSTANCE hInstance,</span><br><span class="line">	_In_  HINSTANCE hPrevInstance,</span><br><span class="line">	_In_  LPSTR lpCmdLine,</span><br><span class="line">	_In_  int nCmdShow</span><br><span class="line">)</span><br><span class="line">&#123;</span><br><span class="line">	DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG_MAIN), NULL, DialogProc);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是，在点击开始之后，对话框直接卡死了。想要理解这个原因，就要先了解消息的双通道模型：同步与异步。</p>
+<h2 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h2><p>同步，是指操作按顺序执行，每个操作必须等待前一个操作完成后才能开始。在同步模型中，调用方会等待被调用操作完成后才继续执行后续代码。执行流程是线性的、阻塞的。</p>
+<p>异步，是指调用方发起操作后，不需要等待其完成，可以继续执行其他任务。异步是非线性的、并发的。</p>
+<ul>
+<li>同步：使用SendMessage发送消息时，如果窗口在本线程，则消息不会进消息队列，而是在发送消息后，立马在本线程调用目标窗口的回调函数，并在函数执行完后返回，继续往下执行。如果窗口不在本线程，消息会被投递到目标线程的消息队列中，并阻塞本线程直到消息被处理完成。</li>
+<li>异步：在我们对窗口进行操作时（比如拖动、点击、拉伸等），系统会生成一个消息，并把消息分发到对应窗口的消息队列中，此时，窗口并不会立即处理此消息，而是会等消息循环处理到这时再调用过程函数处理。这就是异步。使用PostMessage发送消息时也是异步。</li>
+</ul>
+<h2 id="WM-PAINT消息的特殊性"><a href="#WM-PAINT消息的特殊性" class="headerlink" title="WM_PAINT消息的特殊性"></a><code>WM_PAINT</code>消息的特殊性</h2><p><code>WM_PAINT</code>消息是由系统自动生成的，故其属于异步消息。<code>WM_PAINT</code>消息的优先级非常低，<strong>当且仅当消息队列里面没有其他更高优先级的消息需要处理时，系统会检查是否存在无效区域</strong>，如存在，则生成一个<code>WM_PAINT</code>消息并放入消息队列里面（两个条件缺一不可）。</p>
+<p>无效区域是指窗口工作区内当前被认为内容失效、过时或需要重新绘制的那部分区域，可由InvalidateRect函数指定。当调用InvalidateRect函数指定一个无效区域时，并不会立即生成<code>WM_PAINT</code>消息，而是会在消息队列空闲时生成。当多次调用InvalidateRect函数指定多个无效区域时，无效区域会合并，并在消息队列空闲时生成一个<code>WM_PAINT</code>消息。</p>
+<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><h3 id="单线程情况："><a href="#单线程情况：" class="headerlink" title="单线程情况："></a>单线程情况：</h3><p>​	在Clock的循环里面，每次调用SetWindowText函数其内部都会使用SendMessage函数向文本框发送一个<code>WM_SETTEXT</code>消息（同步），然后直接调用编辑框控件的回调函数来处理，此消息不进入消息队列。回调函数判断是<code>WM_SETTEXT</code>消息，于是将文本框的内存缓冲区替换为szBuffer里面的字符串。在更换完后，回调函数会向对话框发送一个<code>WM_COMMAND（EN_CHANGE）</code>消息（同步），用来告诉对话框编辑控件中的文本已更改。然后线程立马跳转到对话框回调函数里面，处理这个消息。在处理完这个消息后，线程调用InvalidateRect函数来指定更改的文本框为无效区域。由于这里是单线程，线程在执行 Clock 循环时，没有进入消息循环，也没有机会调用 <code>GetMessage</code>&#x2F;<code>DispatchMessage</code>，所以即使有无效区域，也不会触发绘制，窗口不会有任何变化。与此同时，新一轮的循环继续开始。</p>
+<p>​	当Clock函数执行完毕，线程执行到对话框消息循环里面，先处理在卡死阶段进行的操作（包括移动窗口、最小化、最大化）产生的消息。在这些优先级更高的消息被处理完后，消息循环空闲，系统判断无效区域存在，然后生成一个<code>WM_PAINT</code>消息放入消息队列并进行处理，重绘这些区域后，窗口将会更新。由于Clock函数里面的循环执行完后文本框中的文本是”0”，故重绘后文本框直接显示”0”，不会有动态变化过程。</p>
+.png)
+
+<h3 id="多线程情况："><a href="#多线程情况：" class="headerlink" title="多线程情况："></a>多线程情况：</h3><p>​	在Win32里面，如果一个窗口的回调函数可以同时被多个线程使用，那么就需要加入大量互斥锁。所以Win32直接将窗口与线程绑定，即在某个线程里面创建的窗口，此窗口的消息只能在此线程里面处理，其他线程无法访问此窗口的回调函数。</p>
+<p>​	假设在线程1里面创建了一个窗口，现在线程2需要给此窗口发送同步消息，此时，由于线程2无法调用此窗口的回调函数，故系统会阻塞线程2，然后将此消息放到线程1的消息队列，等待线程1处理。当线程1处理完后，线程2才会恢复。目标线程如果卡死，发送方会一直阻塞，甚至造成死锁（比如两个线程互相 SendMessage）。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>思路：采用双线程，使Clock函数和消息循环并行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">// testWin.cpp : 定义应用程序的入口点。</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#include &quot;framework.h&quot;</span><br><span class="line">#include &quot;testWin.h&quot;</span><br><span class="line">#include &quot;DebugPrint.h&quot;</span><br><span class="line"></span><br><span class="line">HWND hEDIT;</span><br><span class="line">DWORD WINAPI Clock(LPVOID lpParameter)</span><br><span class="line">&#123;</span><br><span class="line">	//获取子窗口数值</span><br><span class="line">	TCHAR szBuffer[10];</span><br><span class="line">	DWORD dwTimer;</span><br><span class="line">	memset(szBuffer, 0, 10);</span><br><span class="line">	GetWindowText(hEDIT, szBuffer, 10);</span><br><span class="line">	//转成整型</span><br><span class="line">	dwTimer = _wtoi(szBuffer); // 把宽字符字符串转成整数</span><br><span class="line">	while (dwTimer &gt; 0)</span><br><span class="line">	&#123;</span><br><span class="line"></span><br><span class="line">		Sleep(1000);</span><br><span class="line">		wsprintf(szBuffer, L&quot;%d&quot;, --dwTimer);</span><br><span class="line"></span><br><span class="line">		SetWindowText(hEDIT, szBuffer);</span><br><span class="line">//		SendMessage(hEDIT, WM_SETTEXT, (WPARAM)0, (LPARAM)szBuffer);</span><br><span class="line">	&#125;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line">INT_PTR  CALLBACK DialogProc(</span><br><span class="line">	HWND hwndDlg,  // handle to dialog box			</span><br><span class="line">	UINT uMsg,     // message			</span><br><span class="line">	WPARAM wParam, // first message parameter			</span><br><span class="line">	LPARAM lParam  // second message parameter			</span><br><span class="line">)</span><br><span class="line">&#123;</span><br><span class="line">	switch (uMsg)</span><br><span class="line">	&#123;</span><br><span class="line">		case  WM_INITDIALOG:</span><br><span class="line">		&#123;</span><br><span class="line">			hEDIT = GetDlgItem(hwndDlg, IDC_EDIT_TIME);</span><br><span class="line">			SetWindowText(hEDIT, TEXT(&quot;1000&quot;));</span><br><span class="line">			return TRUE;</span><br><span class="line">		&#125;</span><br><span class="line">		case  WM_COMMAND:</span><br><span class="line">		&#123;</span><br><span class="line">			if (LOWORD(wParam) == IDC_BUTTON_TIME)</span><br><span class="line">			&#123;</span><br><span class="line">				HANDLE NewThread = CreateThread(NULL, 0, Clock, 0, 0, NULL);</span><br><span class="line">				CloseHandle(NewThread);</span><br><span class="line">			&#125;</span><br><span class="line">			return TRUE;</span><br><span class="line">		&#125;</span><br><span class="line">		case  WM_CLOSE:</span><br><span class="line">			EndDialog(hwndDlg, 0);</span><br><span class="line">			return TRUE;</span><br><span class="line">		default:</span><br><span class="line">			return FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">int CALLBACK WinMain(</span><br><span class="line">	_In_  HINSTANCE hInstance,</span><br><span class="line">	_In_  HINSTANCE hPrevInstance,</span><br><span class="line">	_In_  LPSTR lpCmdLine,</span><br><span class="line">	_In_  int nCmdShow</span><br><span class="line">)</span><br><span class="line">&#123;</span><br><span class="line">	DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG_MAIN), NULL, DialogProc);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="线程控制"><a href="#线程控制" class="headerlink" title="线程控制"></a>线程控制</h1><h2 id="线程操作"><a href="#线程操作" class="headerlink" title="线程操作"></a>线程操作</h2><h3 id="挂起线程"><a href="#挂起线程" class="headerlink" title="挂起线程"></a>挂起线程</h3><p>挂起线程使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/processthreadsapi/nf-processthreadsapi-suspendthread">SuspendThread</a>函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DWORD SuspendThread(</span><br><span class="line">  [in] HANDLE hThread		// 线程句柄</span><br><span class="line">);		</span><br></pre></td></tr></table></figure>
+
+<h3 id="恢复线程"><a href="#恢复线程" class="headerlink" title="恢复线程"></a>恢复线程</h3><p>恢复线程使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread">ResumeThread</a>函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DWORD ResumeThread(</span><br><span class="line">  [in] HANDLE hThread		// 线程句柄</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="终止线程"><a href="#终止线程" class="headerlink" title="终止线程"></a>终止线程</h3><h4 id="法一：ExitThread函数"><a href="#法一：ExitThread函数" class="headerlink" title="法一：ExitThread函数"></a>法一：<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread">ExitThread</a>函数</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void ExitThread(</span><br><span class="line">  [in] DWORD dwExitCode			// 线程的退出代码</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>这个函数没有线程句柄作为参数传入，所以只能在线程函数处使用，用来关闭本线程。这个和exit(0)关闭进程类似。</p>
+<p>在这个函数使用完后，会自动释放线程占用的堆栈，但是不会释放资源（比如线程句柄），所以，在使用此函数终止线程前一定要将此线程的所有线程句柄关闭。</p>
+<h4 id="法二：线程函数正常返回（建议使用）"><a href="#法二：线程函数正常返回（建议使用）" class="headerlink" title="法二：线程函数正常返回（建议使用）"></a>法二：线程函数正常返回（建议使用）</h4><p>一般当线程函数执行完毕后，线程也会结束，故当想提前结束线程时，可在线程函数里面return来终止线程。可以使用全局变量来作为退出标志。注意，如下错误易犯：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">// testWin.cpp : 定义应用程序的入口点。</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#include &quot;framework.h&quot;</span><br><span class="line">#include &quot;testWin.h&quot;</span><br><span class="line">#include &quot;DebugPrint.h&quot;</span><br><span class="line"></span><br><span class="line">HWND hEDIT = NULL;</span><br><span class="line">HANDLE hThread = NULL;</span><br><span class="line">BOOL flag = false;</span><br><span class="line">DWORD WINAPI Clock(LPVOID lpParameter)</span><br><span class="line">&#123;</span><br><span class="line">	//获取子窗口数值</span><br><span class="line">	TCHAR szBuffer[10];</span><br><span class="line">	DWORD dwTimer;</span><br><span class="line">	memset(szBuffer, 0, 10);</span><br><span class="line">	GetWindowText(hEDIT, szBuffer, 10);</span><br><span class="line">	//转成整型</span><br><span class="line">	dwTimer = _wtoi(szBuffer); // 把宽字符字符串转成整数</span><br><span class="line">	while (dwTimer &gt; 0)</span><br><span class="line">	&#123;</span><br><span class="line">		if (flag) return 1;</span><br><span class="line">		Sleep(10);</span><br><span class="line">		wsprintf(szBuffer, L&quot;%d&quot;, --dwTimer);</span><br><span class="line"></span><br><span class="line">		SetWindowText(hEDIT, szBuffer);</span><br><span class="line">//		SendMessage(hEDIT, WM_SETTEXT, (WPARAM)0, (LPARAM)szBuffer);</span><br><span class="line">	&#125;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line">INT_PTR  CALLBACK DialogProc(</span><br><span class="line">	HWND hwndDlg,  // handle to dialog box			</span><br><span class="line">	UINT uMsg,     // message			</span><br><span class="line">	WPARAM wParam, // first message parameter			</span><br><span class="line">	LPARAM lParam  // second message parameter			</span><br><span class="line">)</span><br><span class="line">&#123;</span><br><span class="line">	switch (uMsg)</span><br><span class="line">	&#123;</span><br><span class="line">		case  WM_INITDIALOG:</span><br><span class="line">		&#123;</span><br><span class="line">			hEDIT = GetDlgItem(hwndDlg, IDC_EDIT_TIME);</span><br><span class="line">			SetWindowText(hEDIT, TEXT(&quot;1000&quot;));</span><br><span class="line">			return TRUE;</span><br><span class="line">		&#125;</span><br><span class="line">		case  WM_COMMAND:</span><br><span class="line">		&#123;</span><br><span class="line">			DWORD control = LOWORD(wParam);</span><br><span class="line">			switch (control) &#123;</span><br><span class="line">				case IDC_BUTTON_START:</span><br><span class="line">				&#123;</span><br><span class="line">					if(!hThread)</span><br><span class="line">						hThread = CreateThread(NULL, 0, Clock, 0, 0, NULL);</span><br><span class="line">					return true;</span><br><span class="line">				&#125;</span><br><span class="line">				case IDC_BUTTON_HANG:</span><br><span class="line">				&#123;</span><br><span class="line">					SuspendThread(hThread);</span><br><span class="line">					return true;</span><br><span class="line">				&#125;</span><br><span class="line">				case IDC_BUTTON_RESTORE:</span><br><span class="line">				&#123;</span><br><span class="line">					ResumeThread(hThread);</span><br><span class="line">					return true;</span><br><span class="line">				&#125;</span><br><span class="line">				case IDC_BUTTON_END:</span><br><span class="line">				&#123;</span><br><span class="line">					flag = true;</span><br><span class="line">					WaitForSingleObject(hThread, INFINITE);</span><br><span class="line">					CloseHandle(hThread);</span><br><span class="line">					hThread = NULL;</span><br><span class="line">					return true;</span><br><span class="line">				&#125;</span><br><span class="line">				default:</span><br><span class="line">					return false;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		case  WM_CLOSE:</span><br><span class="line">			EndDialog(hwndDlg, 0);</span><br><span class="line">			return TRUE;</span><br><span class="line">		default:</span><br><span class="line">			return FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int CALLBACK WinMain(</span><br><span class="line">	_In_  HINSTANCE hInstance,</span><br><span class="line">	_In_  HINSTANCE hPrevInstance,</span><br><span class="line">	_In_  LPSTR lpCmdLine,</span><br><span class="line">	_In_  int nCmdShow</span><br><span class="line">)</span><br><span class="line">&#123;</span><br><span class="line">	DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG_MAIN), NULL, DialogProc);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码会死锁，因为如果线程1在将flag设置为true后，WaitForSingleObject函数阻塞此线程，如果此时线程2执行完了SetWindowText那么就需要等待线程1的回调函数来处理<code>WM_SETTEXT</code>消息（跨线程消息），但是此时线程1被阻塞，于是界面会卡死不动。所以，建议将所有设置窗口的操作都放在窗口所属的线程里面进行。</p>
+<h4 id="法三：TerminateThread函数"><a href="#法三：TerminateThread函数" class="headerlink" title="法三：TerminateThread函数"></a>法三：<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminatethread">TerminateThread</a>函数</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL TerminateThread(</span><br><span class="line">  [in, out] HANDLE hThread,			// 线程句柄</span><br><span class="line">  [in]      DWORD  dwExitCode		// 退出码</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>​	在这三种终止线程的方法中，前面两个都属于线程自己终止，TerminateThread函数方法是唯一一个可以通过其他线程来终止本线程的方法。但是，这个函数不会释放堆栈，所以不到万不得已，不要轻易使用。</p>
+<p>​	TerminateThread函数是异步调用，它会创建一个新的线程去完成结束目标线程的任务，并不会堵塞本线程。因此，在新线程执行结束任务时，本线程还会继续往下走，如果后续有操作需要在结束目标进程后才能执行的可能会出现错误。所以，一般TerminateThread函数不会单独使用，而是会与<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject">WaitForSingleObject</a>函数结合使用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DWORD WaitForSingleObject(</span><br><span class="line">  [in] HANDLE hHandle,			// 线程句柄</span><br><span class="line">  [in] DWORD  dwMilliseconds	//等待时间，单位毫秒（使用INFINITE代表等待直到目标线程发出信号，为0则立即返回）</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>​	当线程关闭时会发出信号，释放已等待线程终止的任何其他线程。WaitForSingleObject函数的作用是阻塞本线程，直到目标线程发出终止信号。</p>
+<h3 id="判断线程状态"><a href="#判断线程状态" class="headerlink" title="判断线程状态"></a>判断线程状态</h3><p>线程有两种状态，一种是运行状态，代表线程还存活（挂起时也是此状态）；另一种是退出状态，在使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/api/processthreadsapi/nf-processthreadsapi-exitthread">ExitThread</a> 、<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/api/processthreadsapi/nf-processthreadsapi-terminatethread">TerminateThread</a> 函数终止线程或线程函数正常返回后，线程变为退出状态。使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodethread">GetExitCodeThread</a>函数可获取线程状态：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL GetExitCodeThread(</span><br><span class="line">  [in]  HANDLE  hThread,			// 线程句柄</span><br><span class="line">  [out] LPDWORD lpExitCode			// 用于接收退出码的指针</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>当线程终止时，lpExitCode得到的是退出码，退出码为<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/api/processthreadsapi/nf-processthreadsapi-exitthread">ExitThread</a> 、 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/desktop/api/processthreadsapi/nf-processthreadsapi-terminatethread">TerminateThread</a> 函数中指定的退出值或线程函数的返回值；其他情况，得到的一律是<code>STILL_ACTIVE</code>(259)。</p>
+<h1 id="获取线程信息"><a href="#获取线程信息" class="headerlink" title="获取线程信息"></a>获取线程信息</h1><p>Windows提供了<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winnt/ns-winnt-context">CONTEXT</a>结构来为用户态程序（如调试器）提供线程寄存器快照信息。</p>
+<p><code>CONTEXT</code>结构（32位）包含以下寄存器组，通过 <code>ContextFlags</code>字段控制读写范围：</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>寄存器组</strong></th>
+<th align="center"><strong>字段示例</strong></th>
+<th align="center"><strong>功能说明</strong></th>
+<th align="center"><strong>对应标志位</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>控制寄存器</strong></td>
+<td align="center"><code>Eip</code>, <code>Esp</code>, <code>Ebp</code>, <code>EFlags</code></td>
+<td align="center">指令指针、堆栈指针、基址指针</td>
+<td align="center"><code>CONTEXT_CONTROL</code></td>
+</tr>
+<tr>
+<td align="center"><strong>整型寄存器</strong></td>
+<td align="center"><code>Eax</code>, <code>Ebx</code>, <code>Ecx</code>, <code>Edx</code>等</td>
+<td align="center">通用数据存储与运算</td>
+<td align="center"><code>CONTEXT_INTEGER</code></td>
+</tr>
+<tr>
+<td align="center"><strong>段寄存器</strong></td>
+<td align="center"><code>SegCs</code>, <code>SegDs</code>, <code>SegSs</code>等</td>
+<td align="center">内存分段管理</td>
+<td align="center"><code>CONTEXT_SEGMENTS</code></td>
+</tr>
+<tr>
+<td align="center"><strong>调试寄存器</strong></td>
+<td align="center"><code>Dr0</code>-<code>Dr7</code></td>
+<td align="center">硬件断点与调试支持</td>
+<td align="center"><code>CONTEXT_DEBUG_REGISTERS</code></td>
+</tr>
+<tr>
+<td align="center"><strong>浮点寄存器</strong></td>
+<td align="center"><code>FloatSave</code>（浮点状态区）</td>
+<td align="center">浮点运算状态保存</td>
+<td align="center"><code>CONTEXT_FLOATING_POINT</code></td>
+</tr>
+<tr>
+<td align="center"><strong>扩展寄存器</strong></td>
+<td align="center"><code>ExtendedRegisters</code>（如 XMM）</td>
+<td align="center">SIMD 指令等扩展功能</td>
+<td align="center"><code>CONTEXT_EXTENDED_REGISTERS</code></td>
+</tr>
+</tbody></table>
+<p>补充：<code>CONTEXT_FULL</code>代表除调试寄存器外的所有寄存器。</p>
+<p>在线程处于挂起状态时，可通过<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadcontext">GetThreadContext</a>函数来获取<code>CONTEXT</code>结构的信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOOL GetThreadContext(</span><br><span class="line">  [in]      HANDLE    hThread,			// 线程句柄</span><br><span class="line">  [in, out] LPCONTEXT lpContext			// 指向CONTEXT结构</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>使用方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SuspendThread(hThread);</span><br><span class="line">CONTEXT context = &#123;0&#125;;</span><br><span class="line">context.ContextFlags = CONTEXT_CONTROL;  // 这里我获取控制寄存器就够了</span><br><span class="line">GetThreadContext(hThread,&amp;context);		 // 获取</span><br><span class="line"></span><br><span class="line">context.Eip = 0x401000;					// 这里可以修改EIP，改变线程的执行</span><br><span class="line">SetThreadContext(hThread,&amp;context);		// 设置</span><br></pre></td></tr></table></figure>
+
+<p>注：这个结构体会根据你的编译器位数来决定具体的结构，例如如果编译器为64位，那么里面的寄存器会是RAX等。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Win32/" rel="tag"><i class="fa fa-tag"></i> Win32</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/48098/" rel="prev" title="对话框常用控件">
+      <i class="fa fa-chevron-left"></i> 对话框常用控件
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/37035/" rel="next" title="临界区与互斥体">
+      临界区与互斥体 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">进程与线程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">创建线程：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA%E5%BA%94%E7%94%A8%E2%80%94%E2%80%94%E8%AE%A1%E6%97%B6%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">线程创建应用——计时器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5"><span class="nav-number">2.1.</span> <span class="nav-text">同步与异步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WM-PAINT%E6%B6%88%E6%81%AF%E7%9A%84%E7%89%B9%E6%AE%8A%E6%80%A7"><span class="nav-number">2.2.</span> <span class="nav-text">WM_PAINT消息的特殊性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="nav-number">2.3.</span> <span class="nav-text">问题分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%83%85%E5%86%B5%EF%BC%9A"><span class="nav-number">2.3.1.</span> <span class="nav-text">单线程情况：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%83%85%E5%86%B5%EF%BC%9A"><span class="nav-number">2.3.2.</span> <span class="nav-text">多线程情况：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">2.4.</span> <span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">线程控制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%93%8D%E4%BD%9C"><span class="nav-number">3.1.</span> <span class="nav-text">线程操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%82%E8%B5%B7%E7%BA%BF%E7%A8%8B"><span class="nav-number">3.1.1.</span> <span class="nav-text">挂起线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E7%BA%BF%E7%A8%8B"><span class="nav-number">3.1.2.</span> <span class="nav-text">恢复线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%88%E6%AD%A2%E7%BA%BF%E7%A8%8B"><span class="nav-number">3.1.3.</span> <span class="nav-text">终止线程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%95%E4%B8%80%EF%BC%9AExitThread%E5%87%BD%E6%95%B0"><span class="nav-number">3.1.3.1.</span> <span class="nav-text">法一：ExitThread函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%95%E4%BA%8C%EF%BC%9A%E7%BA%BF%E7%A8%8B%E5%87%BD%E6%95%B0%E6%AD%A3%E5%B8%B8%E8%BF%94%E5%9B%9E%EF%BC%88%E5%BB%BA%E8%AE%AE%E4%BD%BF%E7%94%A8%EF%BC%89"><span class="nav-number">3.1.3.2.</span> <span class="nav-text">法二：线程函数正常返回（建议使用）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%95%E4%B8%89%EF%BC%9ATerminateThread%E5%87%BD%E6%95%B0"><span class="nav-number">3.1.3.3.</span> <span class="nav-text">法三：TerminateThread函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="nav-number">3.1.4.</span> <span class="nav-text">判断线程状态</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E7%BA%BF%E7%A8%8B%E4%BF%A1%E6%81%AF"><span class="nav-number">4.</span> <span class="nav-text">获取线程信息</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

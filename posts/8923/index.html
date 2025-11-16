@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="minigame这是一个微信小程序的编译产物，加上微信调试工具 (__debug__) 生成的 运行时符号表和调试数据，是一个.wxapkg文件。需要使用wxappUnpacker来进行解压的到源码。先去github上找工具项目（工具源码），下载后按项目里面readme完成包安装，然后用 node wuWxapkg.js &lt;wx_mini_progranm_file_path&gt;指令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="湾区杯初赛wp">
+<meta property="og:url" content="http://example.com/posts/8923/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="minigame这是一个微信小程序的编译产物，加上微信调试工具 (__debug__) 生成的 运行时符号表和调试数据，是一个.wxapkg文件。需要使用wxappUnpacker来进行解压的到源码。先去github上找工具项目（工具源码），下载后按项目里面readme完成包安装，然后用 node wuWxapkg.js &lt;wx_mini_progranm_file_path&gt;指令">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250908163329055.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250908164437317.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250908170754516.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250908170941903.png">
+<meta property="og:image" content="http://example.com/posts/undefined/image-20250908171139724.png">
+<meta property="article:published_time" content="2025-09-08T08:25:59.000Z">
+<meta property="article:modified_time" content="2025-09-08T10:20:27.118Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="wp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/undefined/image-20250908163329055.png">
+
+<link rel="canonical" href="http://example.com/posts/8923/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>湾区杯初赛wp | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/8923/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          湾区杯初赛wp
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-09-08 16:25:59 / 修改时间：18:20:27" itemprop="dateCreated datePublished" datetime="2025-09-08T16:25:59+08:00">2025-09-08</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="minigame"><a href="#minigame" class="headerlink" title="minigame"></a>minigame</h1><p>这是一个微信小程序的编译产物，加上微信调试工具 (<code>__debug__</code>) 生成的 运行时符号表和调试数据，是一个<code>.wxapkg</code>文件。需要使用<code>wxappUnpacker</code>来进行解压的到源码。先去github上找工具项目（<a target="_blank" rel="noopener" href="https://github.com/Fickley/wxappUnpacker">工具源码</a>），下载后按项目里面readme完成包安装，然后用</p>
+<p><code>node wuWxapkg.js &lt;wx_mini_progranm_file_path&gt;</code>指令来解压，生成同名解压文件夹。</p>
+<img src="/posts/undefined/image-20250908163329055.png" class="" title="image-20250908163329055">
+
+<p>分析发现，这个项目是一个微信小程序，主要功能是通过 WASM（WebAssembly）模块对字符串进行校验。验证流程如下：</p>
+<ol>
+<li>用户在页面输入框输入字符串。</li>
+<li>点击“校验”按钮后，前端会将输入内容编码为字节数组，并分配内存，将数据写入 WASM 的内存空间。</li>
+<li>调用 WASM 导出的 _validateString 方法进行校验。</li>
+<li>校验结果会在页面上以图标和文字形式展示（成功&#x2F;失败&#x2F;异常）。</li>
+</ol>
+<p>具体校验规则由 validator.wasm 文件(在utils文件夹里面)决定。</p>
+<p><strong>WASM</strong> 是 <strong>WebAssembly</strong> 的缩写，其文件扩展名为 <code>.wasm</code>。它是一种<strong>二进制指令格式</strong>，专为在 Web 浏览器中高效执行而设计。</p>
+<p>你可以把它理解成一种<strong>面向Web的、低级别的、类似于汇编的语言</strong>，但它是以二进制格式发布的，而不是人类可读的文本。反正就是底层+运行比高级语言快。</p>
+<p>官方提供了反编译的工具，WebAssembly Toolkit(WABT)(<a target="_blank" rel="noopener" href="https://github.com/WebAssembly/wabt">下载链接</a>)。这个工具集里面内置的<code>wasm2wat</code>就是将<code>.wasm</code>文件转回文本文件<code>.wat</code>的工具。先去GitHub里面下载工具集的Release版，解压后<code>wasm2wat.exe</code>就在文件夹bin里面。</p>
+<p>命令行运行这个exe文件反编译得到.wat文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\wasm2wat.exe validator.wasm -o example.wat</span><br></pre></td></tr></table></figure>
+
+<img src="/posts/undefined/image-20250908164437317.png" class="" title="image-20250908164437317">
+
+<p>打开.wat文件，直接让GPT分析，其实就是一个简单的异或，即数据与密钥异或后都等于0x99，写脚本解密：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const key = [</span><br><span class="line">  0xff, 0xf5, 0xf8, 0xfe, 0xe2, 0xff, 0xf8, 0xfc, 0xa9, 0xfb, 0xab, 0xae, 0xfa, 0xad, 0xac, 0xa8,</span><br><span class="line">  0xfa, 0xae, 0xab, 0xa1, 0xa1, 0xaf, 0xae, 0xf8, 0xac, 0xaf, 0xae, 0xfc, 0xa1, 0xfa, 0xa8, 0xfb,</span><br><span class="line">  0xfb, 0xad, 0xfc, 0xac, 0xaa, 0xe4</span><br><span class="line">];</span><br><span class="line">const result = key.map(b =&gt; b ^ 0x99);</span><br><span class="line">const str = String.fromCharCode(...result);</span><br><span class="line">console.log(&#x27;解密结果:&#x27;, str);</span><br></pre></td></tr></table></figure>
+
+<p>解密结果: flag{fae0b27c451c728867a567e8c1bb4e53}</p>
+<h1 id="hardtest"><a href="#hardtest" class="headerlink" title="hardtest"></a>hardtest</h1><p>反编译</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">setbuf(stdin, 0LL);</span><br><span class="line"> setbuf(stdout, 0LL);</span><br><span class="line"> setbuf(stderr, 0LL);</span><br><span class="line"> v3 = time(0LL);</span><br><span class="line"> srand(v3);</span><br><span class="line"> v12 = rand() % 255 + 1;</span><br><span class="line"> printf(&quot;input your number(1-255): &quot;);</span><br><span class="line"> if ( (unsigned int)__isoc99_scanf(&quot;%d&quot;, &amp;v10) == 1 &amp;&amp; v12 == v10 )</span><br><span class="line"> &#123;</span><br><span class="line">   while ( getchar() != 10 )</span><br><span class="line">     ;</span><br><span class="line">   printf(&quot;flag: &quot;);</span><br><span class="line">   fgets(s, 100, stdin);</span><br><span class="line">   s[strcspn(s, &quot;\n&quot;)] = 0;</span><br><span class="line">   v15 = strlen(s);</span><br><span class="line">   v16 = v15 - 1LL;</span><br><span class="line">   v9[2] = v15;</span><br><span class="line">   v9[3] = 0LL;</span><br><span class="line">   v9[0] = v15;</span><br><span class="line">   v9[1] = 0LL;</span><br><span class="line">   v5 = 16 * ((v15 + 15LL) / 0x10uLL);</span><br><span class="line">   while ( v9 != (__int64 *)((char *)v9 - (v5 &amp; 0xFFFFFFFFFFFFF000LL)) )</span><br><span class="line">     ;</span><br><span class="line">   v6 = alloca(v5 &amp; 0xFFF);</span><br><span class="line">   if ( (v5 &amp; 0xFFF) != 0 )</span><br><span class="line">     *(__int64 *)((char *)&amp;v9[-1] + (v5 &amp; 0xFFF)) = *(__int64 *)((char *)&amp;v9[-1] + (v5 &amp; 0xFFF));</span><br><span class="line">   v17 = v9;</span><br><span class="line">   sub_1492(s, v9);</span><br><span class="line">   v18 = v15 - 1LL;</span><br><span class="line">   v7 = 16 * ((v15 + 15LL) / 0x10uLL);</span><br><span class="line">   while ( v9 != (__int64 *)((char *)v9 - (v7 &amp; 0xFFFFFFFFFFFFF000LL)) )</span><br><span class="line">     ;</span><br><span class="line">   v8 = alloca(v7 &amp; 0xFFF);</span><br><span class="line">   if ( (v7 &amp; 0xFFF) != 0 )</span><br><span class="line">     *(__int64 *)((char *)&amp;v9[-1] + (v7 &amp; 0xFFF)) = *(__int64 *)((char *)&amp;v9[-1] + (v7 &amp; 0xFFF));</span><br><span class="line">   v19 = v9;</span><br><span class="line">   for ( i = 0; i &lt; v15; ++i )</span><br><span class="line">     *((_BYTE *)v19 + i) = sub_13E1(*((unsigned __int8 *)v17 + i));</span><br><span class="line">   v11 = 1;</span><br><span class="line">   for ( j = 0; j &lt; v15; ++j )</span><br><span class="line">   &#123;</span><br><span class="line">     if ( *((_BYTE *)v19 + j) != byte_2120[j] )</span><br><span class="line">     &#123;</span><br><span class="line">       v11 = 0;</span><br><span class="line">       break;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   if ( v11 )</span><br><span class="line">     puts(&quot;right&quot;);</span><br><span class="line">   return 0LL;</span><br><span class="line"> &#125;</span><br><span class="line"> else</span><br><span class="line"> &#123;</span><br><span class="line">   puts(&quot;error&quot;);</span><br><span class="line">   return 1LL;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>只有两个函数有用：sub_1492和sub_13E1，其他的都是初始化之类的东西。</p>
+<img src="/posts/undefined/image-20250908170754516.png" class="" title="image-20250908170754516">
+
+<p>sub_1492函数对输入的每一个字符进行循环左移（左移(i&#x2F;7)+1位）。</p>
+<img src="/posts/undefined/image-20250908170941903.png" class="" title="image-20250908170941903">
+
+<p>sub_13E1对数据先进行循环左移，然后得到的值进行变换后放入sub_1313里面加密，然后在循环右移。看sub_1313函数逻辑：</p>
+<img src="/posts/undefined/image-20250908171139724.png" class="" title="image-20250908171139724">
+
+<p>这个函数实际上是使用快速幂算法实现在时间复杂度 O(log n)里求a1的255次方，并且引入了模运算。为什么要求255次方呢？</p>
+<p>根据费马小定理（当且仅当模数是质数时），</p>
+<ul>
+<li>如果 <strong>p</strong> 是一个<strong>质数</strong>，并且整数 <strong>a</strong> 不是 <strong>p</strong> 的倍数（即 gcd(a, p) &#x3D; 1），那么：<br><code>a^(p-1) ≡ 1 (mod p)</code></li>
+<li>这个式子可改写为<code>a * a^(p-2) ≡ 1 (mod p)</code>。把这个等式和模逆元的定义 <code>a * b ≡ 1 (mod p)</code> 对比一下，就会发现，**a^(p-2)**实际就是a的模逆元</li>
+</ul>
+<p>放在本题，就是指a1的255次方对257取模得到的就是a1在模257的意义下的模逆元。</p>
+<p>所以，这个函数其实就是求在模257条件下的模逆元。模逆元是相互的，即如果a是b的模逆元，那么b也是a的模逆元。所以可以对模逆元再求一次逆得到原数据。解密脚本如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line">uint8_t rol(uint8_t value,int n)&#123;		// 循环左移</span><br><span class="line">	return (value &lt;&lt; n) | (value &gt;&gt; (8 - n));</span><br><span class="line">&#125;</span><br><span class="line">uint8_t ror(uint8_t value,int n)&#123;		// 循环右移</span><br><span class="line">	return (value &gt;&gt; n) | (value &lt;&lt; (8 - n));</span><br><span class="line">&#125;</span><br><span class="line">uint8_t ReverseElement(uint8_t value,int mod)&#123;	// 费马小定理求模逆元（仅当模数为质数时生效）</span><br><span class="line">	int result = 1;</span><br><span class="line">	int n = mod-2;</span><br><span class="line">	int base = value;</span><br><span class="line">	while(n != 0)&#123;</span><br><span class="line">		if(n&amp;1)&#123;	// 比特位为1</span><br><span class="line">			result = (result*base) % mod;</span><br><span class="line">		&#125;</span><br><span class="line">		base = (base*base) % mod;</span><br><span class="line">		n &gt;&gt;= 1;</span><br><span class="line">	&#125;</span><br><span class="line">	return result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	uint8_t table[]=&#123;0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, </span><br><span class="line">					0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76, 0xCA, 0x82, 0xC9, 0x7D, </span><br><span class="line">					0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, </span><br><span class="line">					0x72, 0xC0, 0xB7, 0xFD, 0x93, 0x26, 0x36, 0x3F, 0xF7, 0xCC, </span><br><span class="line">					0x34, 0xA5, 0xE5, 0xF1, 0x71, 0xD8, 0x31, 0x15, 0x04, 0xC7, </span><br><span class="line">					0x23, 0xC3, 0x18, 0x96, 0x05, 0x9A, 0x07, 0x12, 0x80, 0xE2, </span><br><span class="line">					0xEB, 0x27, 0xB2, 0x75, 0x09, 0x83, 0x2C, 0x1A, 0x1B, 0x6E, </span><br><span class="line">					0x5A, 0xA0, 0x52, 0x3B, 0xD6, 0xB3, 0x29, 0xE3, 0x2F, 0x84, </span><br><span class="line">					0x53, 0xD1, 0x00, 0xED, 0x20, 0xFC, 0xB1, 0x5B, 0x6A, 0xCB, </span><br><span class="line">					0xBE, 0x39, 0x4A, 0x4C, 0x58, 0xCF, 0xD0, 0xEF, 0xAA, 0xFB, </span><br><span class="line">					0x43, 0x4D, 0x33, 0x85, 0x45, 0xF9, 0x02, 0x7F, 0x50, 0x3C, </span><br><span class="line">					0x9F, 0xA8, 0x51, 0xA3, 0x40, 0x8F, 0x92, 0x9D, 0x38, 0xF5, </span><br><span class="line">					0xBC, 0xB6, 0xDA, 0x21, 0x10, 0xFF, 0xF3, 0xD2, 0xCD, 0x0C, </span><br><span class="line">					0x13, 0xEC, 0x5F, 0x97, 0x44, 0x17, 0xC4, 0xA7, 0x7E, 0x3D, </span><br><span class="line">					0x64, 0x5D, 0x19, 0x73, 0x60, 0x81, 0x4F, 0xDC, 0x22, 0x2A, </span><br><span class="line">					0x90, 0x88, 0x46, 0xEE, 0xB8, 0x14, 0xDE, 0x5E, 0x0B, 0xDB, </span><br><span class="line">					0xE0, 0x32, 0x3A, 0x0A, 0x49, 0x06, 0x24, 0x5C, 0xC2, 0xD3, </span><br><span class="line">					0xAC, 0x62, 0x91, 0x95, 0xE4, 0x79, 0xE7, 0xC8, 0x37, 0x6D, </span><br><span class="line">					0x8D, 0xD5, 0x4E, 0xA9, 0x6C, 0x56, 0xF4, 0xEA, 0x65, 0x7A, </span><br><span class="line">					0xAE, 0x08, 0xBA, 0x78, 0x25, 0x2E, 0x1C, 0xA6, 0xB4, 0xC6, </span><br><span class="line">					0xE8, 0xDD, 0x74, 0x1F, 0x4B, 0xBD, 0x8B, 0x8A, 0x70, 0x3E, </span><br><span class="line">					0xB5, 0x66, 0x48, 0x03, 0xF6, 0x0E, 0x61, 0x35, 0x57, 0xB9, </span><br><span class="line">					0x86, 0xC1, 0x1D, 0x9E, 0xE1, 0xF8, 0x98, 0x11, 0x69, 0xD9, </span><br><span class="line">					0x8E, 0x94, 0x9B, 0x1E, 0x87, 0xE9, 0xCE, 0x55, 0x28, 0xDF, </span><br><span class="line">					0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, </span><br><span class="line">					0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16&#125;;</span><br><span class="line">	uint8_t data[]=&#123; 0x97, 0xD5, 0x60, 0x43, 0xB4, 0x10, 0x43, 0x73, 0x0F, 0xDA, </span><br><span class="line">					0x43, 0xCD, 0xD3, 0xE8, 0x73, 0x4A, 0x94, 0xC3, 0xCD, 0x71, </span><br><span class="line">					0xBD, 0xDC, 0x97, 0x1A&#125;;</span><br><span class="line">	uint8_t DecryptData[24];</span><br><span class="line">	for(int i=0;i&lt;24;i++)&#123;</span><br><span class="line">		uint8_t temp;</span><br><span class="line">		for(int j=0;j&lt;256;j++)&#123;</span><br><span class="line">			if(table[j]==data[i])&#123;</span><br><span class="line">				temp=j;</span><br><span class="line">				break;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		temp = rol(temp, 2);</span><br><span class="line">		temp = ReverseElement(temp, 257);</span><br><span class="line">		uint8_t high = (temp &amp; 0xF0) &gt;&gt; 4;</span><br><span class="line">		uint8_t low = (temp &amp; 0x0F);</span><br><span class="line">		uint8_t inv3 = 11;		// 3的逆元，需要注意这里不能调用ReverseElement函数求逆，因为这里模数是16，不是质数</span><br><span class="line">		uint8_t inv5 = 13;		// 5的逆元</span><br><span class="line">		high = (high * inv3) % 16;</span><br><span class="line">		low = (low * inv5) % 16;</span><br><span class="line">		temp = (high &lt;&lt; 4) | low;		// 合并</span><br><span class="line">		temp = ror(temp, 3)^0x5A;</span><br><span class="line">		temp = ror(temp,(i%7)+1);</span><br><span class="line">		DecryptData[i] = temp;</span><br><span class="line">		printf(&quot;%c&quot;,DecryptData[i]);</span><br><span class="line">	&#125;</span><br><span class="line">	printf(&quot;\n&quot;);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;	// Bl@st1ng_1s_a_g00d_Way!!</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/wp/" rel="tag"><i class="fa fa-tag"></i> wp</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/8729/" rel="prev" title="快速幂算法">
+      <i class="fa fa-chevron-left"></i> 快速幂算法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/35052/" rel="next" title="CE使用教程">
+      CE使用教程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#minigame"><span class="nav-number">1.</span> <span class="nav-text">minigame</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hardtest"><span class="nav-number">2.</span> <span class="nav-text">hardtest</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

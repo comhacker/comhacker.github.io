@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="临界区：当多个线程需要操作同一个变量时，会出现时间上的错误。这个共享变量称为临界资源，对共享资源的操作称为临界区。因此当访问临界资源时，需要使用资源锁，以确保同时只能有一个线程在对此资源进行访问。 临界区的使用：临界区在Win32里面使用CRITICAL_SECTION，它有如下结构： 12345678typedef struct _RTL_CRITICAL_SECTION &#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="临界区与互斥体">
+<meta property="og:url" content="http://example.com/posts/37035/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="临界区：当多个线程需要操作同一个变量时，会出现时间上的错误。这个共享变量称为临界资源，对共享资源的操作称为临界区。因此当访问临界资源时，需要使用资源锁，以确保同时只能有一个线程在对此资源进行访问。 临界区的使用：临界区在Win32里面使用CRITICAL_SECTION，它有如下结构： 12345678typedef struct _RTL_CRITICAL_SECTION &#123;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/37035/image.png">
+<meta property="article:published_time" content="2025-08-17T08:19:39.000Z">
+<meta property="article:modified_time" content="2025-08-27T10:42:53.105Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="Win32">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/37035/image.png">
+
+<link rel="canonical" href="http://example.com/posts/37035/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>临界区与互斥体 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/37035/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          临界区与互斥体
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-08-17 16:19:39" itemprop="dateCreated datePublished" datetime="2025-08-17T16:19:39+08:00">2025-08-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-08-27 18:42:53" itemprop="dateModified" datetime="2025-08-27T18:42:53+08:00">2025-08-27</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="临界区："><a href="#临界区：" class="headerlink" title="临界区："></a>临界区：</h1><p>当多个线程需要操作同一个变量时，会出现时间上的错误。这个共享变量称为临界资源，对共享资源的操作称为临界区。因此当访问临界资源时，需要使用资源锁，以确保同时只能有一个线程在对此资源进行访问。</p>
+<h2 id="临界区的使用："><a href="#临界区的使用：" class="headerlink" title="临界区的使用："></a>临界区的使用：</h2><p>临界区在Win32里面使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/sync/critical-section-objects">CRITICAL_SECTION</a>，它有如下结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _RTL_CRITICAL_SECTION &#123;		</span><br><span class="line">    PRTL_CRITICAL_SECTION_DEBUG DebugInfo;		</span><br><span class="line">    LONG LockCount;				// 初始值为-1，等于0时代表临界区被占用，大于0时值代表等待临界区的线程数</span><br><span class="line">    LONG RecursionCount;		// 所有者线程已经获得该临界区的次数</span><br><span class="line">    HANDLE OwningThread;       	// 占有此临界区的线程的线程标识符	</span><br><span class="line">    HANDLE LockSemaphore;		</span><br><span class="line">    DWORD SpinCount;		</span><br><span class="line">&#125; RTL_CRITICAL_SECTION, *PRTL_CRITICAL_SECTION;		</span><br></pre></td></tr></table></figure>
+
+<p>对临界区操作时使用以下函数：</p>
+<ol>
+<li><code>InitializeCriticalSection</code>初始化临界区</li>
+<li><code>EnterCriticalSection</code>申请进去临界区</li>
+<li><code>LeaveCriticalSection</code>退出临界区</li>
+<li><code>DeleteCriticalSection</code>删除临界区</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">CRITICAL_SECTION cs;	</span><br><span class="line"></span><br><span class="line">// 初始化临界区</span><br><span class="line">InitializeCriticalSection(&amp;cs);</span><br><span class="line"></span><br><span class="line">DWORD WINAPI ThreadProcA(LPVOID lpParameter)&#123;</span><br><span class="line">	EnterCriticalSection(&amp;cs);		// 申请进入临界区</span><br><span class="line">	// 对临界区进行操作</span><br><span class="line">	LeaveCriticalSection(&amp;cs);		// 退出临界区</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">DeleteCriticalSection(&amp;cs);			// 删除临界区</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">CRITICAL_SECTION cs;</span><br><span class="line">int x = 0;</span><br><span class="line"></span><br><span class="line">DWORD WINAPI ThreadProc(LPVOID lpParameter) &#123;</span><br><span class="line"></span><br><span class="line">	for (int i = 0; i &lt; 50; i++) &#123;		</span><br><span class="line">		EnterCriticalSection(&amp;cs);		// 申请进入临界区</span><br><span class="line">		x++;</span><br><span class="line">		LeaveCriticalSection(&amp;cs);		// 退出临界区</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	InitializeCriticalSection(&amp;cs);</span><br><span class="line"></span><br><span class="line">	HANDLE hThread = CreateThread(NULL, 0, ThreadProc, 0, 0, NULL);</span><br><span class="line"></span><br><span class="line">	for (int i = 0; i &lt; 50; i++) &#123;</span><br><span class="line">		EnterCriticalSection(&amp;cs);		// 申请进入临界区		</span><br><span class="line">		x++;</span><br><span class="line">		LeaveCriticalSection(&amp;cs);		// 退出临界区</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	WaitForSingleObject(hThread, INFINITE);</span><br><span class="line">	DeleteCriticalSection(&amp;cs);			// 删除临界区</span><br><span class="line">	CloseHandle(hThread);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注：调试发现LockCount的值好像并非表示等待临界区的线程数</p>
+<p>由于各线程互斥访问临界区，故临界区因尽量的小来减小线程等待时间。</p>
+<h2 id="死锁："><a href="#死锁：" class="headerlink" title="死锁："></a>死锁：</h2><p>当两个或多个线程持有资源且互相等待对方持有的资源时，各线程均无法满足条件，如果都不主动释放资源，那么线程将会进入死锁状态。线程死锁会导致进程卡死，而进程死锁则可能导致操作系统死机。因此，使用多线程时应尽量避免死锁，防止程序崩溃。</p>
+<h3 id="死锁现象："><a href="#死锁现象：" class="headerlink" title="死锁现象："></a>死锁现象：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">CRITICAL_SECTION csA,csB;</span><br><span class="line"></span><br><span class="line">DWORD WINAPI ThreadProc(LPVOID lpParameter) &#123;</span><br><span class="line">	</span><br><span class="line">	EnterCriticalSection(&amp;csA);		// 申请进入临界区	</span><br><span class="line">	Sleep(1000);</span><br><span class="line"></span><br><span class="line">	EnterCriticalSection(&amp;csB);</span><br><span class="line">	printf(&quot;线程2\n&quot;);</span><br><span class="line">	LeaveCriticalSection(&amp;csB);</span><br><span class="line"></span><br><span class="line">	LeaveCriticalSection(&amp;csA);		// 退出临界区</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	InitializeCriticalSection(&amp;csA);</span><br><span class="line">	InitializeCriticalSection(&amp;csB);</span><br><span class="line"></span><br><span class="line">	HANDLE hThread = CreateThread(NULL, 0, ThreadProc, 0, 0, NULL);</span><br><span class="line"></span><br><span class="line">	EnterCriticalSection(&amp;csB);		// 申请进入临界区		</span><br><span class="line">	Sleep(1000);</span><br><span class="line"></span><br><span class="line">	EnterCriticalSection(&amp;csA);</span><br><span class="line">	printf(&quot;线程1\n&quot;);</span><br><span class="line">	LeaveCriticalSection(&amp;csA);</span><br><span class="line"></span><br><span class="line">	LeaveCriticalSection(&amp;csB);		// 退出临界区</span><br><span class="line"></span><br><span class="line">	WaitForSingleObject(hThread, INFINITE);</span><br><span class="line">	DeleteCriticalSection(&amp;csA);</span><br><span class="line">	DeleteCriticalSection(&amp;csB);</span><br><span class="line">	CloseHandle(hThread);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上面这个程序，线程1先申请资源B成功并等待1s，此时线程二申请资源A成功并等待1s，然后线程1等待资源A，线程2等待资源B，两个线程都无法满足条件，故进程死锁，两个线程都无法继续执行。</p>
+<h3 id="死锁的预防："><a href="#死锁的预防：" class="headerlink" title="死锁的预防："></a>死锁的预防：</h3><p>死锁形成的四个条件：</p>
+<ol>
+<li>互斥</li>
+<li>不可剥夺</li>
+<li>请求并保持</li>
+<li>循环等待</li>
+</ol>
+<p>破坏互斥条件：增加资源数</p>
+<p>破坏不可剥夺：资源得不到满足后强行释放线程占有的资源</p>
+<p>破坏请求和保持：预先分配（类似于银行家算法）</p>
+<p>破坏循环等待：资源编号，顺序分配</p>
+<p>​	例如上例中，我们给资源A和资源B编号，分别为0和1，要求线程在获取资源时必须按从小到大的顺序获取资源，也就是没有获取资源A的线程无法获取资源B，那么先获取到资源A的线程就能顺利地执行，执行完成后释放两个资源，下一个线程也能顺利执行。这实际上是破坏了循环等待条件，使线程间无法形成循环等待链，也就无法死锁。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">CRITICAL_SECTION csA, csB;</span><br><span class="line"></span><br><span class="line">DWORD WINAPI ThreadProc(LPVOID lpParameter) &#123;</span><br><span class="line"></span><br><span class="line">	EnterCriticalSection(&amp;csA);		// 申请进入临界区	</span><br><span class="line">	Sleep(1000);</span><br><span class="line"></span><br><span class="line">	EnterCriticalSection(&amp;csB);</span><br><span class="line">	printf(&quot;线程2\n&quot;);</span><br><span class="line">	LeaveCriticalSection(&amp;csB);</span><br><span class="line"></span><br><span class="line">	LeaveCriticalSection(&amp;csA);		// 退出临界区</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	InitializeCriticalSection(&amp;csA);</span><br><span class="line">	InitializeCriticalSection(&amp;csB);</span><br><span class="line"></span><br><span class="line">	HANDLE hThread = CreateThread(NULL, 0, ThreadProc, 0, 0, NULL);</span><br><span class="line"></span><br><span class="line">	EnterCriticalSection(&amp;csA);		// 申请进入临界区		</span><br><span class="line">	Sleep(1000);</span><br><span class="line"></span><br><span class="line">	EnterCriticalSection(&amp;csB);</span><br><span class="line">	printf(&quot;线程1\n&quot;);</span><br><span class="line">	LeaveCriticalSection(&amp;csB);</span><br><span class="line"></span><br><span class="line">	LeaveCriticalSection(&amp;csA);		// 退出临界区</span><br><span class="line"></span><br><span class="line">	WaitForSingleObject(hThread, INFINITE);</span><br><span class="line">	DeleteCriticalSection(&amp;csA);</span><br><span class="line">	DeleteCriticalSection(&amp;csB);</span><br><span class="line">	CloseHandle(hThread);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="互斥体："><a href="#互斥体：" class="headerlink" title="互斥体："></a>互斥体：</h1><p><strong>互斥体（Mutual Exclusion Object，简称 Mutex）</strong> 是一种<strong>内核对象</strong>。</p>
+<p>它的作用：<strong>保证在同一时刻，只有一个线程（或进程）能够访问某个共享资源</strong>。</p>
+<p>它的特点：</p>
+<ul>
+<li>可以在 <strong>同一进程内</strong> 的多个线程间使用。</li>
+<li>也可以在 <strong>不同进程之间</strong> 使用（互斥体是 <strong>内核对象</strong>，可命名并跨进程共享）。</li>
+<li>属于 <strong>内核级同步机制</strong>，比临界区 (Critical Section) 慢一些，但更通用。</li>
+</ul>
+<h2 id="使用互斥体："><a href="#使用互斥体：" class="headerlink" title="使用互斥体："></a>使用互斥体：</h2><h3 id="1、创建互斥体："><a href="#1、创建互斥体：" class="headerlink" title="1、创建互斥体："></a>1、创建互斥体：</h3><p>使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/synchapi/nf-synchapi-createmutexa">CreateMutex</a>函数创建:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HANDLE CreateMutex(</span><br><span class="line">  LPSECURITY_ATTRIBUTES lpMutexAttributes, // 安全属性，通常传 NULL</span><br><span class="line">  BOOL bInitialOwner,                      // 是否由创建线程立即获得互斥体</span><br><span class="line">  LPCSTR lpName                            // 互斥体名字，可用于跨进程共享</span><br><span class="line">);   // 返回值：互斥体对象的句柄</span><br></pre></td></tr></table></figure>
+
+<p>使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HANDLE hMutex = CreateMutex(NULL,FALSE, &quot;MutexNmae&quot;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、打开互斥体："><a href="#2、打开互斥体：" class="headerlink" title="2、打开互斥体："></a>2、打开互斥体：</h3><p>如果互斥体是其他进程创建的，那么需要使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/synchapi/nf-synchapi-openmutexw">OpenMutex</a>函数打开互斥体（获取互斥体句柄）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HANDLE OpenMutexW(</span><br><span class="line">  [in] DWORD   dwDesiredAccess,		// 访问权限。MUTEX_ALL_ACCESS代表全部权限</span><br><span class="line">  [in] BOOL    bInheritHandle,		// 是否继承句柄</span><br><span class="line">  [in] LPCWSTR lpName				// 互斥体名称</span><br><span class="line">);	// 返回值：互斥体对象的句柄</span><br></pre></td></tr></table></figure>
+
+<p>如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HANDLE hMutex = OpenMutex(MUTEX_ALL_ACCESS,FALSE, &quot;MutexNmae&quot;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、请求进入（等待互斥体）"><a href="#3、请求进入（等待互斥体）" class="headerlink" title="3、请求进入（等待互斥体）"></a>3、请求进入（等待互斥体）</h3><p>内核对象有两种状态，信号状态和无信号状态。对于不同的内核对象，两种状态的转换并不相同：</p>
+<ul>
+<li><strong>线程 (Thread)：</strong> 线程存活时为无信号状态，线程结束（包括正常退出、异常终止）时变为有信号状态。</li>
+<li><strong>进程 (Process)：</strong>  进程存活时为无信号状态，进程结束时变为有信号状态。</li>
+<li><strong>互斥量 (Mutex)：</strong> 当该互斥量不被任何线程拥有（即被释放）时变为有信号状态。<code>WaitForSingleObject</code>成功获取互斥量后，调用线程会成为其所有者，互斥量变为无信号状态。</li>
+<li><strong>事件 (Event)：</strong> 通过 <code>SetEvent</code>函数显式将其置为有信号状态。手动重置事件 (<code>CreateEvent(..., TRUE, ...)</code>) 需要显式调用 <code>ResetEvent</code>才能重置为无信号；自动重置事件 (<code>CreateEvent(..., FALSE, ...)</code>) 在唤醒一个等待线程后会自动重置为无信号。</li>
+<li><strong>信号量 (Semaphore)：</strong> 信号量计数大于 0 时为有信号状态。<code>WaitForSingleObject</code>成功获取信号量后，计数减 1。当计数减为 0 时，信号量变为无信号状态。</li>
+</ul>
+<p>等待互斥体，这里有两种做法：</p>
+<h4 id="WaitForSingleObject函数："><a href="#WaitForSingleObject函数：" class="headerlink" title="WaitForSingleObject函数："></a><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject">WaitForSingleObject</a>函数：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DWORD WaitForSingleObject(</span><br><span class="line">  [in] HANDLE hHandle,			// 对象句柄</span><br><span class="line">  [in] DWORD  dwMilliseconds	//等待时间，单位毫秒（使用INFINITE代表等待直到目标线程发出信号，为0则立即返回）</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>此函数会先阻塞本线程，然后在dwMilliseconds时间内持续检测目标对象的状态，直到目标对象变为信号状态。在目标对象变为信号状态后，被阻塞的线程会恢复执行；如果对象是互斥体，那么它还会将目标对象变为无信号状态，阻止其他线程进入。</p>
+<p>函数返回值：</p>
+<ul>
+<li>WAIT_OBJECT_0(0) ：等待对象变为已通知</li>
+<li>WAIT_TIMEOUT(0x102) ：超时</li>
+</ul>
+<h4 id="WaitForMultipleObjects函数："><a href="#WaitForMultipleObjects函数：" class="headerlink" title="WaitForMultipleObjects函数："></a><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjects">WaitForMultipleObjects</a>函数：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DWORD WaitForMultipleObjects(</span><br><span class="line">  [in] DWORD        nCount,			// 对象数目</span><br><span class="line">  [in] const HANDLE *lpHandles,		// 对象句柄数组</span><br><span class="line">  [in] BOOL         bWaitAll,		// true代表需等待全部对象变为信号状态，false代表任意一个对象变为信号状态即可</span><br><span class="line">  [in] DWORD        dwMilliseconds	// 等待时间</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：等待多个内核对象的已通知状态</p>
+<p>返回值：</p>
+<ul>
+<li>WAIT_OBJECT_0(0) ：bWaitAll为true时代表至少一个对象变为了信号状态；bWaitAll为false时代表所有对象均变为了信号状态</li>
+<li>WAIT_TIMEOUT(0x102) ：超时</li>
+</ul>
+<h3 id="4、释放互斥体"><a href="#4、释放互斥体" class="headerlink" title="4、释放互斥体"></a>4、释放互斥体</h3><p>使用ReleaseMutex函数释放互斥体，让其他线程可进入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ReleaseMutex(hMutex);</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、关闭互斥体句柄"><a href="#5、关闭互斥体句柄" class="headerlink" title="5、关闭互斥体句柄"></a>5、关闭互斥体句柄</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CloseHandle(hMutex);</span><br></pre></td></tr></table></figure>
+
+<p>注：互斥体是内核对象，由操作系统进行管理，不需要手动清理。当最后一个进程关闭了此互斥体的句柄时，操作系统会自动清理。</p>
+<h3 id="代码总结："><a href="#代码总结：" class="headerlink" title="代码总结："></a>代码总结：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">DWORD WINAPI ThreadProc(LPVOID lpParameter) &#123;</span><br><span class="line">	HANDLE hMutex = OpenMutex(MUTEX_ALL_ACCESS, FALSE, L&quot;MutexNmae&quot;);</span><br><span class="line">	</span><br><span class="line">	WaitForSingleObject(hMutex, INFINITE);</span><br><span class="line">	printf(&quot;线程2\n&quot;);</span><br><span class="line">	ReleaseMutex(hMutex);</span><br><span class="line"></span><br><span class="line">	CloseHandle(hMutex);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	HANDLE hMutex = CreateMutex(NULL, FALSE, L&quot;MutexNmae&quot;);</span><br><span class="line"></span><br><span class="line">	HANDLE hThread = CreateThread(NULL, 0, ThreadProc, 0, 0, NULL);</span><br><span class="line"></span><br><span class="line">	WaitForSingleObject(hMutex, INFINITE);</span><br><span class="line">	printf(&quot;线程1\n&quot;);</span><br><span class="line">	ReleaseMutex(hMutex);</span><br><span class="line"></span><br><span class="line">	CloseHandle(hMutex);</span><br><span class="line">	CloseHandle(hThread);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="临界区与互斥体的区别："><a href="#临界区与互斥体的区别：" class="headerlink" title="临界区与互斥体的区别："></a>临界区与互斥体的区别：</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>临界区 (CRITICAL_SECTION)</th>
+<th>互斥体 (Mutex)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>作用范围</td>
+<td>同一进程</td>
+<td>可跨进程</td>
+</tr>
+<tr>
+<td>开销</td>
+<td>低（用户态）</td>
+<td>高（内核态）</td>
+</tr>
+<tr>
+<td>内核对象</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>是否可命名</td>
+<td>否</td>
+<td>可以命名（CreateMutex 传名字）</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>高</td>
+<td>低</td>
+</tr>
+<tr>
+<td>等待时间</td>
+<td>一直等待</td>
+<td>可设置等待时间</td>
+</tr>
+<tr>
+<td>是否需要清理</td>
+<td>需使用<code>DeleteCriticalSection</code>函数清理</td>
+<td>系统自动清理</td>
+</tr>
+</tbody></table>
+<p>建议同一进程间的同步时使用临界区；跨进程时使用互斥体。</p>
+<h2 id="作业：模拟抢红包"><a href="#作业：模拟抢红包" class="headerlink" title="作业：模拟抢红包"></a>作业：模拟抢红包</h2><p>要求：</p>
+<img src="/posts/37035/image.png" class="" title="image">
+
+<p>代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line">// testWin.cpp : 定义应用程序的入口点。</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#include &quot;framework.h&quot;</span><br><span class="line">#include &quot;testWin.h&quot;</span><br><span class="line">#include &quot;DebugPrint.h&quot;</span><br><span class="line"></span><br><span class="line">HANDLE hMutex = NULL;</span><br><span class="line">HWND hDlg = NULL;</span><br><span class="line">HWND hEDIT = NULL;</span><br><span class="line"></span><br><span class="line">DWORD WINAPI createThread(LPVOID);</span><br><span class="line">DWORD WINAPI MyThread(LPVOID);</span><br><span class="line"></span><br><span class="line">INT_PTR  CALLBACK DialogProc(</span><br><span class="line">	HWND hwndDlg,  // handle to dialog box			</span><br><span class="line">	UINT uMsg,     // message			</span><br><span class="line">	WPARAM wParam, // first message parameter			</span><br><span class="line">	LPARAM lParam  // second message parameter			</span><br><span class="line">)</span><br><span class="line">&#123;</span><br><span class="line">	switch (uMsg)</span><br><span class="line">	&#123;</span><br><span class="line">		case  WM_INITDIALOG:</span><br><span class="line">		&#123;</span><br><span class="line">			TCHAR str[10];</span><br><span class="line">			GetDlgItemText(hwndDlg, IDC_EDIT_SUM, str, 10);</span><br><span class="line">			hEDIT = GetDlgItem(hwndDlg, IDC_EDIT_SUM);</span><br><span class="line">			hDlg = hwndDlg;</span><br><span class="line">			return TRUE;</span><br><span class="line">		&#125;</span><br><span class="line">		case  WM_COMMAND:</span><br><span class="line">		&#123;</span><br><span class="line">			DWORD control = LOWORD(wParam);</span><br><span class="line">			if (control == IDC_BUTTON1) &#123;</span><br><span class="line">				hMutex = CreateMutex(NULL, FALSE, L&quot;MutexNmae&quot;);</span><br><span class="line">				HANDLE hThread = CreateThread(NULL, 0, createThread, 0, 0, NULL);</span><br><span class="line">				CloseHandle(hThread);</span><br><span class="line">			&#125;</span><br><span class="line">			return true;</span><br><span class="line">		&#125;</span><br><span class="line">		case  WM_CLOSE:</span><br><span class="line">			EndDialog(hwndDlg, 0);</span><br><span class="line">			return TRUE;</span><br><span class="line">		default:</span><br><span class="line">			return FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">int CALLBACK WinMain(</span><br><span class="line">	_In_  HINSTANCE hInstance,</span><br><span class="line">	_In_  HINSTANCE hPrevInstance,</span><br><span class="line">	_In_  LPSTR lpCmdLine,</span><br><span class="line">	_In_  int nCmdShow</span><br><span class="line">)</span><br><span class="line">&#123;</span><br><span class="line">	DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG_MAIN), NULL, DialogProc);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">DWORD WINAPI createThread(LPVOID lpParameter) &#123;</span><br><span class="line">	HANDLE hThread[3];</span><br><span class="line">	hThread[0] = CreateThread(NULL, 0, MyThread, (LPVOID)0, 0, NULL);</span><br><span class="line">	hThread[1] = CreateThread(NULL, 0, MyThread, (LPVOID)1, 0, NULL);</span><br><span class="line">	hThread[2] = CreateThread(NULL, 0, MyThread, (LPVOID)2, 0, NULL);</span><br><span class="line"></span><br><span class="line">	WaitForMultipleObjects(3, hThread, true, INFINITE);</span><br><span class="line">	CloseHandle(hThread[0]);</span><br><span class="line">	CloseHandle(hThread[1]);</span><br><span class="line">	CloseHandle(hThread[2]);</span><br><span class="line">	CloseHandle(hMutex);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">DWORD WINAPI MyThread(LPVOID lpParameter)</span><br><span class="line">&#123;</span><br><span class="line">	DWORD nIDDlgItem[] = &#123; IDC_EDIT1 ,IDC_EDIT2, IDC_EDIT3&#125;;</span><br><span class="line">	HWND hEDIT1 = GetDlgItem(hDlg, nIDDlgItem[(DWORD)lpParameter]);</span><br><span class="line">	TCHAR szBuffer[10];</span><br><span class="line">	memset(szBuffer, 0, 10);</span><br><span class="line">	wsprintf(szBuffer, L&quot;%d&quot;, 0);</span><br><span class="line">	SetWindowText(hEDIT1, szBuffer);</span><br><span class="line"></span><br><span class="line">	while(1)</span><br><span class="line">	&#123;</span><br><span class="line">		WaitForSingleObject(hMutex, INFINITE);</span><br><span class="line"></span><br><span class="line">		int sum;</span><br><span class="line">		memset(szBuffer, 0, 10);</span><br><span class="line">		GetWindowText(hEDIT, szBuffer, 10);  //获取子窗口数值</span><br><span class="line">		sum = _wtoi(szBuffer); // 把宽字符字符串转成整数</span><br><span class="line"></span><br><span class="line">		if (sum &lt; 50) &#123;</span><br><span class="line">			ReleaseMutex(hMutex);</span><br><span class="line">			return 0;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		sum -= 50;</span><br><span class="line">		wsprintf(szBuffer, L&quot;%d&quot;, sum);</span><br><span class="line">		SetWindowText(hEDIT, szBuffer);</span><br><span class="line"></span><br><span class="line">		ReleaseMutex(hMutex);</span><br><span class="line"></span><br><span class="line">		memset(szBuffer, 0, 10);</span><br><span class="line">		GetWindowText(hEDIT1, szBuffer, 10);  //获取子窗口数值</span><br><span class="line">		sum = _wtoi(szBuffer); // 把宽字符字符串转成整数</span><br><span class="line">		sum += 50;</span><br><span class="line">		wsprintf(szBuffer, L&quot;%d&quot;, sum);</span><br><span class="line">		SetWindowText(hEDIT1, szBuffer);</span><br><span class="line"></span><br><span class="line">		Sleep(50);</span><br><span class="line">	&#125;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Win32/" rel="tag"><i class="fa fa-tag"></i> Win32</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/18532/" rel="prev" title="线程">
+      <i class="fa fa-chevron-left"></i> 线程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/43606/" rel="next" title="事件">
+      事件 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%B4%E7%95%8C%E5%8C%BA%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">临界区：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%B4%E7%95%8C%E5%8C%BA%E7%9A%84%E4%BD%BF%E7%94%A8%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">临界区的使用：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%BB%E9%94%81%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">死锁：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%BB%E9%94%81%E7%8E%B0%E8%B1%A1%EF%BC%9A"><span class="nav-number">1.2.1.</span> <span class="nav-text">死锁现象：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%BB%E9%94%81%E7%9A%84%E9%A2%84%E9%98%B2%EF%BC%9A"><span class="nav-number">1.2.2.</span> <span class="nav-text">死锁的预防：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%92%E6%96%A5%E4%BD%93%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">互斥体：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%BA%92%E6%96%A5%E4%BD%93%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">使用互斥体：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%88%9B%E5%BB%BA%E4%BA%92%E6%96%A5%E4%BD%93%EF%BC%9A"><span class="nav-number">2.1.1.</span> <span class="nav-text">1、创建互斥体：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E6%89%93%E5%BC%80%E4%BA%92%E6%96%A5%E4%BD%93%EF%BC%9A"><span class="nav-number">2.1.2.</span> <span class="nav-text">2、打开互斥体：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E8%AF%B7%E6%B1%82%E8%BF%9B%E5%85%A5%EF%BC%88%E7%AD%89%E5%BE%85%E4%BA%92%E6%96%A5%E4%BD%93%EF%BC%89"><span class="nav-number">2.1.3.</span> <span class="nav-text">3、请求进入（等待互斥体）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#WaitForSingleObject%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">WaitForSingleObject函数：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WaitForMultipleObjects%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">WaitForMultipleObjects函数：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E9%87%8A%E6%94%BE%E4%BA%92%E6%96%A5%E4%BD%93"><span class="nav-number">2.1.4.</span> <span class="nav-text">4、释放互斥体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81%E5%85%B3%E9%97%AD%E4%BA%92%E6%96%A5%E4%BD%93%E5%8F%A5%E6%9F%84"><span class="nav-number">2.1.5.</span> <span class="nav-text">5、关闭互斥体句柄</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="nav-number">2.1.6.</span> <span class="nav-text">代码总结：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%B4%E7%95%8C%E5%8C%BA%E4%B8%8E%E4%BA%92%E6%96%A5%E4%BD%93%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">临界区与互斥体的区别：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E4%B8%9A%EF%BC%9A%E6%A8%A1%E6%8B%9F%E6%8A%A2%E7%BA%A2%E5%8C%85"><span class="nav-number">2.3.</span> <span class="nav-text">作业：模拟抢红包</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

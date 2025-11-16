@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="加壳程序作用：读取目标PE文件的内容，加密后贴在壳程序的新建节中。 加壳程序（加密方法为简单的异或），pack.exe： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273">
+<meta property="og:type" content="article">
+<meta property="og:title" content="加密壳">
+<meta property="og:url" content="http://example.com/posts/22045/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="加壳程序作用：读取目标PE文件的内容，加密后贴在壳程序的新建节中。 加壳程序（加密方法为简单的异或），pack.exe： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-26T09:57:06.000Z">
+<meta property="article:modified_time" content="2025-09-04T08:52:32.757Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="Win32">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/posts/22045/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>加密壳 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/22045/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="位卑未敢忘忧国，事定犹须待阖棺">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          加密壳
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-08-26 17:57:06" itemprop="dateCreated datePublished" datetime="2025-08-26T17:57:06+08:00">2025-08-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-04 16:52:32" itemprop="dateModified" datetime="2025-09-04T16:52:32+08:00">2025-09-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="加壳程序"><a href="#加壳程序" class="headerlink" title="加壳程序"></a>加壳程序</h1><p>作用：读取目标PE文件的内容，加密后贴在壳程序的新建节中。</p>
+<p>加壳程序（加密方法为简单的异或），pack.exe：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line">// 作用：将待加壳程序加密后贴在壳程序新节里面，生成一个加壳程序</span><br><span class="line"></span><br><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">BOOL AddSection(BYTE*,BYTE*,DWORD);</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    HANDLE hFileDest = CreateFile(</span><br><span class="line">        L&quot;D:\\桌面\\RVA_FOA.exe&quot;,          // 待加壳PE文件</span><br><span class="line">        GENERIC_READ, // 读写访问</span><br><span class="line">        0,                       // 不共享</span><br><span class="line">        NULL,                    // 默认安全属性</span><br><span class="line">        OPEN_EXISTING,           // 打开已有</span><br><span class="line">        FILE_ATTRIBUTE_NORMAL,   // 普通文件</span><br><span class="line">        NULL</span><br><span class="line">    );</span><br><span class="line">    if (hFileDest == INVALID_HANDLE_VALUE) &#123;</span><br><span class="line">        wprintf(L&quot;打开目标文件失败\n&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    DWORD DestSize = GetFileSize(hFileDest, NULL);</span><br><span class="line">    BYTE* DestBuffer = (BYTE*)malloc(DestSize);</span><br><span class="line">    memset(DestBuffer,0, DestSize);</span><br><span class="line">    DWORD bytesRead = 0;</span><br><span class="line">    if (!ReadFile(hFileDest, DestBuffer, DestSize, &amp;bytesRead, NULL)) &#123;</span><br><span class="line">        wprintf(L&quot;读取目标文件失败\n&quot;);</span><br><span class="line">        CloseHandle(hFileDest);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    CloseHandle(hFileDest);</span><br><span class="line"></span><br><span class="line">    // 加密</span><br><span class="line">    for (int i = 0; i &lt; DestSize; i++) &#123;</span><br><span class="line">        DestBuffer[i] ^= 0x3;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    HANDLE hFilePack = CreateFile(</span><br><span class="line">        L&quot;D:\\桌面\\test32.exe&quot;,          // 壳文件</span><br><span class="line">        GENERIC_READ, // 读写访问</span><br><span class="line">        0,                       // 不共享</span><br><span class="line">        NULL,                    // 默认安全属性</span><br><span class="line">        OPEN_EXISTING,           // 打开已有</span><br><span class="line">        FILE_ATTRIBUTE_NORMAL,   // 普通文件</span><br><span class="line">        NULL</span><br><span class="line">    );</span><br><span class="line">    if (hFilePack == INVALID_HANDLE_VALUE) &#123;</span><br><span class="line">        wprintf(L&quot;打开壳文件失败\n&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    DWORD PackSize = GetFileSize(hFilePack, NULL);</span><br><span class="line">    BYTE* PackBuffer = (BYTE*)malloc(PackSize + DestSize);      // 多分配一个节的空间</span><br><span class="line">    memset(PackBuffer, 0, PackSize + DestSize);</span><br><span class="line">    if (!ReadFile(hFilePack, PackBuffer, PackSize, &amp;bytesRead, NULL)) &#123;</span><br><span class="line">        wprintf(L&quot;读取壳文件失败\n&quot;);</span><br><span class="line">        CloseHandle(hFilePack);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    CloseHandle(hFilePack);</span><br><span class="line"></span><br><span class="line">    if (!AddSection(PackBuffer, DestBuffer, DestSize)) &#123;</span><br><span class="line">        free(PackBuffer);</span><br><span class="line">        free(DestBuffer);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 写入新的文件中</span><br><span class="line">    HANDLE hFile = CreateFile(</span><br><span class="line">        L&quot;Packed.exe&quot;,          // 新文件</span><br><span class="line">        GENERIC_WRITE | GENERIC_READ, // 读写访问</span><br><span class="line">        0,                       // 不共享</span><br><span class="line">        NULL,                    // 默认安全属性</span><br><span class="line">        CREATE_ALWAYS,           // 总是创建新文件，覆盖已有</span><br><span class="line">        FILE_ATTRIBUTE_NORMAL,   // 普通文件</span><br><span class="line">        NULL</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    if (hFile == INVALID_HANDLE_VALUE) &#123;</span><br><span class="line">        wprintf(L&quot;创建文件失败\n&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    DWORD bytesWritten = 0;</span><br><span class="line">    // 2. 写入数据</span><br><span class="line">    if (!WriteFile(hFile, PackBuffer, PackSize + DestSize, &amp;bytesWritten, NULL)) &#123;</span><br><span class="line">        wprintf(L&quot;写入失败\n&quot;);</span><br><span class="line">        CloseHandle(hFile);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    free(PackBuffer);</span><br><span class="line">    free(DestBuffer);</span><br><span class="line">    CloseHandle(hFile);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">BOOL AddSection(BYTE* PackBuffer, BYTE* DestBuffer,DWORD new_size) &#123;</span><br><span class="line">    BYTE *pbuffer = PackBuffer;</span><br><span class="line">    IMAGE_DOS_HEADER* dos = (IMAGE_DOS_HEADER*)pbuffer;</span><br><span class="line">    pbuffer += dos-&gt;e_lfanew + 4;</span><br><span class="line">    IMAGE_FILE_HEADER* fheader = (IMAGE_FILE_HEADER*)pbuffer;</span><br><span class="line">    pbuffer += sizeof(IMAGE_FILE_HEADER);</span><br><span class="line">    IMAGE_OPTIONAL_HEADER32* oheader = (IMAGE_OPTIONAL_HEADER32*)pbuffer;</span><br><span class="line">    pbuffer += sizeof(IMAGE_OPTIONAL_HEADER32);</span><br><span class="line">    IMAGE_SECTION_HEADER* sheader = (IMAGE_SECTION_HEADER*)pbuffer;</span><br><span class="line"></span><br><span class="line">    if (oheader-&gt;SizeOfHeaders - (dos-&gt;e_lfanew + 4 + sizeof(IMAGE_FILE_HEADER) + fheader-&gt;SizeOfOptionalHeader + fheader-&gt;NumberOfSections * sizeof(IMAGE_SECTION_HEADER)) &lt;= 80)</span><br><span class="line">    &#123;</span><br><span class="line">        wprintf(L&quot;空间不足以创建节表\n&quot;);</span><br><span class="line">        return FALSE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int index = fheader-&gt;NumberOfSections;</span><br><span class="line">    lstrcpyA((LPSTR)sheader[index].Name, &quot;new&quot;);</span><br><span class="line">    sheader[index].Misc.VirtualSize = new_size;</span><br><span class="line">    sheader[index].VirtualAddress = sheader[index - 1].VirtualAddress + ((sheader[index - 1].Misc.VirtualSize) / oheader-&gt;SectionAlignment + 1) * oheader-&gt;SectionAlignment;</span><br><span class="line">    sheader[index].PointerToRawData = sheader[index - 1].PointerToRawData + sheader[index - 1].SizeOfRawData;</span><br><span class="line">    sheader[index].SizeOfRawData = new_size;</span><br><span class="line">    sheader[index].Characteristics = 0xE00000A0;  // 可读可写可执行</span><br><span class="line">    sheader[index].PointerToRelocations = sheader[index - 1].PointerToRelocations;</span><br><span class="line">    sheader[index].PointerToLinenumbers = sheader[index - 1].PointerToLinenumbers;</span><br><span class="line">    sheader[index].NumberOfRelocations = sheader[index - 1].NumberOfRelocations;</span><br><span class="line">    sheader[index].NumberOfLinenumbers = sheader[index - 1].NumberOfLinenumbers;</span><br><span class="line">    fheader-&gt;NumberOfSections++;</span><br><span class="line">    oheader-&gt;SizeOfImage += (new_size / oheader-&gt;SectionAlignment + 1) * oheader-&gt;SectionAlignment;</span><br><span class="line"></span><br><span class="line">    memcpy(PackBuffer + sheader[index].PointerToRawData, DestBuffer, new_size);</span><br><span class="line">    return TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="壳程序"><a href="#壳程序" class="headerlink" title="壳程序"></a>壳程序</h1><p>流程：</p>
+<ol>
+<li>获取最后一个节的内容，解密还原为原PE文件。</li>
+<li>将PE文件拉伸</li>
+<li>使用壳程序创建挂起的新进程</li>
+<li>将拉伸后的原PE文件写入新进程空间</li>
+<li>如果没写入原PE文件的imagebase，需要重定位</li>
+<li>修改新进程主线程的imagebase和oep</li>
+<li>恢复主线程</li>
+</ol>
+<p>注：创建新线程后如果卸载主线程，那么会导致程序运行失败，所以这里不卸载主线程。同时，不知道什么原因，这个壳只能加密Win32应用程序，不能加密终端程序。</p>
+<h2 id="关键函数："><a href="#关键函数：" class="headerlink" title="关键函数："></a>关键函数：</h2><h3 id="VirtualAllocEx函数："><a href="#VirtualAllocEx函数：" class="headerlink" title="VirtualAllocEx函数："></a><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/memoryapi/nf-memoryapi-virtualallocex">VirtualAllocEx</a>函数：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">LPVOID VirtualAllocEx(</span><br><span class="line">  HANDLE hProcess,        // 目标进程句柄</span><br><span class="line">  LPVOID lpAddress,       // 期望起始地址（通常为NULL，代表随机指定）</span><br><span class="line">  SIZE_T dwSize,          // 分配区域大小</span><br><span class="line">  DWORD  flAllocationType,// 分配类型。通常为MEM_COMMIT，分配实际物理内存</span><br><span class="line">  DWORD  flProtect        // 内存保护标志。设为PAGE_READWRITE（需写入数据）</span><br><span class="line">);  // 返回值LPVOID代表指向任意类型的指针</span><br></pre></td></tr></table></figure>
+
+<p>作用：在指定进程内分配空间</p>
+<h3 id="VirtualFreeEx函数："><a href="#VirtualFreeEx函数：" class="headerlink" title="VirtualFreeEx函数："></a><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/memoryapi/nf-memoryapi-virtualfreeex">VirtualFreeEx</a>函数：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BOOL VirtualFreeEx(</span><br><span class="line">  HANDLE hProcess,  // 目标进程句柄</span><br><span class="line">  LPVOID lpAddress,  // 要释放的内存起始地址</span><br><span class="line">  SIZE_T dwSize,     // 要释放的内存大小</span><br><span class="line">  DWORD  dwFreeType  // 释放类型（关键参数）。MEM_RELEASE为完全释放</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：释放目标进程的指定空间</p>
+<h3 id="WriteProcessMemor函数"><a href="#WriteProcessMemor函数" class="headerlink" title="WriteProcessMemor函数"></a><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory">WriteProcessMemor</a>函数</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">BOOL WriteProcessMemory(</span><br><span class="line">  [in]  HANDLE  hProcess,		</span><br><span class="line">  [in]  LPVOID  lpBaseAddress,				// 需要写入的地址</span><br><span class="line">  [in]  LPCVOID lpBuffer,					// 源字节缓冲区</span><br><span class="line">  [in]  SIZE_T  nSize,						// 要写入字节数</span><br><span class="line">  [out] SIZE_T  *lpNumberOfBytesWritten		// 实际写入字节数</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>作用：像目标进程写入字节</p>
+<h3 id="pNtUnmapViewOfSection函数："><a href="#pNtUnmapViewOfSection函数：" class="headerlink" title="pNtUnmapViewOfSection函数："></a>pNtUnmapViewOfSection函数：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NTSTATUS NtUnmapViewOfSection(</span><br><span class="line">    HANDLE ProcessHandle,   // 目标进程的句柄。</span><br><span class="line">    PVOID  BaseAddress      // 要解除映射的内存区域的起始地址。</span><br><span class="line">);	// 返回值： 返回码。STATUS_SUCCESS (0) 表示成功。</span><br></pre></td></tr></table></figure>
+
+<p>作用：移除目标进程空间中的指定模块。这里用来移去主模块。</p>
+<p>注：此函数在ntdll.dll里面，需要显示式导入dll，并获取函数地址</p>
+<h2 id="代码："><a href="#代码：" class="headerlink" title="代码："></a>代码：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line">// 壳程序，需要完成源程序的解密然后创建新进程，将解密后的源程序拉伸到新进程空间里，然后继续执行</span><br><span class="line"></span><br><span class="line">#include&quot;shell.h&quot;</span><br><span class="line"></span><br><span class="line">typedef NTSTATUS(NTAPI* PNtUnmapViewOfSection)(HANDLE ProcessHandle, PVOID BaseAddress);</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    HMODULE hModule = GetModuleHandle(NULL);  // 获得创建进程用的模块的句柄，即主模块。</span><br><span class="line">    BYTE* pbuffer = (BYTE*)hModule;</span><br><span class="line">    IMAGE_DOS_HEADER* dos = (IMAGE_DOS_HEADER*)pbuffer;</span><br><span class="line">    pbuffer += dos-&gt;e_lfanew + 4;</span><br><span class="line">    IMAGE_FILE_HEADER* fheader = (IMAGE_FILE_HEADER*)pbuffer;</span><br><span class="line">    pbuffer += sizeof(IMAGE_FILE_HEADER);</span><br><span class="line">    IMAGE_OPTIONAL_HEADER32* oheader = (IMAGE_OPTIONAL_HEADER32*)pbuffer;</span><br><span class="line">    pbuffer += sizeof(IMAGE_OPTIONAL_HEADER32);</span><br><span class="line">    IMAGE_SECTION_HEADER* sheader = (IMAGE_SECTION_HEADER*)pbuffer;</span><br><span class="line">    IMAGE_SECTION_HEADER* LastSection = sheader + fheader-&gt;NumberOfSections - 1;</span><br><span class="line"></span><br><span class="line">    BYTE* decode = (BYTE*)malloc(LastSection-&gt;Misc.VirtualSize);</span><br><span class="line">    memset(decode, 0, LastSection-&gt;Misc.VirtualSize);</span><br><span class="line"></span><br><span class="line">    // 解密</span><br><span class="line">    for (int i = 0; i &lt; LastSection-&gt;Misc.VirtualSize; i++) &#123;</span><br><span class="line">        decode[i] = *((BYTE*)hModule + LastSection-&gt;VirtualAddress + i) ^ 0x3;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    pbuffer = decode;</span><br><span class="line">    dos = (IMAGE_DOS_HEADER*)pbuffer;</span><br><span class="line">    pbuffer += dos-&gt;e_lfanew + 4;</span><br><span class="line">    fheader = (IMAGE_FILE_HEADER*)pbuffer;</span><br><span class="line">    pbuffer += sizeof(IMAGE_FILE_HEADER);</span><br><span class="line">    oheader = (IMAGE_OPTIONAL_HEADER32*)pbuffer;</span><br><span class="line">    pbuffer += sizeof(IMAGE_OPTIONAL_HEADER32);</span><br><span class="line">    sheader = (IMAGE_SECTION_HEADER*)pbuffer;</span><br><span class="line"></span><br><span class="line">    BYTE* buffer = (BYTE*)malloc(oheader-&gt;SizeOfImage);</span><br><span class="line">    memset(buffer, 0, oheader-&gt;SizeOfImage);</span><br><span class="line">    memcpy(buffer, decode, oheader-&gt;SizeOfHeaders);     // 复制文件头</span><br><span class="line">    for (int i = 0; i &lt; fheader-&gt;NumberOfSections; i++) &#123;</span><br><span class="line">        memcpy(buffer + sheader[i].VirtualAddress, decode + sheader[i].PointerToRawData, sheader[i].Misc.VirtualSize); // 复制节</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    // 创建新进程</span><br><span class="line">    STARTUPINFO si = &#123; sizeof(si) &#125;;</span><br><span class="line">    PROCESS_INFORMATION pi = &#123; 0 &#125;;</span><br><span class="line">    TCHAR szPath[MAX_PATH];</span><br><span class="line">    GetModuleFileName(NULL, szPath, MAX_PATH);      // 获取当前进程路径</span><br><span class="line"></span><br><span class="line">    BOOL success = CreateProcess(</span><br><span class="line">        szPath,           // 应用程序名</span><br><span class="line">        NULL,    // 命令行（包含引号的完整路径）</span><br><span class="line">        NULL,           // 进程句柄不可继承</span><br><span class="line">        NULL,           // 线程句柄不可继承</span><br><span class="line">        FALSE,          // 不继承句柄</span><br><span class="line">        CREATE_SUSPENDED,         // 挂起主线程</span><br><span class="line">        NULL,           // 使用父进程环境</span><br><span class="line">        NULL,           // 使用父进程当前目录</span><br><span class="line">        &amp;si,            // 启动信息</span><br><span class="line">        &amp;pi             // 进程信息</span><br><span class="line">    );</span><br><span class="line">    if (!success) &#123;</span><br><span class="line">        free(decode);</span><br><span class="line">        free(buffer);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    HANDLE hProcess = pi.hProcess;</span><br><span class="line">    HANDLE hThread = pi.hThread;</span><br><span class="line">    CONTEXT contx;</span><br><span class="line">    contx.ContextFlags = CONTEXT_FULL;</span><br><span class="line">    GetThreadContext(hThread, &amp;contx);</span><br><span class="line">    //获取ImageBase</span><br><span class="line">    DWORD pebAddr = contx.Ebx;   // x86 下 PEB 地址在 ebx</span><br><span class="line">    DWORD imageBase = 0;</span><br><span class="line">    ReadProcessMemory(hProcess, (LPCVOID)(pebAddr + 8), &amp;imageBase, 4, NULL);</span><br><span class="line"></span><br><span class="line">    // 分配空间</span><br><span class="line">    LPVOID pAlloc = VirtualAllocEx(hProcess, (LPVOID)oheader-&gt;ImageBase, oheader-&gt;SizeOfImage, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);</span><br><span class="line">    if (!pAlloc) &#123;</span><br><span class="line">        // 如果分配失败，尝试在其他位置分配</span><br><span class="line">        if (oheader-&gt;DataDirectory[5].VirtualAddress == 0) &#123;  // 没有重定位表</span><br><span class="line">            free(decode);</span><br><span class="line">            free(buffer);</span><br><span class="line">            return -1;          </span><br><span class="line">        &#125;</span><br><span class="line">        pAlloc = VirtualAllocEx(hProcess, NULL, oheader-&gt;SizeOfImage, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);</span><br><span class="line">        BYTE* location = buffer + oheader-&gt;DataDirectory[5].VirtualAddress;</span><br><span class="line">        Relocation(location ,buffer , oheader-&gt;ImageBase,(DWORD)pAlloc);</span><br><span class="line">        oheader-&gt;ImageBase = (DWORD)pAlloc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 写入PE头</span><br><span class="line">    if (!WriteProcessMemory(</span><br><span class="line">        hProcess,</span><br><span class="line">        pAlloc,</span><br><span class="line">        buffer,</span><br><span class="line">        oheader-&gt;SizeOfImage,</span><br><span class="line">        NULL</span><br><span class="line">    )) &#123;</span><br><span class="line">        printf(&quot;Write wrong!\n&quot;);</span><br><span class="line">        VirtualFreeEx(hProcess, pAlloc, 0, MEM_RELEASE);</span><br><span class="line">        return FALSE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    // 恢复上下文</span><br><span class="line">    WriteProcessMemory(hProcess, (LPVOID)(contx.Ebx + 8), &amp;pAlloc,4,NULL);</span><br><span class="line">    contx.Eax = (DWORD)pAlloc + oheader-&gt;AddressOfEntryPoint;</span><br><span class="line">    if (!SetThreadContext(hThread, &amp;contx)) &#123;</span><br><span class="line">        return FALSE;</span><br><span class="line">    &#125;</span><br><span class="line">    if (ResumeThread(hThread) == (DWORD)-1) &#123;</span><br><span class="line">        return FALSE;</span><br><span class="line">    &#125;</span><br><span class="line">    free(decode);</span><br><span class="line">    free(buffer);</span><br><span class="line">    CloseHandle(hProcess);</span><br><span class="line">    CloseHandle(hThread);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Win32/" rel="tag"><i class="fa fa-tag"></i> Win32</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/18338/" rel="prev" title="进程">
+      <i class="fa fa-chevron-left"></i> 进程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/55909/" rel="next" title="窗口控制">
+      窗口控制 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A0%E5%A3%B3%E7%A8%8B%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">加壳程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A3%B3%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.</span> <span class="nav-text">壳程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">关键函数：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#VirtualAllocEx%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="nav-number">2.1.1.</span> <span class="nav-text">VirtualAllocEx函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VirtualFreeEx%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="nav-number">2.1.2.</span> <span class="nav-text">VirtualFreeEx函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WriteProcessMemor%E5%87%BD%E6%95%B0"><span class="nav-number">2.1.3.</span> <span class="nav-text">WriteProcessMemor函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pNtUnmapViewOfSection%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="nav-number">2.1.4.</span> <span class="nav-text">pNtUnmapViewOfSection函数：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">代码：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">位卑未敢忘忧国，事定犹须待阖棺</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
