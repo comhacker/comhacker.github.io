@@ -262,7 +262,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-10-13 11:06:16" itemprop="dateModified" datetime="2025-10-13T11:06:16+08:00">2025-10-13</time>
+                <time title="修改时间：2025-11-16 17:52:17" itemprop="dateModified" datetime="2025-11-16T17:52:17+08:00">2025-11-16</time>
               </span>
 
           
@@ -280,13 +280,13 @@
 
 <h1 id="PLUS"><a href="#PLUS" class="headerlink" title="PLUS"></a>PLUS</h1><p>有两个附件，一个pyd文件（python的动态链接库），一个py文件（相当大）。这个pyd文件只有在python3.9环境下才能使用！！</p>
 <p>先在终端查看pyd文件的信息：</p>
-<img src="/posts/undefined/image-20251012010727190.png" class="" title="image-20251012010727190">
+<img src="/posts/53938/image-20251012010727190.png" class="" title="image-20251012010727190">
 
 <p>可以看到：它重构了exec、exit、int函数，并新定义了一系列新函数，例如b、c、e、i、m、p。打开plus.py文件：</p>
-<img src="/posts/undefined/image-20251012011012915.png" class="" title="image-20251012011012915">
+<img src="/posts/53938/image-20251012011012915.png" class="" title="image-20251012011012915">
 
 <p>是一行极其长的代码。这样不好看，让AI重构一下：</p>
-<img src="/posts/undefined/image-20251012011102048.png" class="" title="image-20251012011102048">
+<img src="/posts/53938/image-20251012011102048.png" class="" title="image-20251012011102048">
 
 <p>代码非常长，但是大多都是固定的结构。里面的int函数用法为int(一个数)，我们在终端尝试：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; init.int(20)</span><br><span class="line">&#x27;20&#x27;</span><br></pre></td></tr></table></figure>
@@ -309,7 +309,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from init import *</span><br><span class="line">import functools</span><br><span class="line">import inspect</span><br><span class="line"></span><br><span class="line">def hook_function(func):</span><br><span class="line">    @functools.wraps(func)</span><br><span class="line">    def wrapper(*args, **kwargs):</span><br><span class="line">        # 将参数打印为可读形式</span><br><span class="line">        arg_info = []</span><br><span class="line">        for i, a in enumerate(args):</span><br><span class="line">            arg_info.append(f&quot;arg&#123;i&#125;=&#123;a!r&#125;&quot;)</span><br><span class="line">        for k, v in kwargs.items():</span><br><span class="line">            arg_info.append(f&quot;&#123;k&#125;=&#123;v!r&#125;&quot;)</span><br><span class="line">        print(f&quot;[HOOK] Calling &#123;func.__name__&#125; with: &quot; + &quot;, &quot;.join(arg_info))</span><br><span class="line">        # 调用原函数并返回结果</span><br><span class="line">        result = func(*args, **kwargs)</span><br><span class="line">        # print(f&quot;[HOOK] &#123;func.__name__&#125; returned: &#123;result!r&#125;&quot;)</span><br><span class="line">        return result</span><br><span class="line">    return wrapper</span><br><span class="line"></span><br><span class="line"># 只替换我们关心的函数</span><br><span class="line">m = hook_function(m)</span><br><span class="line">p = hook_function(p)</span><br><span class="line">i = hook_function(i)</span><br></pre></td></tr></table></figure>
 
 <p>这段代码放在plus.py文件的最前面，让代码开始执行时就进行hook。运行结果：</p>
-<img src="/posts/undefined/image-20251013102637418.png" class="" title="image-20251013102637418">
+<img src="/posts/53938/image-20251013102637418.png" class="" title="image-20251013102637418">
 
 <p>带入回去就能拼凑出整体逻辑：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">m(&#x27;mem_map&#x27;, 16777216, 2097152)			// 申请存放硬编码的空间</span><br><span class="line">m(&#x27;mem_map&#x27;, 18874368, 65536)			// 申请存放输入的空间</span><br><span class="line">m(&#x27;mem_write&#x27;, 16777216, b&#x27;\xf3\x0f\x1e\xfaUH\x89\xe5H\x89&#125;\xe8\x89u\xe4\x89\xd0\x88E\xe0\xc7E\xfc\x00\x00\x00\x00\xebL\x8bU\xfcH\x8bE\xe8H\x01\xd0\x0f\xb6\x00\x8d\x0c\xc5\x00\x00\x00\x00\x8bU\xfcH\x8bE\xe8H\x01\xd0\x0f\xb6\x002E\xe0\x8d4\x01\x8bU\xfcH\x8bE\xe8H\x01\xd0\x0f\xb6\x00\xc1\xe0\x05\x89\xc1\x8bU\xfcH\x8bE\xe8H\x01\xd0\x8d\x14\x0e\x88\x10\x83E\xfc\x01\x8bE\xfc;E\xe4r\xac\x90\x90]&#x27;)				// 写入硬编码</span><br><span class="line">m(&#x27;mem_write&#x27;, 18878464,i([+]input your flag:))				// 将输入写入18878464地址处</span><br><span class="line">m(&#x27;reg_write&#x27;, 39, 18878464)							// 参数写入寄存器。参数1：输入的字符串的地址</span><br><span class="line">m(&#x27;reg_write&#x27;, 43, 44)									// 参数2：长度</span><br><span class="line">m(&#x27;reg_write&#x27;, 40, 7)									// 参数3：密钥</span><br><span class="line">m(&#x27;emu_start&#x27;, 16777216, 16777332)						// 开始执行硬编码</span><br><span class="line">m(&#x27;mem_read&#x27;, 18878464, 44)								// 读出经过硬编码加密后的数据</span><br><span class="line">if 数据再经过base64加密==&quot;425MvHMxtLqZ3ty3RZkw3mwwulNRjkswbpkDMK+3CDCOtbe6kzAqPyrcEAI=&quot;:</span><br><span class="line">	p(&quot;good&quot;)</span><br><span class="line">else:</span><br><span class="line">	p(&quot;no way&quot;)</span><br></pre></td></tr></table></figure>
@@ -318,37 +318,37 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">b = b&#x27;\xf3\x0f\x1e\xfaUH\x89\xe5H\x89&#125;\xe8\x89u\xe4\x89\xd0\x88E\xe0\xc7E\xfc\x00\x00\x00\x00\xebL\x8bU\xfcH\x8bE\xe8H\x01\xd0\x0f\xb6\x00\x8d\x0c\xc5\x00\x00\x00\x00\x8bU\xfcH\x8bE\xe8H\x01\xd0\x0f\xb6\x002E\xe0\x8d4\x01\x8bU\xfcH\x8bE\xe8H\x01\xd0\x0f\xb6\x00\xc1\xe0\x05\x89\xc1\x8bU\xfcH\x8bE\xe8H\x01\xd0\x8d\x14\x0e\x88\x10\x83E\xfc\x01\x8bE\xfc;E\xe4r\xac\x90\x90]&#x27;</span><br><span class="line">with open(&quot;myrb.bin&quot;,&#x27;+bw&#x27;) as f:</span><br><span class="line">    f.write(b)</span><br></pre></td></tr></table></figure>
 
 <p>让IDA反编译生成的文件：</p>
-<img src="/posts/undefined/image-20251013110353004.png" class="" title="image-20251013110353004">
+<img src="/posts/53938/image-20251013110353004.png" class="" title="image-20251013110353004">
 
 <p>全部加密逻辑都已经知道了，接下来写脚本解密:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">import base64</span><br><span class="line"></span><br><span class="line">def decrypt_buffer(buffer: bytearray, key: int) -&gt; None:</span><br><span class="line">    key = key &amp; 0xFF  # 确保 key 是 8 位</span><br><span class="line">    for i in range(44):</span><br><span class="line">        y = buffer[i]  # 加密后的字节</span><br><span class="line">        # 枚举所有可能的 x (0-255)</span><br><span class="line">        for x in range(32,126):</span><br><span class="line">            xor_val = x ^ key</span><br><span class="line">            shift_val = x * 32 + x *8</span><br><span class="line">            if ((xor_val + shift_val) &amp; 0xFF) == y:</span><br><span class="line">                buffer[i] = x</span><br><span class="line">                break</span><br><span class="line"></span><br><span class="line"># 密文</span><br><span class="line">enc_b64 = &quot;425MvHMxtLqZ3ty3RZkw3mwwulNRjkswbpkDMK+3CDCOtbe6kzAqPyrcEAI=&quot;</span><br><span class="line">enc = base64.b64decode(enc_b64)</span><br><span class="line"></span><br><span class="line">key = 0x7</span><br><span class="line">b = bytearray(enc)</span><br><span class="line">dec = decrypt_buffer(b, key)</span><br><span class="line">print(b)</span><br></pre></td></tr></table></figure>
 
 <p>flag: DASCTF{un1c0rn_1s_u4fal_And_h0w_ab0ut_exec?}</p>
-<h1 id="GD1"><a href="#GD1" class="headerlink" title="GD1"></a>GD1</h1><img src="/posts/undefined/image-20251012163142156.png" class="" title="image-20251012163142156">
+<h1 id="GD1"><a href="#GD1" class="headerlink" title="GD1"></a>GD1</h1><img src="/posts/53938/image-20251012163142156.png" class="" title="image-20251012163142156">
 
 <p>这是一个躲避爬虫的小游戏，如果被爬虫撞到，则游戏结束。正上方显示游戏进行时间，可以猜测时间到了某个值时flag会自动出现。</p>
 <p>使用CE查找时间的地址（由于时间一直在变化，且无法暂停，故建议开启变速精灵，然后每一次数值变化筛选数值增加了1），筛选2~3次就能找到：</p>
-<img src="/posts/undefined/image-20251012163636352.png" class="" title="image-20251012163636352">
+<img src="/posts/53938/image-20251012163636352.png" class="" title="image-20251012163636352">
 
 <p>既然时间是判断是否成功的条件，那么就一定会有一个线程在不断的将时间与某个值比较，这样做就一定会访问时间所在的地址。所以，[右键-&gt;找出是什么访问了这个地址]</p>
-<img src="/posts/undefined/image-20251012163907884.png" class="" title="image-20251012163907884">
+<img src="/posts/53938/image-20251012163907884.png" class="" title="image-20251012163907884">
 
-<img src="/posts/undefined/image-20251012164009337.png" class="" title="image-20251012164009337">
+<img src="/posts/53938/image-20251012164009337.png" class="" title="image-20251012164009337">
 
 <p>最后一个结果是一个比较，就是我们要找的。在汇编窗口打开：</p>
-<img src="/posts/undefined/image-20251012164243803.png" class="" title="image-20251012164243803">
+<img src="/posts/53938/image-20251012164243803.png" class="" title="image-20251012164243803">
 
 <p>这里先判断时间是否等于rax，如果相等，则将[r8+08]设置为1，否则设置为0。有两种实现方法：</p>
 <p>法一：修改时间</p>
 <p>当时间等于rax的值（下断点可以看到是0x1EE2，即十进制7906）时，flag就会弹出来。注意，这个判断只会在时间自动增加时触发，所以如果将时间改为7906，那么只有当再过去1s，也就时间变为7907时才会进行判断，此时判断将不会通过！！因此，时间必须改为小于7906的值。这里改为7905，然后等1s，当时间自动增加到7906时，flag就会弹出来：</p>
-<img src="/posts/undefined/image-20251012165009924.png" class="" title="image-20251012165009924">
+<img src="/posts/53938/image-20251012165009924.png" class="" title="image-20251012165009924">
 
 <p>法二：修改标志寄存器</p>
 <p>在比较这里设下断点，断下后单步步过</p>
-<img src="/posts/undefined/image-20251012165145537.png" class="" title="image-20251012165145537">
+<img src="/posts/53938/image-20251012165145537.png" class="" title="image-20251012165145537">
 
 <p>此时，由于时间不等于7906，故zf寄存器值为0，我们改为1，然后去掉断点继续运行，flag就会出现：</p>
-<img src="/posts/undefined/image-20251012165422077.png" class="" title="image-20251012165422077">
+<img src="/posts/53938/image-20251012165422077.png" class="" title="image-20251012165422077">
 
       
     </div>
@@ -399,7 +399,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-27 21:46:09" itemprop="dateModified" datetime="2025-09-27T21:46:09+08:00">2025-09-27</time>
+                <time title="修改时间：2025-11-16 17:52:17" itemprop="dateModified" datetime="2025-11-16T17:52:17+08:00">2025-11-16</time>
               </span>
 
           
@@ -439,10 +439,10 @@
 <p>下面是部分功能实现思路。</p>
 <h1 id="子弹穿透："><a href="#子弹穿透：" class="headerlink" title="子弹穿透："></a>子弹穿透：</h1><h2 id="分析："><a href="#分析：" class="headerlink" title="分析："></a>分析：</h2><p>子弹有两种状态：<br>0：未打中僵尸时<br>1：打中僵尸后<br>当子弹打到僵尸身体上时，子弹状态切换为1，然后子弹就会消失。<br>那么，子弹穿透的思路应该是：阻止子弹状态切换为1，那么子弹就不会消失</p>
 <p>先使用CE查找子弹状态的地址：种植一棵豌豆射手和一个僵尸，当子弹在空中时，搜索0，打中僵尸时，搜索1。反复多次确定结果。</p>
-<img src="/posts/undefined/image-20250926184810315.png" class="" title="image-20250926184810315">
+<img src="/posts/19579/image-20250926184810315.png" class="" title="image-20250926184810315">
 
 <p>观察谁修改了这个地址</p>
-<img src="/posts/undefined/image-20250926185158931.png" class="" title="image-20250926185158931">
+<img src="/posts/19579/image-20250926185158931.png" class="" title="image-20250926185158931">
 
 <p>第三个结果，将1赋值到这个地址很明显就是要找的指令。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PlantsVsZombies.exe+6EB2B - C6 46 50 01           - mov byte ptr [esi+50],01</span><br></pre></td></tr></table></figure>
@@ -454,14 +454,14 @@
 <h2 id="实现："><a href="#实现：" class="headerlink" title="实现："></a>实现：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void BulletPenetrated() &#123;		// 子弹穿透</span><br><span class="line">	BYTE PatchByte[4] = &#123; 0xC6 ,0x46 ,0x50 ,0x00 &#125;;</span><br><span class="line">	PatchMemory(0x6EB2B, PatchByte, 4);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="无限刷怪："><a href="#无限刷怪：" class="headerlink" title="无限刷怪："></a>无限刷怪：</h1><h2 id="分析：-1"><a href="#分析：-1" class="headerlink" title="分析："></a>分析：</h2><p>游戏右下角有一个关卡进程显示</p>
-<img src="/posts/undefined/image-20250926191108211.png" class="" title="image-20250926191108211">
+<img src="/posts/19579/image-20250926191108211.png" class="" title="image-20250926191108211">
 
 <p>僵尸实际上是分波次来的，当前一个波次的僵尸被消灭后，下一个波次的僵尸会来。在内存中，一定有一个地方存储波次。</p>
 <p>接下来使用CE搜索内存，游戏刚开始时波次为0；然后第一批僵尸（一般是一个）出现，波次为1；消灭第一波僵尸，等第2波出现，波次变为2、、、重复直到锁定波次地址。最后会发现两个地址，任意选一个分析即可。</p>
-<img src="/posts/undefined/image-20250926191900689.png" class="" title="image-20250926191900689">
+<img src="/posts/19579/image-20250926191900689.png" class="" title="image-20250926191900689">
 
 <p>打开谁修改了这个地址，然后消灭这个波次，等下一个波次出现，就会找到一个结果。跟踪到反汇编：</p>
-<img src="/posts/undefined/image-20250926192207641.png" class="" title="image-20250926192207641">
+<img src="/posts/19579/image-20250926192207641.png" class="" title="image-20250926192207641">
 
 <p>关键指令：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PlantsVsZombies.exe+130B4 - 83 C6 01              - add esi,01</span><br></pre></td></tr></table></figure>
@@ -477,12 +477,12 @@
 
 <p>这个指令所在的函数就是爆炸击杀call。</p>
 <p>接下来，在这里下一个断点，我们需要找到调用它的那个函数。重新种植一个僵尸，然后炸死，进程会断在断点处，我们查看堆栈：</p>
-<img src="/posts/undefined/image-20250926211621014.png" class="" title="image-20250926211621014">
+<img src="/posts/19579/image-20250926211621014.png" class="" title="image-20250926211621014">
 
 
 
 <p>直接进入第一个返回地址</p>
-<img src="/posts/undefined/image-20250926211731626.png" class="" title="image-20250926211731626">
+<img src="/posts/19579/image-20250926211731626.png" class="" title="image-20250926211731626">
 
 <p>我们需要的就是让所有僵尸都执行call PlantsVsZombies.exe+132B70这一条指令。在PlantsVsZombies.exe+1D905处设下断点，这一次种下一个僵尸，但是故意让樱桃炸弹炸不到僵尸，看这个地方会不会跳转。结果发现，这个jl会跳过爆炸秒杀call，所以，这个指令需要nop掉。</p>
 <p>与这个方法相同，我们需要检验PlantsVsZombies.exe+1D91F和PlantsVsZombies.exe+1D925会不会跳转，结果发现，前者会，后者不会，所以，前者需要nop。</p>
@@ -521,21 +521,21 @@
 <p>实操可发现：普通僵尸初始血量为270，&lt;90时死亡。路障初始值为370，铁桶初始值为1100，橄榄球帽初始值为1400，为0时破损。</p>
 <p>第一步，先找僵尸血量。这个很好实现，只需要种下一个僵尸和一个植物，植物攻击僵尸，僵尸血量减少，一直搜减少的值。当僵尸死亡后，种下一个新僵尸，然后筛选与首次相比不变的值，很快就能找到结果。</p>
 <p>第二步，查看谁访问了这个地址。</p>
-<img src="/posts/undefined/image-20250926225630591.png" class="" title="image-20250926225630591">
+<img src="/posts/19579/image-20250926225630591.png" class="" title="image-20250926225630591">
 
 <p>我们需要找的是cmp之类的比较指令，目的是判断僵尸血量是否低于阈值。这里明显最后两个结果看起来都像。我们可以两个都试试：</p>
 <p>先试第一个：</p>
-<img src="/posts/undefined/image-20250926230226297.png" class="" title="image-20250926230226297">
+<img src="/posts/19579/image-20250926230226297.png" class="" title="image-20250926230226297">
 
 <p>先在PlantsVsZombies.exe+12A527处设下断点，观察情况。</p>
 <p>断下后发现ecx等于0x5A（十进制90），然后后面的jnl发生了跳转。试试把jnl这一条指令给nop掉，不让他跳转，结果发现僵尸一击必杀。那么，这里就是我们要找的指令。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PlantsVsZombies.exe+12A527 - 39 8B C8000000        - cmp [ebx+000000C8],ecx		// 判断是否小于90</span><br><span class="line">PlantsVsZombies.exe+12A52D - 7D 47                 - jnl PlantsVsZombies.exe+12A576		//  不小于就跳转不杀</span><br><span class="line">PlantsVsZombies.exe+12A52F - 57                    - push edi							// &lt;90时直接秒杀</span><br><span class="line">PlantsVsZombies.exe+12A530 - 53                    - push ebx</span><br><span class="line">PlantsVsZombies.exe+12A531 - E8 FAF4FFFF           - call PlantsVsZombies.exe+129A30	   // 秒杀call</span><br></pre></td></tr></table></figure>
 
 <p>接下来找防具血量。需要种下一个有防具的僵尸，比如路障僵尸，然后用找僵尸血量一样的方法找防具血量。找到后同样看谁访问了这个地址，找到了3个结果：</p>
-<img src="/posts/undefined/image-20250926231100205.png" class="" title="image-20250926231100205">
+<img src="/posts/19579/image-20250926231100205.png" class="" title="image-20250926231100205">
 
 <p>本来想找的是比较，但是结果全是mov，那也不能排除先mov再比较的情况。一个一个看，结果发现第三个的指令与前面血量判断的格式非常像：</p>
-<img src="/posts/undefined/image-20250926231334582.png" class="" title="image-20250926231334582">
+<img src="/posts/19579/image-20250926231334582.png" class="" title="image-20250926231334582">
 
 <p>可以先尝试这个。nop掉PlantsVsZombies.exe+131066 - 75 11 处，不让它跳转，发现防具一触即破。那么这里就是我们要找的：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PlantsVsZombies.exe+13105E - 8B 8D D0000000        - mov ecx,[ebp+000000D0]</span><br><span class="line">PlantsVsZombies.exe+131064 - 85 C9                 - test ecx,ecx					// 判断防具血量是否为0</span><br><span class="line">PlantsVsZombies.exe+131066 - 75 11                 - jne PlantsVsZombies.exe+131079		// 不为0跳转</span><br><span class="line">PlantsVsZombies.exe+131068 - 53                    - push ebx						</span><br><span class="line">PlantsVsZombies.exe+131069 - 8B C5                 - mov eax,ebp</span><br><span class="line">PlantsVsZombies.exe+13106B - E8 C0FDFFFF           - call PlantsVsZombies.exe+130E30		// 秒杀防具</span><br></pre></td></tr></table></figure>
@@ -545,12 +545,12 @@
 <h1 id="全屏秒杀"><a href="#全屏秒杀" class="headerlink" title="全屏秒杀"></a>全屏秒杀</h1><h2 id="分析：-4"><a href="#分析：-4" class="headerlink" title="分析："></a>分析：</h2><p>僵尸结构体里面有一个字段存储僵尸状态，当僵尸处于不同的状态时，他的外观也会不同。比如撑杆僵尸，拿着杆子、撑杆跳起、无杆子时是3个不同状态；铁桶僵尸，有铁桶和无铁桶也是不同状态。当僵尸死亡时，又是另一个状态。我们可以通过修改僵尸状态ID来让僵尸死亡。</p>
 <p>第一步，先找僵尸状态ID。先种下一个撑杆僵尸，然后搜索未知的初始值，筛选值小于200大于0，然后种下植物，当僵尸起跳时，搜索变化的值。僵尸没杆子后又搜索变化的值。然后把僵尸杀死，重新种一个撑杆僵尸，搜索未变的初始值（对比首次扫描）。重复操作直到找到唯一的值。可以发现，撑杆僵尸有杆时是11，起跳是12，无杆是13。当僵尸死亡后，其ID变为1。那么，是不是意味着如果ID为1，那么僵尸处于死亡状态呢？我们可以通过修改状态ID来试着看僵尸会变成什么样。结果发现，当状态改为1时，僵尸会直接消失；当状态改为3时，僵尸会立即死亡。那就意味着其实僵尸在死亡时的状态其实是3，只不过在死亡后状态立马变为1，然后消失，这个过程非常快，我们看不到。</p>
 <p>第二步，就是修改状态ID了。我们知道僵尸死亡时ID为3，那么，一定有一个线程一直在判断僵尸的状态是否为3，如果状态为3，那么调用杀死call来杀死僵尸。我们打开“谁访问了这个地址”，按理说，僵尸的状态哪怕没有改变，这个判断也会一直执行，所以，我们需要找的是一直访问的指令。我们发现了很多结果，一个一个找，直到找到判断状态是否为3的指令：</p>
-<img src="/posts/undefined/image-20250927203437091.png" class="" title="image-20250927203437091">
+<img src="/posts/19579/image-20250927203437091.png" class="" title="image-20250927203437091">
 
 <p>这里在PlantsVsZombies.exe+12AEF6 处判断状态是否为3，如果不为3，后面的jne就要跳走。如果把这个jne指令给nop掉，那么后续的杀死call就会强制执行，所有僵尸都会直接被秒杀。这是第一种方法。</p>
 <p>用的更多的方法不是这种，而是不断给僵尸状态赋值3，来使僵尸死亡。僵尸的坐标是一直被访问的，如果我们hook这个访问指令，在前面加上一个赋值3的操作，那么僵尸状态就会一直是3，等到僵尸进入前面的判断后，就会被call秒杀。</p>
 <p>我们先找到僵尸的坐标（坐标是单浮点，往左减小。我们前面找到了僵尸的状态ID，那么僵尸坐标一定在僵尸状态ID附近的地址，因为他们同属一个结构体，利用这个条件可以帮助快速找到目标），然后查看谁访问了这个地址，可以发现有一个指令一直访问僵尸位置：</p>
-<img src="/posts/undefined/image-20250927204913353.png" class="" title="image-20250927204913353">
+<img src="/posts/19579/image-20250927204913353.png" class="" title="image-20250927204913353">
 
 <p>我们对其进行hook：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">[ENABLE]</span><br><span class="line">//code from here to &#x27;[DISABLE]&#x27; will be used to enable the cheat</span><br><span class="line">alloc(newmem,2048)</span><br><span class="line">label(returnhere)</span><br><span class="line">label(originalcode)</span><br><span class="line">label(exit)</span><br><span class="line"></span><br><span class="line">newmem: //this is allocated memory, you have read,write,execute access</span><br><span class="line">//place your code here</span><br><span class="line"></span><br><span class="line">mov [ecx+28],03			// 修改僵尸状态</span><br><span class="line"></span><br><span class="line">originalcode:</span><br><span class="line">fld dword ptr [ecx+2C]</span><br><span class="line">push edi</span><br><span class="line">fisub [ecx+08]</span><br><span class="line"></span><br><span class="line">exit:</span><br><span class="line">jmp returnhere</span><br><span class="line"></span><br><span class="line">&quot;PlantsVsZombies.exe&quot;+12D9E1:</span><br><span class="line">jmp newmem</span><br><span class="line">nop 2</span><br><span class="line">returnhere:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">[DISABLE]</span><br><span class="line">//code from here till the end of the code will be used to disable the cheat</span><br><span class="line">dealloc(newmem)</span><br><span class="line">&quot;PlantsVsZombies.exe&quot;+12D9E1:</span><br><span class="line">fld dword ptr [ecx+2C]</span><br><span class="line">push edi</span><br><span class="line">fisub [ecx+08]</span><br><span class="line">//Alt: db D9 41 2C 57 DA 61 08</span><br></pre></td></tr></table></figure>
@@ -608,7 +608,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-28 17:05:29" itemprop="dateModified" datetime="2025-09-28T17:05:29+08:00">2025-09-28</time>
+                <time title="修改时间：2025-11-17 20:54:19" itemprop="dateModified" datetime="2025-11-17T20:54:19+08:00">2025-11-17</time>
               </span>
 
           
@@ -625,7 +625,7 @@
           <span id="more"></span>
 
 <h1 id="week2-babyre"><a href="#week2-babyre" class="headerlink" title="week2-babyre"></a>week2-babyre</h1><p><strong>考点：linux下的异常处理、PV操作</strong></p>
-<img src="/posts/undefined/image-20250921225044401.png" class="" title="image-20250921225044401">
+<img src="/posts/32678/image-20250921225044401.png" class="" title="image-20250921225044401">
 
 <p>主要流程：读取字符串-&gt;加密密钥-&gt;设置4个线程，按先后顺序对字符串进行加密-&gt;进行判断</p>
 <p>其中，用到的linux异常处理是sigsetjmp函数和signal函数。这两个函数是连着用的，sigsetjmp函数保存当前的执行情况，然后signal函数设置需要等待的异常消息（8代表算数异常，包括除数为0）和异常处理函数，当发生对应的事件时，signal函数会调用异常处理函数。当异常处理函数返回时，会恢复sigsetjmp函数之前保存的执行情况（在这里就是跳转回if判断语句这里）。</p>
@@ -633,23 +633,23 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">线程1：</span><br><span class="line">while(i&lt;32)&#123;</span><br><span class="line">	P(s1);</span><br><span class="line">	data[i]+=data[i+1]*key[(i+1)%6]</span><br><span class="line">	i++;</span><br><span class="line">	V(s2);</span><br><span class="line">&#125;</span><br><span class="line">V(s2)</span><br><span class="line"></span><br><span class="line">线程2：</span><br><span class="line">while(i&lt;32)&#123;</span><br><span class="line">	P(s2);</span><br><span class="line">	data[i]-=data[i+1]^key[(i+1)%6]</span><br><span class="line">	i++;</span><br><span class="line">	V(s3);</span><br><span class="line">&#125;</span><br><span class="line">V(s3)</span><br><span class="line"></span><br><span class="line">线程3：</span><br><span class="line">while(i&lt;32)&#123;</span><br><span class="line">	P(s3);</span><br><span class="line">	data[i]*=data[i+1]+key[(i+1)%6]</span><br><span class="line">	i++;</span><br><span class="line">	V(s4);</span><br><span class="line">&#125;</span><br><span class="line">V(s4)</span><br><span class="line"></span><br><span class="line">线程4：</span><br><span class="line">while(i&lt;32)&#123;</span><br><span class="line">	P(s4);</span><br><span class="line">	data[i]^=data[i+1]-key[(i+1)%6];</span><br><span class="line">	i++;</span><br><span class="line">	V(s1);</span><br><span class="line">&#125;</span><br><span class="line">V(s1)</span><br></pre></td></tr></table></figure>
 
 <p>可以看到，循环最后一次执行是i&#x3D;31时，这个时候，data[i+1]明显已经越界了，那么，我们需要看越界部分存储的是什么：</p>
-<img src="/posts/undefined/image-20250921230238881.png" class="" title="image-20250921230238881">
+<img src="/posts/32678/image-20250921230238881.png" class="" title="image-20250921230238881">
 
 <p>是这个全局变量n0xF9，交叉引用可以看到两个函数修改了它，一个是读取字符串的函数，对其进行初始化：</p>
-<img src="/posts/undefined/image-20250921230351031.png" class="" title="image-20250921230351031">
+<img src="/posts/32678/image-20250921230351031.png" class="" title="image-20250921230351031">
 
 <p>一个是异常处理函数，令其自增：</p>
-<img src="/posts/undefined/image-20250921230524236.png" class="" title="image-20250921230524236">
+<img src="/posts/32678/image-20250921230524236.png" class="" title="image-20250921230524236">
 
 <p>那么需要判断这个异常处理函数是否能执行。到main函数的汇编界面，也就是对密钥加密的部分：</p>
-
+<img src="/posts/32678/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-2025-09-21-230640.png" class="" title="屏幕截图 2025-09-21 230640">
 
 <p>当循环执行到第4次时，eax开始是3，然后减3，等于0。后面idiv的除数是0，就触发了算数异常，令全局变量n0xF9++，而且不再执行后续的密钥加密部分。因此密钥只有前3个字节被加密，而且全局变量n0xF9最后的值应该是0xFA。</p>
 <p>对密钥进行交叉引用：</p>
-<img src="/posts/undefined/image-20250921230954503.png" class="" title="image-20250921230954503">
+<img src="/posts/32678/image-20250921230954503.png" class="" title="image-20250921230954503">
 
 <p>可以定位到一个赋值函数，这个函数先于main函数执行，会修改密钥的值：</p>
-<img src="/posts/undefined/image-20250921231036534.png" class="" title="image-20250921231036534">
+<img src="/posts/32678/image-20250921231036534.png" class="" title="image-20250921231036534">
 
 <p>然后回到信号量这里，只有S1被赋予初值1，所以一定是线程函数1先执行，然后是2执行，然后是3执行，最后是4执行，然后又回到1执行、、、。因此，加密等同于：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void encrypt(DWORD data[],BYTE key[])&#123;</span><br><span class="line">	for(int i=0;i&lt;32;i+=4)&#123;</span><br><span class="line">		data[i]+=data[i+1]*key[(i+1)%6];</span><br><span class="line">		data[i+1]-=data[i+2]^key[(i+2)%6];</span><br><span class="line">		data[i+2]*=data[i+3]+key[(i+3)%6];</span><br><span class="line">		data[i+3]^=data[i+4]-key[(i+4)%6];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -658,10 +658,10 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">void decrypt(DWORD data[],BYTE key[])&#123;</span><br><span class="line">	for(int i=28;i&gt;=0;i-=4)&#123;</span><br><span class="line">		data[i+3]^=data[i+4]-key[(i+4)%6];</span><br><span class="line">		data[i+2]/=data[i+3]+key[(i+3)%6];</span><br><span class="line">		data[i+1]+=data[i+2]^key[(i+2)%6];</span><br><span class="line">		data[i]-=data[i+1]*key[(i+1)%6];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">	DWORD data[33]=&#123;0x2F14,0x4E,0x4FF3,0x6D,0x32D8,0x6D,0x6B4B,0xFFFFFF92,0x264F,0x5B,0x52FB,0xFFFFFF9C,</span><br><span class="line">					0x2B71,0x14,0x2A6F,0xFFFFFF95,0x28FA,0x1D,0x2989,0xFFFFFF9B,0x28B4,0x4E,0x4506,0xFFFFFFDA,</span><br><span class="line">					0x177B,0xFFFFFFFC,0x40CE,0x7D,0x29E3,0xF,0x1F11,0xFF,0xFA&#125;;		// 最后一个字节是全局变量n0xF9</span><br><span class="line">	BYTE key[6] = &#123;0x66,0x65,0x69,0x66,0x65,0x69&#125;;</span><br><span class="line">	for(int i=0;i&lt;3;i++)&#123;</span><br><span class="line">		key[i]^=0x11;</span><br><span class="line">	&#125;</span><br><span class="line">	decrypt(data,key);</span><br><span class="line">	for(int i=0;i&lt;32;i++)&#123;</span><br><span class="line">		printf(&quot;%c&quot;,data[i]);</span><br><span class="line">	&#125;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;			// hgame&#123;you_are_3o_c1ever2_3Olve!&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="week2-arithmetic"><a href="#week2-arithmetic" class="headerlink" title="week2-arithmetic"></a>week2-arithmetic</h1><p>先改回节区名，然后upx脱壳。使用IDA打开：</p>
-<img src="/posts/undefined/image-20250922121531477.png" class="" title="image-20250922121531477">
+<img src="/posts/32678/image-20250922121531477.png" class="" title="image-20250922121531477">
 
 <p>23行到32行的循环，先打开out文件，然后每次读取一个数。我们看看Out文件的内容：</p>
-<img src="/posts/undefined/image-20250922121721093.png" class="" title="image-20250922121721093">
+<img src="/posts/32678/image-20250922121721093.png" class="" title="image-20250922121721093">
 
 <p>可以看到，是一个三角状的数据。然后仔细分析循环：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">v5 = 1;</span><br><span class="line">v6 = 1;</span><br><span class="line">for ( i = fopen(&quot;out&quot;, &quot;rb&quot;); (unsigned int)sub_140001080(i, &quot;%d&quot;) != -1; v5 = v9 )</span><br><span class="line">&#123;</span><br><span class="line">  v8 = 1;</span><br><span class="line">  if ( v5 != v6 )</span><br><span class="line">    v8 = v6 + 1;</span><br><span class="line">  v9 = v5 + 1;</span><br><span class="line">  if ( v5 != v6 )</span><br><span class="line">    v9 = v5;</span><br><span class="line">  v6 = v8;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -675,20 +675,20 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for(v5==1;;v5++)&#123;</span><br><span class="line">	for(v6==1;v6&lt;v5;v6++)&#123;</span><br><span class="line">		、、、、</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这其实就构成了一个三角形。很奇怪的一点是，按反编译代码来看，读取到的数据好像并未进行任何操作，也未存储到哪个数组里面。而后续的代码用到的dword_1400048B0和dword_1400048B4并没有初始化，按常理来看，dword_1400048B0里面应该要存储之前读到的数据才对。</p>
-<img src="/posts/undefined/image-20250922122345489.png" class="" title="image-20250922122345489">
+<img src="/posts/32678/image-20250922122345489.png" class="" title="image-20250922122345489">
 
 <p>到这里，就可以猜测IDA反编译时，把读取数据的函数sub_140001080的参数给识别失败了。这里有两个方式证明：</p>
 <p><strong>方法1，看sub_140001080函数的具体实现，判断有几个参数传入：</strong></p>
-
+<img src="/posts/32678/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-2025-09-22-124329.png" class="" title="屏幕截图 2025-09-22 124329">
 
 <p>接下来看看_stdio_common_vfscanf函数的定义：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int __cdecl _stdio_common_vfscanf(</span><br><span class="line">    unsigned __int64 options,       // 内部选项标志</span><br><span class="line">    const char *format,             // 格式字符串</span><br><span class="line">    void *stream,                   // FILE* 流指针，对于 sscanf 可能为 NULL</span><br><span class="line">    _locale_t locale,               // 本地化信息，可能用于某些转换</span><br><span class="line">    va_list arg                     // 可变参数列表，指向要填充的变量地址</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 
 <p>可以看到，第5个参数就是需要填写的缓冲区，但是在sub_140001080函数里面，这个参数来源于va_start函数。<code>va_start</code> 是 C 语言标准库 <code>&lt;stdarg.h&gt;</code> 中定义的一个<strong>宏</strong>（macro），用于初始化一个 <code>va_list</code> 类型的变量，以便在变参函数中安全地访问可变数量的参数。之所以会这样，是因为IDA没找到这个变量的来历，于是写一个va_start来当作填充符号。IDA找不到，我们就自己找。接下来，查看汇编界面：</p>
-
+<img src="/posts/32678/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-2025-09-22-125025.png" class="" title="屏幕截图 2025-09-22 125025">
 
 <p>第5个参数是Arglist，来自rsi；而rsi来自[rsp+48h+arg_10]；而[rsp+48h+arg_10]则来自r8（因为在此之前，经过了3次压栈和一次sub-0x30，所以esp一共减少了0x48，所以这里要加上去）。r8是由上一个函数（main函数）传入的，回看main函数部分：</p>
-
+<img src="/posts/32678/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-2025-09-22-125732.png" class="" title="屏幕截图 2025-09-22 125732">
 
 <p>分析：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">.text:0000000140001140                               loc_140001140:                          ; CODE XREF: main+AF↓j</span><br><span class="line">.text:0000000140001140 3B F7                         cmp     esi, edi						// 根据是否相等修改ZF寄存器</span><br><span class="line">.text:0000000140001142 8D 47 01                      lea     eax, [rdi+1]					// eax = rdi+1</span><br><span class="line">.text:0000000140001145 8B D3                         mov     edx, ebx						// 先将edx寄存器回退为1</span><br><span class="line">.text:0000000140001147 4D 8D 87 B0 48 00 00          lea     r8, rva dword_1400048B0[r15]    ; r8来自数组dword_1400048B0</span><br><span class="line">.text:000000014000114E 0F 45 D0                      cmovnz  edx, eax						// 如果前面不相等，那么edx=eax赋值</span><br><span class="line">.text:0000000140001151 8D 46 01                      lea     eax, [rsi+1]					// eax = rsi+1</span><br><span class="line">.text:0000000140001154 0F 45 C6                      cmovnz  eax, esi						// 如果前面不相等，那么eax=esi赋值</span><br><span class="line">.text:0000000140001157 8B FA                         mov     edi, edx</span><br><span class="line">.text:0000000140001159 48 63 F0                      movsxd  rsi, eax						// 把eax重新填回esi</span><br><span class="line">.text:000000014000115C 48 63 C2                      movsxd  rax, edx						// rax = edx</span><br><span class="line">.text:000000014000115F 48 8D 15 12 11 00 00          lea     rdx, aD                         ; &quot;%d&quot;</span><br><span class="line">.text:0000000140001166 48 69 CE F4 01 00 00          imul    rcx, rsi, 500					// rcx = rsi*500</span><br><span class="line">.text:000000014000116D 48 03 C8                      add     rcx, rax						// RCX += RAX</span><br><span class="line">.text:0000000140001170 4D 8D 04 88                   lea     r8, [r8+rcx*4]					// r8 += rcx*4。乘4是因为int占4字节</span><br><span class="line">.text:0000000140001174 48 8B CD                      mov     rcx, rbp                        ; Stream</span><br><span class="line">.text:0000000140001177 E8 04 FF FF FF                call    sub_140001080</span><br><span class="line">.text:0000000140001177</span><br><span class="line">.text:000000014000117C 83 F8 FF                      cmp     eax, 0FFFFFFFFh				// 判断函数调用的结果</span><br><span class="line">.text:000000014000117F 75 BF                         jnz     short loc_140001140</span><br></pre></td></tr></table></figure>
@@ -699,24 +699,24 @@
 <li>sub_140001080少了一个参数，它肯定把dword_1400048B0数组传入了。</li>
 </ul>
 <p>那么，接下来就要去IDA里面修正了，先修正数组：</p>
-<img src="/posts/undefined/image-20250922132501406.png" class="" title="image-20250922132501406">
+<img src="/posts/32678/image-20250922132501406.png" class="" title="image-20250922132501406">
 
 <p>[右键-&gt;Convert to array]，数组大小不确定，就先填个500</p>
-<img src="/posts/undefined/image-20250922132543392.png" class="" title="image-20250922132543392">
+<img src="/posts/32678/image-20250922132543392.png" class="" title="image-20250922132543392">
 
 <p>然后修复函数：</p>
-<img src="/posts/undefined/image-20250922132819840.png" class="" title="image-20250922132819840">
+<img src="/posts/32678/image-20250922132819840.png" class="" title="image-20250922132819840">
 
 <p>[右键-&gt;set type…]，然后改成：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int sub_140001080(FILE *Stream, char *Format, int* arr,...);</span><br></pre></td></tr></table></figure>
 
 <p>接下来main函数和sub_140001080函数就能正确识别了：</p>
-<img src="/posts/undefined/image-20250922133118279.png" class="" title="image-20250922133118279">
+<img src="/posts/32678/image-20250922133118279.png" class="" title="image-20250922133118279">
 
-<img src="/posts/undefined/image-20250922133130173.png" class="" title="image-20250922133130173">
+<img src="/posts/32678/image-20250922133130173.png" class="" title="image-20250922133130173">
 
 <p>接下来，总结上面的操作：就是读取文件里面的数字，然后按三角形的格式放入二维数组中。接下来看判断操作：</p>
-<img src="/posts/undefined/image-20250922133906674.png" class="" title="image-20250922133906674">
+<img src="/posts/32678/image-20250922133906674.png" class="" title="image-20250922133906674">
 
 <p>这里实际上是从(1,1)开始，然后每次加下一层的正下方的数或右下方的数，一直加到最后一层，然后判断总值是否大于6752833。由于解只有一个，所以只需要选最大的路径即可。这是一个数字金字塔模型，有两种方法，自顶向下法和自底向上法，我这里采用自底向上法，原理为：</p>
 <p>假设现在知道了从最后一行到第k+1行的各个位置的最长路径path，那么最后一行到第k行的第i个位置的最长路径有两种可能：</p>
@@ -782,13 +782,13 @@
 <li>浮点 → <code>XMM0</code></li>
 </ul>
 <h1 id="week3-Crackme"><a href="#week3-Crackme" class="headerlink" title="week3-Crackme"></a>week3-Crackme</h1><p><strong>考点：C++异常处理，xtea加密</strong></p>
-<img src="/posts/undefined/image-20250923154230990.png" class="" title="image-20250923154230990">
+<img src="/posts/32678/image-20250923154230990.png" class="" title="image-20250923154230990">
 
 <p>前面一段都是初始化和赋值</p>
-
+<img src="/posts/32678/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-2025-09-23-154324.png" class="" title="屏幕截图 2025-09-23 154324">
 
 <p>后面一段的exception字符串和CxxThrowException代表这里抛出了一个字符串异常，那么就要注意异常处理了。main函数到这里戛然而止，但是后续一定还有代码，因为加密和验证的代码都还没看到。到main函数的汇编界面看：</p>
-<img src="/posts/undefined/image-20250923154813177.png" class="" title="image-20250923154813177">
+<img src="/posts/32678/image-20250923154813177.png" class="" title="image-20250923154813177">
 
 <p>这里函数开头的三句话</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FUNCTION CHUNK AT .text:0000000140005190 SIZE 0000009D BYTES</span><br><span class="line">FUNCTION CHUNK AT .text:000000014000522E SIZE 0000004F BYTES</span><br><span class="line">FUNCTION CHUNK AT .text:000000014000527E SIZE 00000027 BYTES</span><br></pre></td></tr></table></figure>
@@ -802,48 +802,48 @@
 
 <p>从14000191C开始，这里连续抛出了3个异常。我们之前在看反编译的伪代码时，只看到了一个异常，这主要是因为<code>_CxxThrowException</code>函数的特殊性。_CxxThrowException函数是一个标准的 C++ 运行时库函数，它的行为是抛出一个异常，编译器在生成代码时，会给这个函数打上一个特殊的标记。 IDA 在进行静态分析时，会读取这个标记，并识别出它是一个无返回函数。因此，IDA 会认为之后的指令不可达，就会直接忽略。但是实际上，虽然CxxThrowException函数不返回，但是在抛出异常后，系统会找到异常处理函数，然后找到catch块，最后跳回main函数执行接下来的指令。</p>
 <p>如果要IDA识别后续的代码，就要把这三个块全部nop掉。然后按F5反编译：</p>
-<img src="/posts/undefined/image-20250923161134364.png" class="" title="image-20250923161134364">
+<img src="/posts/32678/image-20250923161134364.png" class="" title="image-20250923161134364">
 
 <p>这里看的到大致的逻辑了，看起来就像一个tea加密，主要的加密逻辑还得看catch块里面的内容。catch块在main函数开头获取的三个地址处：</p>
-<img src="/posts/undefined/image-20250923161523249.png" class="" title="image-20250923161523249">
+<img src="/posts/32678/image-20250923161523249.png" class="" title="image-20250923161523249">
 
 <p>这种带cleanup关键字的都是系统生成为了保护程序的，不需要看。只需要看catch关键字：</p>
-<img src="/posts/undefined/image-20250923161547606.png" class="" title="image-20250923161547606">
+<img src="/posts/32678/image-20250923161547606.png" class="" title="image-20250923161547606">
 
 <p>如果想要反编译的话可以将它识别为函数（注：IDA认为它是main函数的部分，因此想要把他识别为函数，必须先对main函数按u）：</p>
-<img src="/posts/undefined/image-20250923162102168.png" class="" title="image-20250923162102168">
+<img src="/posts/32678/image-20250923162102168.png" class="" title="image-20250923162102168">
 
-<img src="/posts/undefined/image-20250923162129262.png" class="" title="image-20250923162129262">
+<img src="/posts/32678/image-20250923162129262.png" class="" title="image-20250923162129262">
 
-<img src="/posts/undefined/image-20250923162149296.png" class="" title="image-20250923162149296">
+<img src="/posts/32678/image-20250923162149296.png" class="" title="image-20250923162149296">
 
 <p>脚本解密：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt; </span><br><span class="line">#include&lt;windows.h&gt;</span><br><span class="line">#include&lt;stdint.h&gt;</span><br><span class="line">void decrypt(DWORD* v,uint32_t* key)</span><br><span class="line">&#123;</span><br><span class="line">	uint32_t k0,k2,k3,k1;</span><br><span class="line">	uint32_t v0,v1;</span><br><span class="line">	v0=v[0],v1=v[1];</span><br><span class="line">	k0=key[0],k1=key[1],k2=key[2],k3=key[3];</span><br><span class="line">	uint32_t delta=0x33221155,sum=0;</span><br><span class="line">	for(int i=0;i&lt;32;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		sum^=delta;</span><br><span class="line">		v1 -= (key[(sum &gt;&gt; 11) &amp; 3] + sum) ^ (v0 + ((v0 &gt;&gt; 6) ^ (32 * v0)));</span><br><span class="line">		v0 -= (key[sum&amp;3] + sum) ^ (v1 + ((v1 &gt;&gt; 5) ^ (16 * v1)));</span><br><span class="line">	&#125;</span><br><span class="line">	v[0]=v0,v[1]=v1;</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	DWORD v18[8];</span><br><span class="line">	v18[0] = 0x32FC31EA;</span><br><span class="line">  v18[1] = 0xF0566F42;</span><br><span class="line">  v18[2] = 0xF905B0B2;</span><br><span class="line">  v18[3] = 0x5F4551BE;</span><br><span class="line">  v18[4] = 0xFB3EFCBB;</span><br><span class="line">  v18[5] = 0x6B6ADB30;</span><br><span class="line">  v18[6] = 0x4839879;</span><br><span class="line">  v18[7] = 0x2F4378DF;</span><br><span class="line">	uint32_t key[4]=&#123;1234,2345,3456,4567&#125;;</span><br><span class="line">	for(int i=0;i&lt;8;i+=2)</span><br><span class="line">	&#123;</span><br><span class="line">		decrypt(v18+i,key);	</span><br><span class="line">	&#125;</span><br><span class="line">	printf(&quot;%s&quot;,(char*)v18);		  </span><br><span class="line"> &#125; 			// hgame&#123;C_p1us_plus_exc3pti0n!!!!&#125;</span><br></pre></td></tr></table></figure>
 
-<h1 id="week3-Findme"><a href="#week3-Findme" class="headerlink" title="week3-Findme"></a>week3-Findme</h1><img src="/posts/undefined/image-20250925173511325.png" class="" title="image-20250925173511325">
+<h1 id="week3-Findme"><a href="#week3-Findme" class="headerlink" title="week3-Findme"></a>week3-Findme</h1><img src="/posts/32678/image-20250925173511325.png" class="" title="image-20250925173511325">
 
 <p>一个假flag，查看Buffer：</p>
-<img src="/posts/undefined/image-20250925173621317.png" class="" title="image-20250925173621317">
+<img src="/posts/32678/image-20250925173621317.png" class="" title="image-20250925173621317">
 
 <p>4D5A开头，应该是个PE文件，导出为txt文件：</p>
-<img src="/posts/undefined/image-20250925173719141.png" class="" title="image-20250925173719141">
+<img src="/posts/32678/image-20250925173719141.png" class="" title="image-20250925173719141">
 
 <p>复制到WinHex里面，保存为二进制文件</p>
-<img src="/posts/undefined/image-20250925173841239.png" class="" title="image-20250925173841239">
+<img src="/posts/32678/image-20250925173841239.png" class="" title="image-20250925173841239">
 
 <p>每4个字节只有一个字节是有用的，写脚本去掉多余的0：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fp = open(&quot;D:\\桌面\\test&quot;,&quot;rb&quot;).read()</span><br><span class="line">newarr = [fp[i] for i in range(0,len(fp),4)]</span><br><span class="line">wp = open(&quot;D:\\桌面\\out.exe&quot;,&quot;wb&quot;)</span><br><span class="line">wp.write(bytes(newarr))</span><br><span class="line">print(&quot;done&quot;)</span><br></pre></td></tr></table></figure>
 
 <p>使用IDA打开生成的PE文件：</p>
-<img src="/posts/undefined/image-20250926014525380.png" class="" title="image-20250926014525380">
+<img src="/posts/32678/image-20250926014525380.png" class="" title="image-20250926014525380">
 
 <p>有许多jz&#x2F;jnz型花指令，写脚本自动去花：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import idc</span><br><span class="line">import idaapi</span><br><span class="line">import idautils</span><br><span class="line"></span><br><span class="line">address = 0x401000</span><br><span class="line">len = 0x1000</span><br><span class="line">for i in range(len):</span><br><span class="line">    byte1 = get_wide_byte(address)</span><br><span class="line">    byte2 = get_wide_byte(address+1)</span><br><span class="line">    byte3 = get_wide_byte(address+2)</span><br><span class="line">    byte4 = get_wide_byte(address+3)</span><br><span class="line">    if byte1 == 0x74:</span><br><span class="line">        if byte3 == 0x75 and (byte2 - byte4) == 0x2:</span><br><span class="line">            patch_len = 2 + byte2</span><br><span class="line">            for j in range(patch_len):</span><br><span class="line">                patch_byte(address+j,0x90)</span><br><span class="line">            address += patch_len</span><br><span class="line">            continue</span><br><span class="line">    address += 1</span><br></pre></td></tr></table></figure>
 
 <p>这里加密算法是一个变形的rc4：</p>
-<img src="/posts/undefined/image-20250926014817607.png" class="" title="image-20250926014817607">
+<img src="/posts/32678/image-20250926014817607.png" class="" title="image-20250926014817607">
 
-<img src="/posts/undefined/image-20250926014841342.png" class="" title="image-20250926014841342">
+<img src="/posts/32678/image-20250926014841342.png" class="" title="image-20250926014841342">
 
 <p>注意，rc4加密函数的第21行data[-(unsigned __int8)(v4 + Sbox[i])]这里取得并不是data里面的数据，因为数组的索引是负数，所以等同于取data数组起始地址往上的地址，而这个地址恰好是Sbox数组，结构如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Sbox起始：</span><br><span class="line">xx</span><br><span class="line">xx</span><br><span class="line">、、、一共256字节</span><br><span class="line">xx</span><br><span class="line">data起始：</span><br><span class="line">xx</span><br><span class="line">xx</span><br></pre></td></tr></table></figure>
@@ -851,23 +851,23 @@
 <p>Sbox有256个字节，所以这里等同于取Sbox[256 - (v4 + Sbox[i])]。脚本解密：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">/*初始化函数*/</span><br><span class="line">void rc4_init(unsigned char*s, unsigned char*key, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0;</span><br><span class="line">    char k[256] = &#123; 0 &#125;;</span><br><span class="line">    unsigned char tmp = 0;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s[i] = (256-i)%256;</span><br><span class="line">        k[i] = key[i%Len];</span><br><span class="line">    &#125;</span><br><span class="line">    for (i = 0; i&lt;256; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        j = (j + s[i] + k[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[i]和s[j]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line">/*加解密*/</span><br><span class="line">void rc4_crypt(unsigned char*s, unsigned char*Data, unsigned long Len)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0, j = 0, t = 0;</span><br><span class="line">    unsigned long k = 0;</span><br><span class="line">    unsigned char tmp;</span><br><span class="line">    for (k = 0; k&lt;Len; k++)</span><br><span class="line">    &#123;</span><br><span class="line">        i = (i + 1) % 256;</span><br><span class="line">        j = (j + s[i]) % 256;</span><br><span class="line">        tmp = s[i];</span><br><span class="line">        s[i] = s[j];//交换s[x]和s[y]</span><br><span class="line">        s[j] = tmp;</span><br><span class="line">        t = (s[i] + s[j])%256;</span><br><span class="line">        Data[k] -= s[256 - t];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    unsigned char flag[]=</span><br><span class="line">    &#123;</span><br><span class="line">       0x7D, 0x2B, 0x43, 0xA9, 0xB9, 0x6B, 0x93, 0x2D, 0x9A, 0xD0, </span><br><span class="line">  0x48, 0xC8, 0xEB, 0x51, 0x59, 0xE9, 0x74, 0x68, 0x8A, 0x45, </span><br><span class="line">  0x6B, 0xBA, 0xA7, 0x16, 0xF1, 0x10, 0x74, 0xD5, 0x41, 0x3C, </span><br><span class="line">  0x67, 0x7D</span><br><span class="line">    &#125;; </span><br><span class="line">    unsigned char key[]=&quot;deadbeef&quot;;</span><br><span class="line">    unsigned  char s[256]=&#123;0&#125;;</span><br><span class="line">    rc4_init(s,key,8);    </span><br><span class="line">    rc4_crypt(s,flag,32); </span><br><span class="line">    int i;</span><br><span class="line">    for(i=0;i&lt;32;i++)&#123;</span><br><span class="line">		printf(&quot;%c&quot;,flag[i]);</span><br><span class="line">	&#125; </span><br><span class="line">    printf(&quot;\n&quot;);</span><br><span class="line">&#125;		// hgame&#123;Fl0w3rs_Ar3_Very_fr4grant&#125;</span><br></pre></td></tr></table></figure>
 
-<h1 id="week4-crackme2"><a href="#week4-crackme2" class="headerlink" title="week4-crackme2"></a>week4-crackme2</h1><img src="/posts/undefined/image-20250928165455131.png" class="" title="image-20250928165455131">
+<h1 id="week4-crackme2"><a href="#week4-crackme2" class="headerlink" title="week4-crackme2"></a>week4-crackme2</h1><img src="/posts/32678/image-20250928165455131.png" class="" title="image-20250928165455131">
 
 <p>输入，然后是一个Base64。第8行爆红了，看看是什么问题：</p>
-<img src="/posts/undefined/image-20250928165544340.png" class="" title="image-20250928165544340">
+<img src="/posts/32678/image-20250928165544340.png" class="" title="image-20250928165544340">
 
 <p>是一个异常处理，尝试往地址0写入字节，在 <strong>Windows 用户态</strong> 下，这个地址是<strong>不可访问的内存页</strong>，写入会触发 **访问违例 ** 异常。这里影响了IDA反编译，直接nop掉try块。然后F5反编译：</p>
-<img src="/posts/undefined/image-20250928165741812.png" class="" title="image-20250928165741812">
+<img src="/posts/32678/image-20250928165741812.png" class="" title="image-20250928165741812">
 
 <p>是一个反调试+SMC，直接在16行设下断点绕过反调试，30行设下断点绕过SMC。开始调试：</p>
 <p>修改ZF跳过反调试：</p>
-<img src="/posts/undefined/image-20250928170053579.png" class="" title="image-20250928170053579">
+<img src="/posts/32678/image-20250928170053579.png" class="" title="image-20250928170053579">
 
 <p>还原SMC</p>
-<img src="/posts/undefined/image-20250928170310995.png" class="" title="image-20250928170310995">
+<img src="/posts/32678/image-20250928170310995.png" class="" title="image-20250928170310995">
 
 <p>反编译：</p>
-<img src="/posts/undefined/image-20250928170402451.png" class="" title="image-20250928170402451">
+<img src="/posts/32678/image-20250928170402451.png" class="" title="image-20250928170402451">
 
 <p>有32个方程的方程式，采用z3求解：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br></pre></td><td class="code"><pre><span class="line">import z3</span><br><span class="line"></span><br><span class="line">def solve_complete_system():</span><br><span class="line">    &quot;&quot;&quot;求解完整的约束系统&quot;&quot;&quot;</span><br><span class="line">    </span><br><span class="line">    # 创建32个变量，代表a1[0]到a1[31]</span><br><span class="line">    vars = [z3.Int(f&#x27;a1_&#123;i&#125;&#x27;) for i in range(32)]</span><br><span class="line">    </span><br><span class="line">    # 创建求解器</span><br><span class="line">    solver = z3.Solver()</span><br><span class="line">    </span><br><span class="line">    # 添加基本约束：每个变量都是0-255之间的字节</span><br><span class="line">    for var in vars:</span><br><span class="line">        solver.add(var &gt;= 0)</span><br><span class="line">        solver.add(var &lt;= 255)</span><br><span class="line">    </span><br><span class="line">    # 变量别名（对应原代码中的变量）</span><br><span class="line">    v5 = vars[0]; v28 = vars[1]; v11 = vars[2]; v10 = vars[3]; v24 = vars[4]</span><br><span class="line">    v41 = vars[5]; v22 = vars[6]; v40 = vars[7]; v7 = vars[8]; v18 = vars[9]</span><br><span class="line">    v29 = vars[10]; v27 = vars[11]; v9 = vars[12]; v31 = vars[13]; v30 = vars[14]</span><br><span class="line">    v20 = vars[15]; v23 = vars[16]; v39 = vars[17]; v15 = vars[18]; v21 = vars[19]</span><br><span class="line">    v26 = vars[20]; v2 = vars[21]; v42 = vars[22]; v6 = vars[23]; v16 = vars[24]</span><br><span class="line">    v1 = vars[25]; v17 = vars[26]; v25 = vars[27]; v8 = vars[28]; v4 = vars[29]</span><br><span class="line">    v19 = vars[30]; v3 = vars[31]</span><br><span class="line">    </span><br><span class="line">    # 辅助变量</span><br><span class="line">    v37 = 2 * v26; v38 = 2 * v16; v32 = 2 * v18; v33 = 2 * v41</span><br><span class="line">    v35 = v25 + v30; v34 = 2 * v31; v36 = 3 * v21</span><br><span class="line">    </span><br><span class="line">    print(&quot;添加所有约束条件...&quot;)</span><br><span class="line">    </span><br><span class="line">    # 约束 1</span><br><span class="line">    print(&quot;添加约束 1...&quot;)</span><br><span class="line">    eq1 = (v18 + 201 * v24 + 194 * v10 + 142 * v20 + 114 * v39 + 103 * v11 +</span><br><span class="line">           52 * (v17 + v31) + ((v9 + v23) * 64) + 14 * (v21 + 4 * v25 + v25) +</span><br><span class="line">           9 * (v40 + 23 * v27 + v2 + 3 * v1 + 4 * v2 + 4 * v6) +</span><br><span class="line">           5 * (v16 + 23 * v30 + 2 * (v3 + 2 * v19) + 5 * v5 + 39 * v15 + 51 * v4) +</span><br><span class="line">           24 * (v8 + 10 * v28 + 4 * (v42 + v7 + 2 * v26)) + 62 * v22 + 211 * v41 + 212 * v29)</span><br><span class="line">    solver.add(eq1 == 296473)</span><br><span class="line">    </span><br><span class="line">    # 约束 2</span><br><span class="line">    eq2 = (207 * v41 + 195 * v22 + 151 * v40 + 57 * v5 + 118 * v6 + 222 * v42 +</span><br><span class="line">           103 * v7 + 181 * v8 + 229 * v9 + 142 * v31 + 51 * v29 + 122 * (v26 + v20) +</span><br><span class="line">           91 * (v2 + 2 * v16) + 107 * (v27 + v25) + 81 * (v17 + 2 * v18 + v18) +</span><br><span class="line">           45 * (v19 + 2 * (v11 + v24) + v11 + v24) +</span><br><span class="line">           4 * (3 * (v23 + v21 + 2 * v23 + 5 * v4) + v39 + 29 * (v10 + v1) + 25 * v15) +</span><br><span class="line">           26 * v28 + 101 * v30 + 154 * v3)</span><br><span class="line">    solver.add(eq2 == 354358)</span><br><span class="line">    </span><br><span class="line">    # 约束 3</span><br><span class="line">    eq3 = (177 * v40 + 129 * v26 + 117 * v42 + 143 * v28 + 65 * v8 + 137 * v25 +</span><br><span class="line">           215 * v21 + 93 * v31 + 235 * v39 + 203 * v11 + 15 * (v7 + 17 * v30) +</span><br><span class="line">           2 * (v24 + 91 * v9 + 95 * v29 + 51 * v41 + 81 * v20 + 92 * v18 +</span><br><span class="line">                112 * (v10 + v6) + 32 * (v22 + 2 * (v1 + v23)) +</span><br><span class="line">                6 * (v2 + 14 * v16 + 19 * v15) + 83 * v5 + 53 * v4 + 123 * v19) +</span><br><span class="line">           v17 + 175 * v27 + 183 * v3)</span><br><span class="line">    solver.add(eq3 == 448573)</span><br><span class="line">    </span><br><span class="line">    # 约束 4</span><br><span class="line">    eq4 = (113 * v19 + 74 * v3 + 238 * v6 + 140 * v2 + 214 * v26 + 242 * v8 +</span><br><span class="line">           160 * v21 + 136 * v23 + 209 * v9 + 220 * v31 + 50 * v24 + 125 * v10 +</span><br><span class="line">           175 * v20 + 23 * v39 + 137 * v22 + 149 * v18 + 83 * (v4 + 2 * v30) +</span><br><span class="line">           21 * (9 * v29 + v16) + 59 * (4 * v27 + v17) + 41 * (v1 + v41) +</span><br><span class="line">           13 * (v7 + 11 * (v40 + v15) + 6 * v42 + 4 * (v28 + 2 * v11) + v28 + 2 * v11 + 17 * v5) +</span><br><span class="line">           36 * v25)</span><br><span class="line">    solver.add(eq4 == 384306)</span><br><span class="line">    </span><br><span class="line">    # 约束 5</span><br><span class="line">    eq5 = (229 * v21 + 78 * v1 + v2 + v9 + 133 * v27 + 74 * v6 + 69 * v26 + 243 * v7 +</span><br><span class="line">           98 * v28 + 253 * v8 + 142 * v25 + 175 * v31 + 105 * v41 + 221 * v10 + 121 * v39 +</span><br><span class="line">           218 * (v19 + v29) + 199 * (v24 + v30) + 33 * (v40 + 7 * v17) +</span><br><span class="line">           4 * (27 * v20 + 50 * v11 + 45 * v18 + 19 * (v3 + v42) + v16 + 16 * v23 + 52 * v4) +</span><br><span class="line">           195 * v22 + 211 * v5 + 153 * v15)</span><br><span class="line">    solver.add(eq5 == 424240)</span><br><span class="line">    </span><br><span class="line">    # 约束 6</span><br><span class="line">    eq6 = (181 * v25 + 61 * v2 + 65 * v21 + 58 * v31 + 170 * v29 + 143 * v24 + 185 * v10 +</span><br><span class="line">           86 * v11 + 97 * v22 + 235 * (v23 + v27) +</span><br><span class="line">           3 * (53 * v41 + 74 * (v8 + v3) + 13 * (v42 + 6 * v9) + 11 * (v39 + 7 * v20) +</span><br><span class="line">                15 * (v18 + 4 * v17) + v7 + 35 * v1 + 29 * v15) +</span><br><span class="line">           4 * (57 * v6 + 18 * (v5 + v37) + v28 + 17 * v16 + 55 * v30) + 151 * v40 + 230 * v4 + 197 * v19)</span><br><span class="line">    solver.add(eq6 == 421974)</span><br><span class="line"></span><br><span class="line">    # 约束 7 （含 v33 = 2 * v41）</span><br><span class="line">    eq7 = (209 * v21 + 249 * v30 + 195 * v2 + 219 * v25 + 201 * v39 + 85 * v18 +</span><br><span class="line">           213 * (v17 + v31) + 119 * (v11 + 2 * v41) + 29 * (8 * v24 + v40 + 4 * v27 + v27) +</span><br><span class="line">           2 * (v8 + 55 * (2 * v29 + v19) + 3 * (v10 + 39 * v9 + 2 * (v6 + 20 * v20) + 35 * v7) +</span><br><span class="line">                4 * (v5 + 31 * v42 + 28 * v3) + 26 * v28 + 46 * (v37 + v16) + 98 * v1) +</span><br><span class="line">           53 * v23 + 171 * v15 + 123 * v4)</span><br><span class="line">    solver.add(eq7 == 442074)</span><br><span class="line"></span><br><span class="line">    # 约束 8 （含 v32 = 2 * v18）</span><br><span class="line">    eq8 = (162 * v19 + 74 * v5 + 28 * v27 + 243 * v42 + 123 * v28 + 73 * v8 + 166 * v23 +</span><br><span class="line">           94 * v24 + 113 * v11 + 193 * v22 + 122 * (v6 + 2 * v7) + 211 * (v10 + v25) +</span><br><span class="line">           21 * (v17 + 7 * v41) + 11 * (v4 + 23 * (v16 + v39) + 2 * (v40 + 5 * v30 + 2 * (2 * v18 + v29) + 2 * v18 + v29)) +</span><br><span class="line">           5 * (46 * v9 + 26 * v20 + 4 * (v31 + 2 * v21) + v15 + 27 * v2 + 10 * v1) +</span><br><span class="line">           36 * (v3 + 5 * v26))</span><br><span class="line">    solver.add(eq8 == 376007)</span><br><span class="line"></span><br><span class="line">    # 约束 9 （含 v35 = v25 + v30）</span><br><span class="line">    eq9 = (63 * v19 + 143 * v5 + 250 * v6 + 136 * v2 + 214 * v40 + 62 * v26 + 221 * v42 +</span><br><span class="line">           226 * v7 + 171 * v28 + 178 * v8 + 244 * v23 + (v9 * 128) + 150 * v31 + 109 * v29 + 70 * v41 +</span><br><span class="line">           127 * v20 + 204 * v39 + 121 * v22 + 173 * v18 + 69 * (v25 + v30 + v27) +</span><br><span class="line">           74 * (v16 + 2 * v15 + v15) + 22 * (7 * v24 + v17 + 10 * v11) + 40 * (v1 + 4 * v21 + v21) +</span><br><span class="line">           81 * v10 + 94 * v4 + 84 * v3)</span><br><span class="line">    solver.add(eq9 == 411252)</span><br><span class="line"></span><br><span class="line">    # 约束 10</span><br><span class="line">    eq10 = (229 * v15 + 121 * v4 + 28 * v30 + 206 * v16 + 145 * v27 + 41 * v1 + 247 * v6 +</span><br><span class="line">            118 * v26 + 241 * v28 + 79 * v8 + 102 * v25 + 124 * v23 + 65 * v9 + 68 * v31 +</span><br><span class="line">            239 * v17 + 148 * v24 + 245 * v39 + 115 * v11 + 163 * v22 + 137 * v18 + 53 * (v5 + 2 * v29) +</span><br><span class="line">            126 * (v40 + 2 * v10) + 38 * (v7 + v21 + 4 * v7 + 6 * v41) + 12 * (v2 + 16 * v42) +</span><br><span class="line">            109 * v20 + 232 * v3 + 47 * v19)</span><br><span class="line">    solver.add(eq10 == 435012)</span><br><span class="line"></span><br><span class="line">    # 约束 11</span><br><span class="line">    eq11 = (209 * v21 + 233 * v40 + 93 * v1 + 241 * v2 + 137 * v8 + 249 * v17 + 188 * v29 + 86 * v24 +</span><br><span class="line">            246 * v10 + 149 * v20 + 99 * v11 + 37 * v22 + 219 * v18 + 17 * (v6 + 10 * v25) +</span><br><span class="line">            49 * (v5 + 3 * v3 + 4 * v28 + v28) + 5 * (16 * v39 + 11 * (v41 + 2 * v27 + v27) + 12 * v7 + v31 + 30 * v16 + 27 * v19) +</span><br><span class="line">            18 * (v23 + 2 * (v4 + v26 + 2 * v4) + v4 + v26 + 2 * v4) + 24 * v9 + 109 * v42 + 183 * v30 + 154 * v15)</span><br><span class="line">    solver.add(eq11 == 392484)</span><br><span class="line"></span><br><span class="line">    # 约束 12 （含 v34 = 2 * v31）</span><br><span class="line">    eq12 = (155 * v15 + 247 * v40 + 157 * v28 + 119 * v23 + 161 * v17 + 133 * v20 + 85 * v22 +</span><br><span class="line">            229 * (v7 + v24) + 123 * (2 * v31 + v42) + 21 * (v41 + 12 * v30) +</span><br><span class="line">            55 * (v9 + v5 + v18 + 2 * v5) + 15 * (v3 + 16 * v10 + 9 * v21) +</span><br><span class="line">            2 * (v2 + 115 * v29 + 111 * v16 + 26 * v6 + 88 * v8 + 73 * v39 + 71 * v11 + 28 * (v26 + 2 * (v25 + 2 * v1)) + 51 * v27 + 99 * v4 + 125 * v19))</span><br><span class="line">    solver.add(eq12 == 437910)</span><br><span class="line"></span><br><span class="line">    # 约束 13 （含 v33 = 2 * v41 再次使用）</span><br><span class="line">    eq13 = (220 * v3 + 200 * v4 + 139 * v15 + 33 * v5 + 212 * v30 + 191 * v16 + 30 * v27 + 233 * v1 +</span><br><span class="line">            246 * v6 + 89 * v2 + 252 * v40 + 223 * v42 + 19 * v25 + 141 * v21 + 163 * v9 +</span><br><span class="line">            185 * v17 + 136 * v31 + 46 * v24 + 109 * v10 + 217 * v39 + 75 * v22 + 157 * v18 +</span><br><span class="line">            125 * (v11 + v19) + 104 * (2 * v41 + v20) + 43 * (v28 + 2 * v29 + v29) +</span><br><span class="line">            32 * (v8 + v7 + 2 * v8 + 2 * (v23 + v26)))</span><br><span class="line">    solver.add(eq13 == 421905)</span><br><span class="line"></span><br><span class="line">    # 约束 14</span><br><span class="line">    eq14 = (211 * v24 + 63 * v15 + 176 * v5 + 169 * v16 + 129 * v27 + 146 * v40 + 111 * v26 + 68 * v42 +</span><br><span class="line">            39 * v25 + 188 * v23 + 130 * v9 + (v31 * 64) + 91 * v41 + 208 * v20 + 145 * v39 + 247 * v18 +</span><br><span class="line">            93 * (v22 + v17) + 71 * (v6 + 2 * v11) + 103 * (v8 + 2 * v30) +</span><br><span class="line">            6 * (v21 + 10 * v28 + 28 * v7 + 9 * v29 + 19 * v2 + 24 * v1 + 22 * v3) + 81 * v10 + 70 * v4 + 23 * v19)</span><br><span class="line">    solver.add(eq14 == 356282)</span><br><span class="line"></span><br><span class="line">    # 约束 15 （含 v12 = ...）</span><br><span class="line">    v12_expr = (v10 + 2 * (v31 + 4 * (v29 + v17)) + v31 + 4 * (v29 + v17))</span><br><span class="line">    eq15 = (94 * v42 + 101 * v2 + 152 * v40 + 200 * v7 + 226 * v8 + 211 * v23 + 121 * v24 + 74 * v11 +</span><br><span class="line">            166 * v18 + ((v6 + 3 * v28) * 64) + 41 * (4 * v9 + v21) + 23 * (v39 + 11 * v41) +</span><br><span class="line">            7 * (v20 + 10 * v25 + 2 * v12_expr + v12_expr) +</span><br><span class="line">            3 * (78 * v30 + 81 * v16 + 55 * v27 + 73 * v1 + 4 * v26 + v15 + 85 * v3 + 65 * v19) +</span><br><span class="line">            62 * v22 + 88 * v5 + 110 * v4)</span><br><span class="line">    solver.add(eq15 == 423091)</span><br><span class="line"></span><br><span class="line">    # 约束 16 （含 v32 = 2 * v18）</span><br><span class="line">    eq16 = (133 * v22 + 175 * v15 + 181 * v30 + 199 * v16 + 123 * v27 + 242 * v1 + 75 * v6 + 69 * v2 +</span><br><span class="line">            153 * v40 + 33 * v26 + 100 * v42 + 229 * v7 + 177 * v8 + 134 * v31 + 179 * v29 + 129 * v41 +</span><br><span class="line">            14 * v10 + 247 * v24 + 228 * v20 + 92 * v11 + 86 * (v9 + 2 * v18) + 94 * (v23 + v21) +</span><br><span class="line">            37 * (v17 + 4 * v3) + 79 * (v25 + 2 * v28) + 72 * v5 + 93 * v39 + 152 * v4 + 214 * v19)</span><br><span class="line">    solver.add(eq16 == 391869)</span><br><span class="line"></span><br><span class="line">    # 约束 17</span><br><span class="line">    eq17 = (211 * v24 + 213 * v18 + 197 * v40 + 159 * v25 + 117 * v21 + 119 * v9 + 98 * v17 + 218 * v41 +</span><br><span class="line">            106 * v39 + 69 * v11 + 43 * (v2 + v29 + 2 * v2) + 116 * (v4 + v10 + v37) +</span><br><span class="line">            5 * (v42 + 9 * v23 + 35 * v20 + 37 * v31) + 11 * (v16 + 13 * v27 + 5 * v5 + 8 * v30) +</span><br><span class="line">            6 * (29 * v28 + 25 * v8 + 38 * v22 + v15 + 13 * v1 + 10 * v3) + 136 * v7 + 142 * v6 + 141 * v19)</span><br><span class="line">    solver.add(eq17 == 376566)</span><br><span class="line"></span><br><span class="line">    # 约束 18</span><br><span class="line">    eq18 = (173 * v3 + 109 * v15 + 61 * v30 + 187 * v1 + 79 * v6 + 53 * v40 + 184 * v21 + 43 * v23 + 41 * v9 +</span><br><span class="line">            166 * v31 + 193 * v41 + 58 * v24 + 146 * v10 + (v20 * 64) + 89 * v39 + 121 * v11 +</span><br><span class="line">            5 * (v17 + 23 * v8) + 7 * (29 * v18 + v29 + 4 * v7) +</span><br><span class="line">            13 * (3 * v42 + v16 + 7 * v26 + 13 * v2) +</span><br><span class="line">            3 * (v4 + 83 * v5 + 51 * v27 + 33 * v22 + 8 * (v19 + 4 * v28) + 18 * v25))</span><br><span class="line">    solver.add(eq18 == 300934)</span><br><span class="line"></span><br><span class="line">    # 约束 19 （含 v36 = 3 * v21）</span><br><span class="line">    eq19 = (78 * v1 + 131 * v5 + 185 * v16 + 250 * v40 + 90 * v26 + 129 * v42 + 255 * v28 + 206 * v8 + 239 * v25 +</span><br><span class="line">            150 * v10 + 253 * v39 + 104 * v22 + 58 * (v2 + 2 * v7) + 96 * (v15 + v31) + 117 * (v9 + 2 * v4) +</span><br><span class="line">            27 * (v17 + 8 * v18 + v18) + 19 * (v23 + 3 * v21 + 4 * v29 + v29) +</span><br><span class="line">            7 * (22 * v41 + 3 * (v11 + 11 * v24) + v3 + 29 * v6 + 14 * v27) +</span><br><span class="line">            109 * v20 + 102 * v30 + 100 * v19)</span><br><span class="line">    solver.add(eq19 == 401351)</span><br><span class="line"></span><br><span class="line">    # 约束 20</span><br><span class="line">    eq20 = (233 * v19 + 71 * v5 + 209 * v27 + 82 * v6 + 58 * v26 + 53 * v25 + 113 * v23 + 206 * v31 + 39 * v41 +</span><br><span class="line">            163 * v20 + 222 * v11 + 191 * v18 + 123 * (v7 + v40) + 69 * (v9 + 2 * v22 + v22) +</span><br><span class="line">            9 * (v3 + 8 * v24 + 7 * (3 * v1 + v28) + 5 * v16 + 19 * v30) +</span><br><span class="line">            4 * (v15 + 26 * v17 + 61 * v29 + 43 * v42 + 49 * v2 + 32 * v4) +</span><br><span class="line">            10 * (7 * (v8 + 3 * v21) + v39 + 12 * v10))</span><br><span class="line">    solver.add(eq20 == 368427)</span><br><span class="line"></span><br><span class="line">    # 约束 21</span><br><span class="line">    eq21 = (139 * v30 + 53 * v5 + 158 * v16 + 225 * v1 + 119 * v6 + 67 * v2 + 213 * v40 + 188 * v28 + 152 * v8 +</span><br><span class="line">            187 * v21 + 129 * v23 + 54 * v9 + 125 * v17 + 170 * v24 + 184 * v11 + 226 * v22 + 253 * v18 +</span><br><span class="line">            26 * (v29 + v41) + 97 * (v4 + 2 * v25) + 39 * (5 * v26 + v27) + 21 * (v39 + 8 * v42) +</span><br><span class="line">            12 * (17 * v10 + v31 + 15 * v7 + 12 * v19) + 165 * v20 + 88 * v15 + 157 * v3)</span><br><span class="line">    solver.add(eq21 == 403881)</span><br><span class="line"></span><br><span class="line">    # 约束 22</span><br><span class="line">    eq22 = (114 * v3 + 61 * v27 + 134 * v40 + 62 * v42 + 89 * v9 + 211 * v17 + 163 * v41 + 66 * v24 +</span><br><span class="line">            201 * (v7 + v18) + 47 * (5 * v16 + v22) + 74 * (v4 + v31) + 142 * (v2 + v28) +</span><br><span class="line">            35 * (v20 + 6 * v26) + 39 * (v15 + 6 * v30) + 27 * (v25 + 9 * v23 + 8 * v6) +</span><br><span class="line">            4 * (v21 + 63 * v19 + 2 * (v1 + 12 * (v10 + v5) + 8 * v11 + 26 * v29)) + 10 * (v8 + 4 * v39 + v39))</span><br><span class="line">    solver.add(eq22 == 382979)</span><br><span class="line"></span><br><span class="line">    # 约束 23 （含 v32 = 2*v18, v38 = 2*v16）</span><br><span class="line">    eq23 = (122 * v25 + 225 * v21 + 52 * v23 + 253 * v9 + 197 * v17 + 187 * v31 + 181 * v29 + 183 * v41 + 47 * v20 +</span><br><span class="line">            229 * v39 + 88 * v22 + 127 * (v10 + 2 * v18) + 37 * (v7 + 3 * v3) + ((v11 + 2 * v30 + v30) * 64) +</span><br><span class="line">            7 * (21 * v8 + v27 + 18 * (v4 + v1 + 2 * v16)) + 6 * (23 * v24 + v26 + 17 * v2 + 39 * v6) +</span><br><span class="line">            10 * (v5 + 11 * v28 + 21 * v42) + 149 * v19 + 165 * v40 + 121 * v15)</span><br><span class="line">    solver.add(eq23 == 435695)</span><br><span class="line"></span><br><span class="line">    # 约束 24 （含 v34 = 2*v31, v38 = 2*v16）</span><br><span class="line">    eq24 = (165 * v20 + 223 * v4 + 249 * v5 + 199 * v1 + 135 * v2 + 133 * v26 + 254 * v42 + 111 * v7 + 189 * v28 +</span><br><span class="line">            221 * v25 + 115 * v21 + 186 * v9 + 79 * v41 + 217 * v24 + 122 * v11 + 38 * v18 + 109 * (2 * v31 + v29) +</span><br><span class="line">            14 * (v8 + 17 * v40 + 8 * (v6 + 2 * v16)) +</span><br><span class="line">            4 * (11 * (5 * v30 + v39) + 6 * (v10 + 2 * v22) + v27 + 52 * v17 + 50 * v23) +</span><br><span class="line">            229 * v15 + 86 * v3 + 234 * v19)</span><br><span class="line">    solver.add(eq24 == 453748)</span><br><span class="line"></span><br><span class="line">    # 约束 25</span><br><span class="line">    eq25 = (181 * v25 + 94 * v42 + 125 * v1 + 226 * v26 + 155 * v7 + 95 * v21 + 212 * v17 + 91 * v31 + 194 * v29 +</span><br><span class="line">            98 * v24 + 166 * v11 + 120 * v22 + 59 * v18 + 32 * (v9 + v8) + 158 * (v6 + v5) + 101 * (v41 + v19) +</span><br><span class="line">            63 * (v4 + 2 * v23) + 67 * (v28 + 2 * v20) + 11 * (v39 + 10 * v16 + 11 * v10) +</span><br><span class="line">            39 * (v30 + 4 * (v2 + v15)) + 233 * v40 + 56 * v27 + 225 * v3)</span><br><span class="line">    solver.add(eq25 == 358321)</span><br><span class="line"></span><br><span class="line">    # 约束 26 （含 v35 = v25 + v30）</span><br><span class="line">    eq26 = (229 * v21 + 135 * v4 + 197 * v15 + 118 * v5 + 143 * v16 + 134 * v6 + 204 * v40 + 173 * v26 + 81 * v7 +</span><br><span class="line">            60 * v28 + 58 * v8 + 179 * v23 + 142 * v9 + 178 * v17 + 230 * v31 + 148 * v29 + 224 * v41 + 194 * v24 +</span><br><span class="line">            223 * v10 + 87 * v20 + 200 * v39 + 233 * v11 + 49 * v22 + 127 * (v25 + v30) + 31 * (4 * v27 + v18) +</span><br><span class="line">            42 * (v1 + 6 * v2) + 109 * v42 + 75 * v3 + 165 * v19)</span><br><span class="line">    solver.add(eq26 == 456073)</span><br><span class="line"></span><br><span class="line">    # 约束 27</span><br><span class="line">    eq27 = (41 * v4 + 253 * v3 + 163 * v15 + 193 * v30 + 155 * v16 + 113 * v27 + 131 * v6 + 55 * v2 + 21 * v40 +</span><br><span class="line">            53 * v26 + 13 * v8 + 201 * v25 + 237 * v9 + 223 * v31 + 95 * v24 + 194 * v20 + 62 * v39 + 119 * v11 +</span><br><span class="line">            171 * v22 + 135 * v18 + 69 * (v10 + 3 * v28) + 211 * (v1 + v29) + 4 * (43 * v7 + v42 + 40 * v17) +</span><br><span class="line">            6 * (v5 + 33 * v41 + 20 * (2 * v19 + v21) + 24 * v23))</span><br><span class="line">    solver.add(eq27 == 407135)</span><br><span class="line"></span><br><span class="line">    # 约束 28 （含 v13 = v6 + v1 + 8*v6 + 4*(v8 + 2*v27)）</span><br><span class="line">    v13_expr = (v6 + v1 + 8 * v6 + 4 * (v8 + 2 * v27))</span><br><span class="line">    eq28 = (111 * v19 + 190 * v3 + 149 * v4 + 173 * v28 + 118 * v23 + 146 * v29 + 179 * v10 + 51 * v20 + 49 * v39 +</span><br><span class="line">            61 * v11 + 125 * v22 + 162 * v18 + 214 * (v25 + v30) + 14 * (2 * v31 + v24) + 178 * (v41 + v16) +</span><br><span class="line">            11 * (4 * v9 + v21 + 17 * v42) + 65 * (v26 + v17 + 2 * v26 + 2 * v5) +</span><br><span class="line">            4 * (v7 + 38 * v15 + 4 * v13_expr + v13_expr + 8 * v40 + 43 * v2))</span><br><span class="line">    solver.add(eq28 == 369835)</span><br><span class="line"></span><br><span class="line">    # 约束 29</span><br><span class="line">    eq29 = (27 * v27 + 223 * v6 + 147 * v26 + 13 * v21 + 35 * (v17 + 7 * v4) + 57 * (v19 + 2 * v18 + 3 * v11) +</span><br><span class="line">            11 * (v1 + 17 * (v9 + v5) + 10 * v16 + 3 * v31) + 2 * (53 * v23 + v25 + 38 * v15 + 43 * v42 + 115 * v29 +</span><br><span class="line">            61 * v22 + 111 * (v10 + v40) + 14 * (v20 + v7 + 2 * v7 + 8 * v28) + 109 * v2 + 100 * v41 + 63 * v8) +</span><br><span class="line">            93 * v39 + 251 * v30 + 131 * v3)</span><br><span class="line">    solver.add(eq29 == 393303)</span><br><span class="line"></span><br><span class="line">    # 约束 30</span><br><span class="line">    eq30 = (116 * v9 + 152 * v29 + 235 * v20 + 202 * v18 + 85 * (v8 + 3 * v11) + 221 * (v16 + v40) + 125 * (2 * v41 + v24) +</span><br><span class="line">            7 * (19 * v4 + 9 * (v10 + 2 * v25) + v2 + 33 * v3 + 32 * v19) +</span><br><span class="line">            3 * (71 * v39 + 43 * v22 + 32 * (v17 + v26) + 15 * (v5 + v6 + 2 * v23) + v28 + 74 * v31 + 48 * v42) +</span><br><span class="line">            10 * (v21 + 11 * v30 + 16 * v15) + 136 * v7 + 106 * v1 + 41 * v27)</span><br><span class="line">    solver.add(eq30 == 403661)</span><br><span class="line"></span><br><span class="line">    # 约束 31 （含 v36 = 3*v21）</span><br><span class="line">    eq31 = (127 * v4 + 106 * v15 + 182 * v30 + 142 * v5 + 159 * v16 + 17 * v1 + 211 * v6 + 134 * v2 + 199 * v7 +</span><br><span class="line">            103 * v28 + 247 * v23 + 122 * v9 + 95 * v41 + 62 * v10 + 203 * v39 + 16 * v11 +</span><br><span class="line">            41 * (6 * v42 + v25) + 9 * (22 * v24 + v20 + 27 * v31 + 28 * v40) +</span><br><span class="line">            10 * (v8 + v22 + 3 * v21 + 8 * v17 + 2 * (v22 + 3 * v21 + 8 * v17) + 13 * v29) +</span><br><span class="line">            6 * (23 * v27 + v26) + 213 * v18 + 179 * v3 + 43 * v19)</span><br><span class="line">    solver.add(eq31 == 418596)</span><br><span class="line"></span><br><span class="line">    # 终止条件 (函数返回为 true 的最终等式)</span><br><span class="line">    final_eq = (149 * v19 + v1 + 133 * v22 + 207 * v41 + 182 * v26 + 234 * v7 + 199 * v8 + 168 * v21 +</span><br><span class="line">                58 * v10 + 108 * v20 + 142 * v18 + 156 * (v9 + v25) + 16 * (v29 + 6 * v31) +</span><br><span class="line">                126 * (v17 + 2 * v39) + 127 * (v4 + 2 * v27 + v40) + 49 * (v30 + 4 * v16) + 11 * (v5 + 22 * v11) +</span><br><span class="line">                5 * (v15 + v42 + 45 * v24 + 50 * v28) + 109 * v2 + 124 * v6 + 123 * v3)</span><br><span class="line">    solver.add(final_eq == 418697)</span><br><span class="line">    </span><br><span class="line">    print(&quot;开始求解...&quot;)</span><br><span class="line">    </span><br><span class="line">    if solver.check() == z3.sat:</span><br><span class="line">        model = solver.model()</span><br><span class="line">        result = []</span><br><span class="line">        for i in range(32):</span><br><span class="line">            value = model[vars[i]].as_long()</span><br><span class="line">            result.append(value)</span><br><span class="line">        </span><br><span class="line">        print(&quot;找到解:&quot;)</span><br><span class="line">        for i, val in enumerate(result):</span><br><span class="line">            print(f&quot;a1[&#123;i&#125;] = &#123;val:3d&#125; (0x&#123;val:02x&#125;) &#x27;&#123;chr(val) if 32 &lt;= val &lt;= 126 else &#x27;.&#x27;&#125;&#x27;&quot;)</span><br><span class="line">        </span><br><span class="line">        # 转换为字符串</span><br><span class="line">        flag_string = &#x27;&#x27;.join(chr(val) for val in result)</span><br><span class="line">        print(f&quot;\n可能的flag: &#123;flag_string&#125;&quot;)</span><br><span class="line">        </span><br><span class="line">        return result</span><br><span class="line">    else:</span><br><span class="line">        print(&quot;无解或需要添加更多约束&quot;)</span><br><span class="line">        return None</span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    print(&quot;=== Base64 约束求解器 ===&quot;)</span><br><span class="line">    print(&quot;正在分析并求解32个字节的约束方程组...&quot;)</span><br><span class="line">    print()</span><br><span class="line">    </span><br><span class="line">    # 添加约束</span><br><span class="line">    result = solve_complete_system()</span><br><span class="line">    </span><br><span class="line">    if result:</span><br><span class="line">        print(&quot;\n=== 验证结果 ===&quot;)</span><br><span class="line">        # 验证是否为可打印字符</span><br><span class="line">        printable_chars = []</span><br><span class="line">        for val in result:</span><br><span class="line">            if 32 &lt;= val &lt;= 126:</span><br><span class="line">                printable_chars.append(chr(val))</span><br><span class="line">            else:</span><br><span class="line">                printable_chars.append(&#x27;?&#x27;)</span><br><span class="line">        </span><br><span class="line">        flag_candidate = &#x27;&#x27;.join(printable_chars)</span><br><span class="line">        print(f&quot;作为字符串: &#123;flag_candidate&#125;&quot;)</span><br><span class="line">        </span><br><span class="line">    else:</span><br><span class="line">        print(&quot;未能找到解，可能需要添加更多约束条件&quot;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -923,7 +923,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-13 00:06:38" itemprop="dateModified" datetime="2025-09-13T00:06:38+08:00">2025-09-13</time>
+                <time title="修改时间：2025-11-17 20:54:18" itemprop="dateModified" datetime="2025-11-17T20:54:18+08:00">2025-11-17</time>
               </span>
 
           
@@ -939,58 +939,58 @@
       
           <span id="more"></span>
 
-<h1 id="第二关：精确扫描"><a href="#第二关：精确扫描" class="headerlink" title="第二关：精确扫描"></a>第二关：精确扫描</h1><img src="/posts/undefined/image-20250912132011150.png" class="" title="image-20250912132011150">
+<h1 id="第二关：精确扫描"><a href="#第二关：精确扫描" class="headerlink" title="第二关：精确扫描"></a>第二关：精确扫描</h1><img src="/posts/35052/image-20250912132011150.png" class="" title="image-20250912132011150">
 
 <p>扫描类型：精确数值</p>
 <p>数值：100</p>
 <p>数值类型：4字节。因为一般都使用int来存储，而int是4字节的。</p>
 <p>然后进行首次扫描（查找存储了值100的所有地址）：</p>
-<img src="/posts/undefined/image-20250912132214346.png" class="" title="image-20250912132214346">
+<img src="/posts/35052/image-20250912132214346.png" class="" title="image-20250912132214346">
 
 <p>点击“打我”，健康值变为96。将搜索数值改为96，进行再次扫描（从上一次的结果里面找出存储的值变为96的地址）：</p>
-<img src="/posts/undefined/image-20250912132447180.png" class="" title="image-20250912132447180">
+<img src="/posts/35052/image-20250912132447180.png" class="" title="image-20250912132447180">
 
 <p>搜索结果只有一个，那么这个就是存储血量的地址。双击搜索出的结果，在下方的列表里面会添加这一项，点击这一项的数值，可直接改变其存储的值（血量）。</p>
-<img src="/posts/undefined/image-20250912132728695.png" class="" title="image-20250912132728695">
+<img src="/posts/35052/image-20250912132728695.png" class="" title="image-20250912132728695">
 
 <p>点击”激活“那一列的方框，这个修改后的值将不会再被程序修改，也就达到了锁血的效果。</p>
-<h1 id="第三关：未知的初始值"><a href="#第三关：未知的初始值" class="headerlink" title="第三关：未知的初始值"></a>第三关：未知的初始值</h1><img src="/posts/undefined/image-20250912133044845.png" class="" title="image-20250912133044845">
+<h1 id="第三关：未知的初始值"><a href="#第三关：未知的初始值" class="headerlink" title="第三关：未知的初始值"></a>第三关：未知的初始值</h1><img src="/posts/35052/image-20250912133044845.png" class="" title="image-20250912133044845">
 
 <p>先点击”新的扫描“来清空先前框定的范围，重新开始。然后</p>
 <p>扫描类型：未知的初始值</p>
 <p>数值类型：4字节</p>
 <p>然后进行首次扫描</p>
-<img src="/posts/undefined/image-20250912133328508.png" class="" title="image-20250912133328508">
+<img src="/posts/35052/image-20250912133328508.png" class="" title="image-20250912133328508">
 
 <p>由于结果太多，因此左边结果列表不会显示。接下来点击游戏里的“打我”，显示血量-6。</p>
 <p>扫描类型：数值减少了</p>
 <p>数值类型：4字节</p>
 <p>数值：6</p>
 <p>进行再次扫描：</p>
-<img src="/posts/undefined/image-20250912133625705.png" class="" title="image-20250912133625705">
+<img src="/posts/35052/image-20250912133625705.png" class="" title="image-20250912133625705">
 
 <p>重复此操作，直到结果栏只剩一个满足条件的结果（题目说了数值在0~500之间）：</p>
-<img src="/posts/undefined/image-20250912134133066.png" class="" title="image-20250912134133066">
+<img src="/posts/35052/image-20250912134133066.png" class="" title="image-20250912134133066">
 
 <p>将这个值修改为5000，进入下一关。</p>
-<h1 id="第四关：浮点数"><a href="#第四关：浮点数" class="headerlink" title="第四关：浮点数"></a>第四关：浮点数</h1><img src="/posts/undefined/image-20250912134304333.png" class="" title="image-20250912134304333">
+<h1 id="第四关：浮点数"><a href="#第四关：浮点数" class="headerlink" title="第四关：浮点数"></a>第四关：浮点数</h1><img src="/posts/35052/image-20250912134304333.png" class="" title="image-20250912134304333">
 
 <p>精确数值、单浮点、100，进行首次扫描，找到健康值，修改为5000</p>
-<img src="/posts/undefined/image-20250912134607921.png" class="" title="image-20250912134607921">
+<img src="/posts/35052/image-20250912134607921.png" class="" title="image-20250912134607921">
 
 <p>新的扫描，精确数值、双浮点、100，进行首次扫描，找到弹药，修改为5000</p>
-<img src="/posts/undefined/image-20250912134854793.png" class="" title="image-20250912134854793">
+<img src="/posts/35052/image-20250912134854793.png" class="" title="image-20250912134854793">
 
-<h1 id="第五关：代码查找"><a href="#第五关：代码查找" class="headerlink" title="第五关：代码查找"></a>第五关：代码查找</h1><img src="/posts/undefined/image-20250912135607756.png" class="" title="image-20250912135607756">
+<h1 id="第五关：代码查找"><a href="#第五关：代码查找" class="headerlink" title="第五关：代码查找"></a>第五关：代码查找</h1><img src="/posts/35052/image-20250912135607756.png" class="" title="image-20250912135607756">
 
 <p>先通过精确数值找到存储血量的地址：</p>
-<img src="/posts/undefined/image-20250912135757248.png" class="" title="image-20250912135757248">
+<img src="/posts/35052/image-20250912135757248.png" class="" title="image-20250912135757248">
 
 <p>【右键-&gt;找出是什么改写了这个地址】，点击“改变数值，列表会出现改变了此地址存储的值的所有指令，双击可查看详细信息：</p>
-<img src="/posts/undefined/image-20250912140021249.png" class="" title="image-20250912140021249">
+<img src="/posts/35052/image-20250912140021249.png" class="" title="image-20250912140021249">
 
 <p>点击“替换”，可将指令nop掉。点击“改变数值”，进入下一关。</p>
-<h1 id="第六关：指针"><a href="#第六关：指针" class="headerlink" title="第六关：指针"></a>第六关：指针</h1><img src="/posts/undefined/image-20250912140355037.png" class="" title="image-20250912140355037">
+<h1 id="第六关：指针"><a href="#第六关：指针" class="headerlink" title="第六关：指针"></a>第六关：指针</h1><img src="/posts/35052/image-20250912140355037.png" class="" title="image-20250912140355037">
 
 <h2 id="理论："><a href="#理论：" class="headerlink" title="理论："></a>理论：</h2><p>我们知道，存储变量可通过3种方式：</p>
 <ol>
@@ -1004,134 +1004,134 @@
 
 <p>看这段代码，我指的第一种锁血（动态地址锁血）就是对malloc返回的地址进行锁血（事实上，通过数值扫描找到的第一个地址也就是这个地址），这个地址在每一次程序执行时都会改变，因此这个锁血是失败的。而第二种锁血（基址锁血），锁的其实是全局变量里面存储的地址，这个地址虽然每一次运行都会变动，但是CE每一次锁血时，都是通过这个指针链来查找的，找到的是更新后的地址，锁血因此是成功的。我们此关就是要通过动态地址来往上找，直到找到基址，然后构建指针链，让CE每次通过这个指针链找到血量，进行锁血。</p>
 <h2 id="实操："><a href="#实操：" class="headerlink" title="实操："></a>实操：</h2><p>先找到存储血量的地址（这里称为地址1）：</p>
-<img src="/posts/undefined/image-20250912145119463.png" class="" title="image-20250912145119463">
+<img src="/posts/35052/image-20250912145119463.png" class="" title="image-20250912145119463">
 
 <p>查找是什么改写了这个地址，查看详细信息：</p>
-<img src="/posts/undefined/image-20250912145159617.png" class="" title="image-20250912145159617">
+<img src="/posts/35052/image-20250912145159617.png" class="" title="image-20250912145159617">
 
 <p>分析指令，是将eax的值放入[rdx]里面。此时rdx存储了地址1，那么我们现在需要知道是谁将地址1赋值给rdx的。使用内存扫描找谁存储了地址1（注意数值一定要勾选Hex）：</p>
-<img src="/posts/undefined/image-20250912145754688.png" class="" title="image-20250912145754688">
+<img src="/posts/35052/image-20250912145754688.png" class="" title="image-20250912145754688">
 
 <p>可以看到，是一个绿色地址存储了地址1，这个绿色地址就是基址。接下来创建指针链：</p>
 <p>点击“手动添加地址”，然后在弹出的界面勾选指针：</p>
-<img src="/posts/undefined/image-20250912145946889.png" class="" title="image-20250912145946889">
+<img src="/posts/35052/image-20250912145946889.png" class="" title="image-20250912145946889">
 
 <p>在下面的空文本框输入基址，然后上面的偏移填入偏移（因为上面是[rdx]，故偏移为0），点击确定。地址列表会出现一个[P-&gt;xxx]格式的指针：</p>
-<img src="/posts/undefined/image-20250912150618102.png" class="" title="image-20250912150618102">
+<img src="/posts/35052/image-20250912150618102.png" class="" title="image-20250912150618102">
 
 <p>看这一项的”数值“列对应的值是否与血量相等，如果相等，则代表指针链构建成功。将数值改为5000并锁定，然后点击游戏里面”改变指针“进入下一关。</p>
-<h1 id="第七关：代码注入"><a href="#第七关：代码注入" class="headerlink" title="第七关：代码注入"></a>第七关：代码注入</h1><img src="/posts/undefined/image-20250912153109765.png" class="" title="image-20250912153109765">
+<h1 id="第七关：代码注入"><a href="#第七关：代码注入" class="headerlink" title="第七关：代码注入"></a>第七关：代码注入</h1><img src="/posts/35052/image-20250912153109765.png" class="" title="image-20250912153109765">
 
 <p>先找到存储血量的地址，然后”找出是什么改写了这个地址”：</p>
-<img src="/posts/undefined/image-20250912153326353.png" class="" title="image-20250912153326353">
+<img src="/posts/35052/image-20250912153326353.png" class="" title="image-20250912153326353">
 
 
 
 <p>双击可打开调试程序：</p>
-<img src="/posts/undefined/image-20250912153814134.png" class="" title="image-20250912153814134">
+<img src="/posts/35052/image-20250912153814134.png" class="" title="image-20250912153814134">
 
 <p>点击[工具-&gt;自动汇编]</p>
-<img src="/posts/undefined/image-20250912153841446.png" class="" title="image-20250912153841446">
+<img src="/posts/35052/image-20250912153841446.png" class="" title="image-20250912153841446">
 
 <p>[模板-&gt;代码注入]，它会自动帮你生成一个Inline Hook的模板</p>
-<img src="/posts/undefined/image-20250912153953900.png" class="" title="image-20250912153953900">
+<img src="/posts/35052/image-20250912153953900.png" class="" title="image-20250912153953900">
 
 <p>修改这个模板：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">alloc(newmem,2048,&quot;Tutorial-x86_64.exe&quot;+2D897) </span><br><span class="line">label(returnhere)</span><br><span class="line">label(originalcode)</span><br><span class="line">label(exit)</span><br><span class="line"></span><br><span class="line">// 第一部分，跳转的新空间</span><br><span class="line">newmem: //this is allocated memory, you have read,write,execute access</span><br><span class="line">//place your code here</span><br><span class="line"></span><br><span class="line">originalcode:</span><br><span class="line">add dword ptr [rsi+000007E0],02</span><br><span class="line"></span><br><span class="line">exit:</span><br><span class="line">jmp returnhere</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 第二部分：原地址空间</span><br><span class="line">&quot;Tutorial-x86_64.exe&quot;+2D897:</span><br><span class="line">jmp newmem</span><br><span class="line">nop 2</span><br><span class="line">returnhere:</span><br></pre></td></tr></table></figure>
 
 <p>点击”execute”，代码就注入完成了。</p>
 <h1 id="第八关：多级指针"><a href="#第八关：多级指针" class="headerlink" title="第八关：多级指针"></a>第八关：多级指针</h1><h2 id="法一：手动跟踪"><a href="#法一：手动跟踪" class="headerlink" title="法一：手动跟踪"></a>法一：手动跟踪</h2><p>先查找存储血量的地址，是0x015A6958，然后查看谁修改了这个地址：</p>
-<img src="/posts/undefined/image-20250912155020067.png" class="" title="image-20250912155020067">
+<img src="/posts/35052/image-20250912155020067.png" class="" title="image-20250912155020067">
 
 <p>rsi+18等于0x015A6958，那么偏移为0x18。rsi &#x3D;  0x015A6958  - 0x18 &#x3D; 0x015A6940，接下来我们需要查找谁将0x015A6940赋值给了rsi。使用内存扫描，得到地址0x06D806F0：</p>
-<img src="/posts/undefined/image-20250912155314839.png" class="" title="image-20250912155314839">
+<img src="/posts/35052/image-20250912155314839.png" class="" title="image-20250912155314839">
 
 <p>为了查看偏移，我们使用“查看谁访问了这个地址”:</p>
 <p>注意：除第1级指针外，更高级的指针都不能使用“谁修改了这个地址”，因为当你点击改变数值时，这个指针链并不会改变，只有指针链末尾指向的数值才会改变，也就是只有最后一个指针指向的值才会改变。但是可用“谁访问了这个地址”，因为当程序顺着指针链修改末尾的数值时，会访问中间的所有指针。</p>
-<img src="/posts/undefined/image-20250912155759521.png" class="" title="image-20250912155759521">
+<img src="/posts/35052/image-20250912155759521.png" class="" title="image-20250912155759521">
 
 <p>选择“谁访问这个地址”时，可能会出现多个结果，这个时候就要分析每个结果的汇编语句，排除一些选项，比如：</p>
-<img src="/posts/undefined/image-20250912155921979.png" class="" title="image-20250912155921979">
+<img src="/posts/35052/image-20250912155921979.png" class="" title="image-20250912155921979">
 
 <p>这个比较并不会改变任何寄存器的值，因此不是我们要找的。</p>
-<img src="/posts/undefined/image-20250912160000977.png" class="" title="image-20250912160000977">
+<img src="/posts/35052/image-20250912160000977.png" class="" title="image-20250912160000977">
 
 <p>而这个是将RSI指向的数据传给RSI，会改变寄存器的值，是我们要找的。</p>
 <p>这里显示的RSI的值是0x015A6940，刚好是前面我们需要查找的地址，也就说明，现在显示的寄存器状态是这个指令执行完成后的状态。那么，执行前RSI的值就是0x06D806F0，偏移为0（因为是[rsi]）。接下来寻找谁存储的地址2，发现是0x06DD2508存储了地址2。为了查看偏移，查找谁访问了这个地址：</p>
-<img src="/posts/undefined/image-20250912161320720.png" class="" title="image-20250912161320720">
+<img src="/posts/35052/image-20250912161320720.png" class="" title="image-20250912161320720">
 
 <p>这里RSI+18等于0x06DD2508，那么偏移是0x18。在执行这条指令前，RSI &#x3D; 0x06DD2508 - 0x18 &#x3D; 0x06DD24F0，接下来查找谁存储了0x06DD24F0，发现是0x06DD1A20，找出是谁访问了该地址：</p>
-<img src="/posts/undefined/image-20250912162022171.png" class="" title="image-20250912162022171">
+<img src="/posts/35052/image-20250912162022171.png" class="" title="image-20250912162022171">
 
 <p>这里RSI+10等于0x06DD1A20，那么偏移是0x10。在执行这条指令前，RSI &#x3D; 0x06DD1A20 - 0x10&#x3D; 0x06DD1A10，接下来查找谁存储了0x06DD1A10</p>
-<img src="/posts/undefined/image-20250912162229106.png" class="" title="image-20250912162229106">
+<img src="/posts/35052/image-20250912162229106.png" class="" title="image-20250912162229106">
 
 <p>发现是一个绿色地址0x100325B00（基址）存储了这个地址，查看是谁访问了这个地址：</p>
-<img src="/posts/undefined/image-20250912162453758.png" class="" title="image-20250912162453758">
+<img src="/posts/35052/image-20250912162453758.png" class="" title="image-20250912162453758">
 
 <p>直接使用[100325B00]代表偏移是0。总结一下执行流程：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mov rsi,[100325B00]</span><br><span class="line">mov rsi,[rsi+10]		// rsi == 0x06DD1A10</span><br><span class="line">mov rsi,[rsi+18]		// rsi == 0x06DD24F0</span><br><span class="line">mov rsi,[rsi]			// rsi == 0x06D806F0</span><br><span class="line">mov [rsi+18],eax		// rsi == 0x015A6940</span><br><span class="line"></span><br><span class="line">也就是：</span><br><span class="line">[100325B00] == 0x06DD1A10</span><br><span class="line">[0x06DD1A10 + 0X10] == 0x06DD24F0</span><br><span class="line">[0x06DD24F0 + 0X18] == 0x06D806F0</span><br><span class="line">[0x06D806F0] == 0x015A6940</span><br><span class="line">[0x015A6940 + 0X18] == 血量</span><br></pre></td></tr></table></figure>
 
 <p>构建指针链：</p>
-<img src="/posts/undefined/image-20250912164630187.png" class="" title="image-20250912164630187">
+<img src="/posts/35052/image-20250912164630187.png" class="" title="image-20250912164630187">
 
 <h2 id="法二：指针扫描"><a href="#法二：指针扫描" class="headerlink" title="法二：指针扫描"></a>法二：指针扫描</h2><p>先查找存储血量的地址，然后[右键-&gt;对这个地址进行指针扫描]</p>
-<img src="/posts/undefined/image-20250912165414183.png" class="" title="image-20250912165414183">
+<img src="/posts/35052/image-20250912165414183.png" class="" title="image-20250912165414183">
 
 
 
 <p>然后默认</p>
-<img src="/posts/undefined/image-20250912165451946.png" class="" title="image-20250912165451946">
+<img src="/posts/35052/image-20250912165451946.png" class="" title="image-20250912165451946">
 
 
 
 <p>选择地址保存</p>
-<img src="/posts/undefined/image-20250912165550048.png" class="" title="image-20250912165550048">
+<img src="/posts/35052/image-20250912165550048.png" class="" title="image-20250912165550048">
 
 <p>保存后文件会自动打开。接下来，我们需要改变指针（这题点击“改变指针”这个按钮就行，如果是真正的游戏就需要死亡或重新打开游戏即可），然后进行精确值扫描，记下新的地址。回到之前打开的文件，点击[指针扫描器-&gt;重新扫描内存]:</p>
-<img src="/posts/undefined/image-20250912171032020.png" class="" title="image-20250912171032020">
+<img src="/posts/35052/image-20250912171032020.png" class="" title="image-20250912171032020">
 
 <p>输入新指针：</p>
-<img src="/posts/undefined/image-20250912171155009.png" class="" title="image-20250912171155009">
+<img src="/posts/35052/image-20250912171155009.png" class="" title="image-20250912171155009">
 
 <p>点击确定后选择地址保存，它会自动筛选出正确的路径：</p>
-<img src="/posts/undefined/image-20250912171258048.png" class="" title="image-20250912171258048">
+<img src="/posts/35052/image-20250912171258048.png" class="" title="image-20250912171258048">
 
 <p>点击即可添加进地址列表</p>
-<img src="/posts/undefined/image-20250912171403023.png" class="" title="image-20250912171403023">
+<img src="/posts/35052/image-20250912171403023.png" class="" title="image-20250912171403023">
 
 
 
-<h1 id="第九关：注入-（共享代码）"><a href="#第九关：注入-（共享代码）" class="headerlink" title="第九关：注入++（共享代码）"></a>第九关：注入++（共享代码）</h1><img src="/posts/undefined/image-20250912172306193.png" class="" title="image-20250912172306193">
+<h1 id="第九关：注入-（共享代码）"><a href="#第九关：注入-（共享代码）" class="headerlink" title="第九关：注入++（共享代码）"></a>第九关：注入++（共享代码）</h1><img src="/posts/35052/image-20250912172306193.png" class="" title="image-20250912172306193">
 
 <p>先找出4个健康值：</p>
-<img src="/posts/undefined/image-20250912172845472.png" class="" title="image-20250912172845472">
+<img src="/posts/35052/image-20250912172845472.png" class="" title="image-20250912172845472">
 
 <p>[右键-&gt;找出是什么改写了这个地址]，然后游戏里”攻击“，在改写列表里面双击出现的项查看详细信息，再双击进入调试器：</p>
-<img src="/posts/undefined/image-20250912173136729.png" class="" title="image-20250912173136729">
+<img src="/posts/35052/image-20250912173136729.png" class="" title="image-20250912173136729">
 
 <p>[右键-&gt;找出指令访问的地址]</p>
-<img src="/posts/undefined/image-20250912173246607.png" class="" title="image-20250912173246607">
+<img src="/posts/35052/image-20250912173246607.png" class="" title="image-20250912173246607">
 
 <p>然后对每一个玩家进行攻击，在列表里面可以看到4项：</p>
-<img src="/posts/undefined/image-20250912173345787.png" class="" title="image-20250912173345787">
+<img src="/posts/35052/image-20250912173345787.png" class="" title="image-20250912173345787">
 
 <p>这4个地址刚好是前面找出的4个健康值的地址，说明这4个玩家公用一段修改健康值的代码，如果我像第五关一样直接nop掉，那么敌人也会锁血。因此我们需要代码注入，判断需要修改的是队友还是敌人，如果是队友，那么不修改；如果是敌人，那么直接修改为0。为了方便判断，我们需要找出队友和敌人的区别。先将队友归为第一组：[右键-&gt;Find commonalities ….-&gt;Mark selection as group 1]</p>
-<img src="/posts/undefined/image-20250912173857855.png" class="" title="image-20250912173857855">
+<img src="/posts/35052/image-20250912173857855.png" class="" title="image-20250912173857855">
 
 <p>然后将敌人归于第2组：[右键-&gt;Find commonalities ….-&gt;Mark selection as group 2]</p>
-<img src="/posts/undefined/image-20250912174115143.png" class="" title="image-20250912174115143">
+<img src="/posts/35052/image-20250912174115143.png" class="" title="image-20250912174115143">
 
 <p>然后全选，[右键-&gt;Find commonalities ….-&gt;Scan for commonalities]</p>
-<img src="/posts/undefined/image-20250912174213625.png" class="" title="image-20250912174213625">
+<img src="/posts/35052/image-20250912174213625.png" class="" title="image-20250912174213625">
 
-<img src="/posts/undefined/image-20250912174318845.png" class="" title="image-20250912174318845">
+<img src="/posts/35052/image-20250912174318845.png" class="" title="image-20250912174318845">
 
 <p>由于汇编语句中是对rbx+8处的值进行修改，那么需要对比rbx存储的地址的附近的值，所以点击rbx那一项</p>
-<img src="/posts/undefined/image-20250912174511676.png" class="" title="image-20250912174511676">
+<img src="/posts/35052/image-20250912174511676.png" class="" title="image-20250912174511676">
 
 <p>点击扫描</p>
-
+<img src="/posts/35052/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-2025-09-12-175435.png" class="" title="屏幕截图 2025-09-12 175435">
 
 <p>可以看到，在偏移为0x14的位置，貌似是阵营标签，可以拿这个来判断需要修改的是哪个阵营。接下来写注入代码：</p>
 <p>[工具-&gt;自动汇编]，然后模板可以先选择CT表框架（CT表就是之前说的地址列表），因为选择了这个之后就可保存在CT表里面，后续可以进行修改。然后再选择代码注入模板。注入脚本如下：</p>
@@ -1144,20 +1144,20 @@
 </ul>
 <h2 id="脚本优化：特征码"><a href="#脚本优化：特征码" class="headerlink" title="脚本优化：特征码"></a>脚本优化：特征码</h2><p>前面提到的脚本每一次重开游戏都是有效的，但是如果游戏进行了更新，那么会重新编译，代码的偏移可能会不同，因此如果还是使用固定偏移来注入，版本更新会直接失效。版本更新时，大多数时候都是改变稍微一小部分指令，大部分的指令不会改变，只是位置发生了移动。因此可以把待注入地址处及附近的硬编码作为特征码来锁定目标位置，而不是用绝对地址，这样做在版本更新后依然有效。</p>
 <p>先在调试器界面复制指令硬编码，然后进行搜索：</p>
-<img src="/posts/undefined/image-20250912192329282.png" class="" title="image-20250912192329282">
+<img src="/posts/35052/image-20250912192329282.png" class="" title="image-20250912192329282">
 
 <p>注意：一定要把可写给关掉</p>
 <p>在版本更新时，操作类型基本是稳定的，但是操作数据可能会有改变，因此可以使用”xx”来代替操作数据进行搜索。一个”xx”代表一个字节：</p>
-<img src="/posts/undefined/image-20250912192844806.png" class="" title="image-20250912192844806">
+<img src="/posts/35052/image-20250912192844806.png" class="" title="image-20250912192844806">
 
 <p>注意，在实际AOB注入时，应该先在扫描界面搜索一下字节数组的搜索结果是否唯一，防止注入位置错误。</p>
 <p>代码注入：模板选择CT表+AOB注入</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">&#123; Game   : Tutorial-x86_64.exe</span><br><span class="line">  Version: </span><br><span class="line">  Date   : 2025-09-12</span><br><span class="line">  Author : tzs</span><br><span class="line"></span><br><span class="line">  This script does blah blah blah</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[ENABLE]</span><br><span class="line">//code from here to &#x27;[DISABLE]&#x27; will be used to enable the cheat</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">aobscanmodule(INJECT,Tutorial-x86_64.exe,F3xxxxxxxx0Fxxxxxxxxxxxx7Axx75xx48xxxxxx48xxxxxxxxxxxx) // should be unique</span><br><span class="line">alloc(newmem,$1000,INJECT)</span><br><span class="line"></span><br><span class="line">label(Enemy)</span><br><span class="line">label(return)</span><br><span class="line">label(exit)</span><br><span class="line"></span><br><span class="line">newmem:</span><br><span class="line">pushfq</span><br><span class="line">cmp [rbx+14],1</span><br><span class="line">je exit</span><br><span class="line">Enemy:</span><br><span class="line">  movss [rbx+08],xmm0</span><br><span class="line">  jmp exit</span><br><span class="line"></span><br><span class="line">exit:</span><br><span class="line">popfq</span><br><span class="line">jmp return</span><br><span class="line"></span><br><span class="line">INJECT:</span><br><span class="line">  jmp newmem</span><br><span class="line">return:</span><br><span class="line">registersymbol(INJECT)</span><br><span class="line"></span><br><span class="line">[DISABLE]</span><br><span class="line">//code from here till the end of the code will be used to disable the cheat</span><br><span class="line">INJECT:</span><br><span class="line">  db F3 0F 11 43 08</span><br><span class="line"></span><br><span class="line">unregistersymbol(INJECT)</span><br><span class="line">dealloc(newmem)</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">// ORIGINAL CODE - INJECTION POINT: Tutorial-x86_64.exe+2EF1D</span><br><span class="line"></span><br><span class="line">Tutorial-x86_64.exe+2EEF3: E9 97 00 00 00           - jmp Tutorial-x86_64.exe+2EF8F</span><br><span class="line">Tutorial-x86_64.exe+2EEF8: F3 0F 2A C6              - cvtsi2ss xmm0,esi</span><br><span class="line">Tutorial-x86_64.exe+2EEFC: F3 0F 10 4B 08           - movss xmm1,[rbx+08]</span><br><span class="line">Tutorial-x86_64.exe+2EF01: F3 0F 5C C8              - subss xmm1,xmm0</span><br><span class="line">Tutorial-x86_64.exe+2EF05: 0F 2F 0D 3C 89 20 00     - comiss xmm1,[Tutorial-x86_64.exe+237848]</span><br><span class="line">Tutorial-x86_64.exe+2EF0C: 7A 0C                    - jp Tutorial-x86_64.exe+2EF1A</span><br><span class="line">Tutorial-x86_64.exe+2EF0E: 73 0A                    - jae Tutorial-x86_64.exe+2EF1A</span><br><span class="line">Tutorial-x86_64.exe+2EF10: F3 0F 10 05 30 89 20 00  - movss xmm0,[Tutorial-x86_64.exe+237848]</span><br><span class="line">Tutorial-x86_64.exe+2EF18: EB 03                    - jmp Tutorial-x86_64.exe+2EF1D</span><br><span class="line">Tutorial-x86_64.exe+2EF1A: 0F 28 C1                 - movaps xmm0,xmm1</span><br><span class="line">// ---------- INJECTING HERE ----------</span><br><span class="line">Tutorial-x86_64.exe+2EF1D: F3 0F 11 43 08           - movss [rbx+08],xmm0</span><br><span class="line">// ---------- DONE INJECTING  ----------</span><br><span class="line">Tutorial-x86_64.exe+2EF22: 0F 2F 05 1F 89 20 00     - comiss xmm0,[Tutorial-x86_64.exe+237848]</span><br><span class="line">Tutorial-x86_64.exe+2EF29: 7A 14                    - jp Tutorial-x86_64.exe+2EF3F</span><br><span class="line">Tutorial-x86_64.exe+2EF2B: 75 12                    - jne Tutorial-x86_64.exe+2EF3F</span><br><span class="line">Tutorial-x86_64.exe+2EF2D: 48 8B 4B 60              - mov rcx,[rbx+60]</span><br><span class="line">Tutorial-x86_64.exe+2EF31: 48 8B 15 00 BD 18 00     - mov rdx,[Tutorial-x86_64.exe+1BAC38]</span><br><span class="line">Tutorial-x86_64.exe+2EF38: E8 43 D7 07 00           - call Tutorial-x86_64.exe+AC680</span><br><span class="line">Tutorial-x86_64.exe+2EF3D: EB 42                    - jmp Tutorial-x86_64.exe+2EF81</span><br><span class="line">Tutorial-x86_64.exe+2EF3F: F3 0F 10 4B 08           - movss xmm1,[rbx+08]</span><br><span class="line">Tutorial-x86_64.exe+2EF44: 48 8D 4D E0              - lea rcx,[rbp-20]</span><br><span class="line">Tutorial-x86_64.exe+2EF48: E8 C3 BC 01 00           - call Tutorial-x86_64.exe+4AC10</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h1 id="实战练习："><a href="#实战练习：" class="headerlink" title="实战练习："></a>实战练习：</h1><img src="/posts/undefined/image-20250912210705295.png" class="" title="image-20250912210705295">
+<h1 id="实战练习："><a href="#实战练习：" class="headerlink" title="实战练习："></a>实战练习：</h1><img src="/posts/35052/image-20250912210705295.png" class="" title="image-20250912210705295">
 
 <p>通过摧毁靶子选定要挑战的关卡</p>
-<h2 id="练习一："><a href="#练习一：" class="headerlink" title="练习一："></a>练习一：</h2><img src="/posts/undefined/image-20250912211405223.png" class="" title="image-20250912211405223">
+<h2 id="练习一："><a href="#练习一：" class="headerlink" title="练习一："></a>练习一：</h2><img src="/posts/35052/image-20250912211405223.png" class="" title="image-20250912211405223">
 
 <p>规则：</p>
 <ol>
@@ -1166,7 +1166,7 @@
 </ol>
 <p>破解思路：可以将子弹数设置为无限，也可以修改靶子扣血逻辑，达到一击毙命。这里选择一击毙命的方式：</p>
 <p>先找存储靶子血量的地址。由于未知血量数值、类型，因此全部选择未知进行扫描：</p>
-<img src="/posts/undefined/image-20250912211904889.png" class="" title="image-20250912211904889">
+<img src="/posts/35052/image-20250912211904889.png" class="" title="image-20250912211904889">
 
 <p>可以通过以下操作进行筛选：</p>
 <ol>
@@ -1174,22 +1174,22 @@
 <li>空放炮弹，筛选数值不变的</li>
 <li>打完炮弹，筛选对比首次扫描数值不变的</li>
 </ol>
-<img src="/posts/undefined/image-20250912214618474.png" class="" title="image-20250912214618474">
+<img src="/posts/35052/image-20250912214618474.png" class="" title="image-20250912214618474">
 
 <p>最后得到了8个结果。其中0159E010的4字节和0159E070的单浮点数最像血量（因为初始值为100），使用”谁修改了这个地址“，定位汇编界面：</p>
-<img src="/posts/undefined/image-20250912214927578.png" class="" title="image-20250912214927578">
+<img src="/posts/35052/image-20250912214927578.png" class="" title="image-20250912214927578">
 
 <p>进行代码注入（简略版）：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sub rsp, 16</span><br><span class="line">movups [rsp], xmm0</span><br><span class="line">xorps xmm0,xmm0</span><br><span class="line">movss [rax+50],xmm0</span><br><span class="line">movups xmm0, [rsp]</span><br><span class="line">add rsp, 16</span><br><span class="line">jmp return</span><br></pre></td></tr></table></figure>
 
 <p>实操发现最后血条变成空了，但是游戏并未结束，说明这个0159E070的单浮点数可能只是血条的显示数，不是真实的血条。</p>
-<img src="/posts/undefined/image-20250912221440981.png" class="" title="image-20250912221440981">
+<img src="/posts/35052/image-20250912221440981.png" class="" title="image-20250912221440981">
 
 <p>然后试试0159E010的4字节</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">&#123; Game   : gtutorial-x86_64.exe</span><br><span class="line">  Version: </span><br><span class="line">  Date   : 2025-09-12</span><br><span class="line">  Author : tzs</span><br><span class="line"></span><br><span class="line">  This script does blah blah blah</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[ENABLE]</span><br><span class="line">//code from here to &#x27;[DISABLE]&#x27; will be used to enable the cheat</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">aobscanmodule(INJECT,gtutorial-x86_64.exe,89xxxx48xxxxxxxx74xxF2) // should be unique</span><br><span class="line">alloc(newmem,$1000,INJECT)</span><br><span class="line"></span><br><span class="line">label(code)</span><br><span class="line">label(return)</span><br><span class="line"></span><br><span class="line">newmem:</span><br><span class="line"></span><br><span class="line">code:</span><br><span class="line">  mov [rax+70],0</span><br><span class="line">  cmp qword ptr [rax+68],00</span><br><span class="line">  jmp return</span><br><span class="line"></span><br><span class="line">INJECT:</span><br><span class="line">  jmp newmem</span><br><span class="line">  nop 3</span><br><span class="line">return:</span><br><span class="line">registersymbol(INJECT)</span><br><span class="line"></span><br><span class="line">[DISABLE]</span><br><span class="line">//code from here till the end of the code will be used to disable the cheat</span><br><span class="line">INJECT:</span><br><span class="line">  db 89 50 70 48 83 78 68 00</span><br><span class="line"></span><br><span class="line">unregistersymbol(INJECT)</span><br><span class="line">dealloc(newmem)</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">// ORIGINAL CODE - INJECTION POINT: gtutorial-x86_64.exe+3C1E3</span><br><span class="line"></span><br><span class="line">gtutorial-x86_64.exe+3C1D0: 8B 41 70                 - mov eax,[rcx+70]</span><br><span class="line">gtutorial-x86_64.exe+3C1D3: 85 C0                    - test eax,eax</span><br><span class="line">gtutorial-x86_64.exe+3C1D5: 7F 03                    - jg gtutorial-x86_64.exe+3C1DA</span><br><span class="line">gtutorial-x86_64.exe+3C1D7: B0 01                    - mov al,01</span><br><span class="line">gtutorial-x86_64.exe+3C1D9: C3                       - ret </span><br><span class="line">gtutorial-x86_64.exe+3C1DA: 30 C0                    - xor al,al</span><br><span class="line">gtutorial-x86_64.exe+3C1DC: C3                       - ret </span><br><span class="line">gtutorial-x86_64.exe+3C1DD: 00 00                    - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+3C1DF: 00 48 89                 - add [rax-77],cl</span><br><span class="line">gtutorial-x86_64.exe+3C1E2: C8                       - db C8 </span><br><span class="line">// ---------- INJECTING HERE ----------</span><br><span class="line">gtutorial-x86_64.exe+3C1E3: 89 50 70                 - mov [rax+70],edx</span><br><span class="line">// ---------- DONE INJECTING  ----------</span><br><span class="line">gtutorial-x86_64.exe+3C1E6: 48 83 78 68 00           - cmp qword ptr [rax+68],00</span><br><span class="line">gtutorial-x86_64.exe+3C1EB: 74 23                    - je gtutorial-x86_64.exe+3C210</span><br><span class="line">gtutorial-x86_64.exe+3C1ED: F2 0F 2A 40 70           - cvtsi2sd xmm0,[rax+70]</span><br><span class="line">gtutorial-x86_64.exe+3C1F2: F2 0F 2A 48 74           - cvtsi2sd xmm1,[rax+74]</span><br><span class="line">gtutorial-x86_64.exe+3C1F7: F2 0F 5E C1              - divsd xmm0,xmm1</span><br><span class="line">gtutorial-x86_64.exe+3C1FB: F2 0F 59 05 35 9F 27 00  - mulsd xmm0,[gtutorial-x86_64.exe+2B6138]</span><br><span class="line">gtutorial-x86_64.exe+3C203: 48 8B 40 68              - mov rax,[rax+68]</span><br><span class="line">gtutorial-x86_64.exe+3C207: F2 0F 5A C0              - cvtsd2ss xmm0,xmm0</span><br><span class="line">INJECT: E9 F0 3D FB FF           - jmp FFFF0000</span><br><span class="line">gtutorial-x86_64.exe+3C210: C3                       - ret </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>发现确实一击必杀，说明这个就是真正的血条，成功注入！</p>
-<h2 id="练习二："><a href="#练习二：" class="headerlink" title="练习二："></a>练习二：</h2><img src="/posts/undefined/image-20250912223035849.png" class="" title="image-20250912223035849">
+<h2 id="练习二："><a href="#练习二：" class="headerlink" title="练习二："></a>练习二：</h2><img src="/posts/35052/image-20250912223035849.png" class="" title="image-20250912223035849">
 
 <p>规则：</p>
 <ol>
@@ -1199,21 +1199,21 @@
 </ol>
 <p>思路：找到敌人和我的血条地址，分析差异，写出注入代码，对敌人一击必杀，对我不扣血。</p>
 <p>这里我的血量是知道的，因此可以把我的血量作为突破口，进行查找：</p>
-<img src="/posts/undefined/image-20250912223812539.png" class="" title="image-20250912223812539">
+<img src="/posts/35052/image-20250912223812539.png" class="" title="image-20250912223812539">
 
 <p>然后看谁改了这个地址，转入汇编界面：</p>
-<img src="/posts/undefined/image-20250912223910567.png" class="" title="image-20250912223910567">
+<img src="/posts/35052/image-20250912223910567.png" class="" title="image-20250912223910567">
 
 <p>然后查找指令访问的地址，就可得到敌人的血量：</p>
-<img src="/posts/undefined/image-20250912224037134.png" class="" title="image-20250912224037134">
+<img src="/posts/35052/image-20250912224037134.png" class="" title="image-20250912224037134">
 
 <p>然后又是分组、找不同</p>
-<img src="/posts/undefined/image-20250912224218637.png" class="" title="image-20250912224218637">
+<img src="/posts/35052/image-20250912224218637.png" class="" title="image-20250912224218637">
 
 <p>在70偏移处，看起来很像是分组标识。开始注入：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">&#123; Game   : gtutorial-x86_64.exe</span><br><span class="line">  Version: </span><br><span class="line">  Date   : 2025-09-12</span><br><span class="line">  Author : tzs</span><br><span class="line"></span><br><span class="line">  This script does blah blah blah</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[ENABLE]</span><br><span class="line">//code from here to &#x27;[DISABLE]&#x27; will be used to enable the cheat</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">aobscanmodule(INJECT,gtutorial-x86_64.exe,29xxxxc3000000000000) // should be unique</span><br><span class="line">alloc(newmem,$1000,INJECT)</span><br><span class="line"></span><br><span class="line">label(enemy)</span><br><span class="line">label(return)</span><br><span class="line">label(exit)</span><br><span class="line"></span><br><span class="line">newmem:</span><br><span class="line"></span><br><span class="line">pushfq</span><br><span class="line">cmp [rax+70],1</span><br><span class="line">jne exit</span><br><span class="line">enemy:</span><br><span class="line">  mov [rax+60],0</span><br><span class="line">exit:</span><br><span class="line">  popfq</span><br><span class="line">  ret</span><br><span class="line">  add [rax],al</span><br><span class="line">  jmp return</span><br><span class="line"></span><br><span class="line">INJECT:</span><br><span class="line">  jmp newmem</span><br><span class="line">  nop</span><br><span class="line">return:</span><br><span class="line">registersymbol(INJECT)</span><br><span class="line"></span><br><span class="line">[DISABLE]</span><br><span class="line">//code from here till the end of the code will be used to disable the cheat</span><br><span class="line">INJECT:</span><br><span class="line">  db 29 50 60 C3 00 00</span><br><span class="line"></span><br><span class="line">unregistersymbol(INJECT)</span><br><span class="line">dealloc(newmem)</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">// ORIGINAL CODE - INJECTION POINT: gtutorial-x86_64.exe+400E3</span><br><span class="line"></span><br><span class="line">gtutorial-x86_64.exe+400CB: 90                 - nop </span><br><span class="line">gtutorial-x86_64.exe+400CC: 90                 - nop </span><br><span class="line">gtutorial-x86_64.exe+400CD: 66 0F 6F 74 24 20  - movdqa xmm6,[rsp+20]</span><br><span class="line">gtutorial-x86_64.exe+400D3: 48 8D 64 24 30     - lea rsp,[rsp+30]</span><br><span class="line">gtutorial-x86_64.exe+400D8: 5B                 - pop rbx</span><br><span class="line">gtutorial-x86_64.exe+400D9: C3                 - ret </span><br><span class="line">gtutorial-x86_64.exe+400DA: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400DC: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400DE: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400E0: 48 89 C8           - mov rax,rcx</span><br><span class="line">// ---------- INJECTING HERE ----------</span><br><span class="line">gtutorial-x86_64.exe+400E3: 29 50 60           - sub [rax+60],edx</span><br><span class="line">// ---------- DONE INJECTING  ----------</span><br><span class="line">gtutorial-x86_64.exe+400E6: C3                 - ret </span><br><span class="line">gtutorial-x86_64.exe+400E7: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400E9: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400EB: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400ED: 00 00              - add [rax],al</span><br><span class="line">gtutorial-x86_64.exe+400EF: 00 53 56           - add [rbx+56],dl</span><br><span class="line">gtutorial-x86_64.exe+400F2: 48 8D 64 24 D8     - lea rsp,[rsp-28]</span><br><span class="line">gtutorial-x86_64.exe+400F7: 48 89 CB           - mov rbx,rcx</span><br><span class="line">gtutorial-x86_64.exe+400FA: 48 89 D6           - mov rsi,rdx</span><br><span class="line">gtutorial-x86_64.exe+400FD: 48 85 F6           - test rsi,rsi</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="练习三："><a href="#练习三：" class="headerlink" title="练习三："></a>练习三：</h2><img src="/posts/undefined/image-20250912225121022.png" class="" title="image-20250912225121022">
+<h2 id="练习三："><a href="#练习三：" class="headerlink" title="练习三："></a>练习三：</h2><img src="/posts/35052/image-20250912225121022.png" class="" title="image-20250912225121022">
 
 <p>规则：</p>
 <ol>
@@ -1234,22 +1234,22 @@
 <li>落地后搜索与初始值相同的</li>
 </ul>
 <p>搜索得到4个结果：</p>
-<img src="/posts/undefined/image-20250912232206535.png" class="" title="image-20250912232206535">
+<img src="/posts/35052/image-20250912232206535.png" class="" title="image-20250912232206535">
 
 <p>其他的要么数值太大，要么数值太小，只有01620698才像y轴坐标。[右键-&gt;浏览相关内存区域]，然后在下方就能看到该地址的内存情况：</p>
-<img src="/posts/undefined/image-20250912232510687.png" class="" title="image-20250912232510687">
+<img src="/posts/35052/image-20250912232510687.png" class="" title="image-20250912232510687">
 
 <p>[右键-&gt;显示类型-&gt;单浮点]</p>
-<img src="/posts/undefined/image-20250912232603574.png" class="" title="image-20250912232603574">
+<img src="/posts/35052/image-20250912232603574.png" class="" title="image-20250912232603574">
 
 <p>为了看y坐标附近是否有坐标x，需要将滚轮网上一点，将坐标y置于中央，然后上下左右移动，看哪些值会变化：</p>
-<img src="/posts/undefined/image-20250912232917850.png" class="" title="image-20250912232917850">
+<img src="/posts/35052/image-20250912232917850.png" class="" title="image-20250912232917850">
 
 <p>很明显，哪个-0.90就是x坐标了，并且往左减小，往右增大。根据这些信息，我们可以很容易定位小车的横轴（因为小车y轴一直不变，故不易定位）:</p>
-<img src="/posts/undefined/image-20250912234018789.png" class="" title="image-20250912234018789">
+<img src="/posts/35052/image-20250912234018789.png" class="" title="image-20250912234018789">
 
 <p>[右键-&gt;浏览相关内存区域]，查看内存附近区域是否有其他对象：</p>
-<img src="/posts/undefined/image-20250912234118187.png" class="" title="image-20250912234118187">
+<img src="/posts/35052/image-20250912234118187.png" class="" title="image-20250912234118187">
 
 <p>找出谁改写了这个地址，直接nop掉，让小车停止移动。</p>
 <p>然后接下来查找哪里存储了已点亮平台数，然后进行代码注入：</p>
@@ -1298,10 +1298,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-09-08 16:25:59 / 修改时间：18:20:27" itemprop="dateCreated datePublished" datetime="2025-09-08T16:25:59+08:00">2025-09-08</time>
+              <time title="创建时间：2025-09-08 16:25:59" itemprop="dateCreated datePublished" datetime="2025-09-08T16:25:59+08:00">2025-09-08</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-11-16 17:52:17" itemprop="dateModified" datetime="2025-11-16T17:52:17+08:00">2025-11-16</time>
+              </span>
 
           
 
@@ -1318,7 +1324,7 @@
 
 <h1 id="minigame"><a href="#minigame" class="headerlink" title="minigame"></a>minigame</h1><p>这是一个微信小程序的编译产物，加上微信调试工具 (<code>__debug__</code>) 生成的 运行时符号表和调试数据，是一个<code>.wxapkg</code>文件。需要使用<code>wxappUnpacker</code>来进行解压的到源码。先去github上找工具项目（<a target="_blank" rel="noopener" href="https://github.com/Fickley/wxappUnpacker">工具源码</a>），下载后按项目里面readme完成包安装，然后用</p>
 <p><code>node wuWxapkg.js &lt;wx_mini_progranm_file_path&gt;</code>指令来解压，生成同名解压文件夹。</p>
-<img src="/posts/undefined/image-20250908163329055.png" class="" title="image-20250908163329055">
+<img src="/posts/8923/image-20250908163329055.png" class="" title="image-20250908163329055">
 
 <p>分析发现，这个项目是一个微信小程序，主要功能是通过 WASM（WebAssembly）模块对字符串进行校验。验证流程如下：</p>
 <ol>
@@ -1334,7 +1340,7 @@
 <p>命令行运行这个exe文件反编译得到.wat文件：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\wasm2wat.exe validator.wasm -o example.wat</span><br></pre></td></tr></table></figure>
 
-<img src="/posts/undefined/image-20250908164437317.png" class="" title="image-20250908164437317">
+<img src="/posts/8923/image-20250908164437317.png" class="" title="image-20250908164437317">
 
 <p>打开.wat文件，直接让GPT分析，其实就是一个简单的异或，即数据与密钥异或后都等于0x99，写脚本解密：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const key = [</span><br><span class="line">  0xff, 0xf5, 0xf8, 0xfe, 0xe2, 0xff, 0xf8, 0xfc, 0xa9, 0xfb, 0xab, 0xae, 0xfa, 0xad, 0xac, 0xa8,</span><br><span class="line">  0xfa, 0xae, 0xab, 0xa1, 0xa1, 0xaf, 0xae, 0xf8, 0xac, 0xaf, 0xae, 0xfc, 0xa1, 0xfa, 0xa8, 0xfb,</span><br><span class="line">  0xfb, 0xad, 0xfc, 0xac, 0xaa, 0xe4</span><br><span class="line">];</span><br><span class="line">const result = key.map(b =&gt; b ^ 0x99);</span><br><span class="line">const str = String.fromCharCode(...result);</span><br><span class="line">console.log(&#x27;解密结果:&#x27;, str);</span><br></pre></td></tr></table></figure>
@@ -1344,13 +1350,13 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">setbuf(stdin, 0LL);</span><br><span class="line"> setbuf(stdout, 0LL);</span><br><span class="line"> setbuf(stderr, 0LL);</span><br><span class="line"> v3 = time(0LL);</span><br><span class="line"> srand(v3);</span><br><span class="line"> v12 = rand() % 255 + 1;</span><br><span class="line"> printf(&quot;input your number(1-255): &quot;);</span><br><span class="line"> if ( (unsigned int)__isoc99_scanf(&quot;%d&quot;, &amp;v10) == 1 &amp;&amp; v12 == v10 )</span><br><span class="line"> &#123;</span><br><span class="line">   while ( getchar() != 10 )</span><br><span class="line">     ;</span><br><span class="line">   printf(&quot;flag: &quot;);</span><br><span class="line">   fgets(s, 100, stdin);</span><br><span class="line">   s[strcspn(s, &quot;\n&quot;)] = 0;</span><br><span class="line">   v15 = strlen(s);</span><br><span class="line">   v16 = v15 - 1LL;</span><br><span class="line">   v9[2] = v15;</span><br><span class="line">   v9[3] = 0LL;</span><br><span class="line">   v9[0] = v15;</span><br><span class="line">   v9[1] = 0LL;</span><br><span class="line">   v5 = 16 * ((v15 + 15LL) / 0x10uLL);</span><br><span class="line">   while ( v9 != (__int64 *)((char *)v9 - (v5 &amp; 0xFFFFFFFFFFFFF000LL)) )</span><br><span class="line">     ;</span><br><span class="line">   v6 = alloca(v5 &amp; 0xFFF);</span><br><span class="line">   if ( (v5 &amp; 0xFFF) != 0 )</span><br><span class="line">     *(__int64 *)((char *)&amp;v9[-1] + (v5 &amp; 0xFFF)) = *(__int64 *)((char *)&amp;v9[-1] + (v5 &amp; 0xFFF));</span><br><span class="line">   v17 = v9;</span><br><span class="line">   sub_1492(s, v9);</span><br><span class="line">   v18 = v15 - 1LL;</span><br><span class="line">   v7 = 16 * ((v15 + 15LL) / 0x10uLL);</span><br><span class="line">   while ( v9 != (__int64 *)((char *)v9 - (v7 &amp; 0xFFFFFFFFFFFFF000LL)) )</span><br><span class="line">     ;</span><br><span class="line">   v8 = alloca(v7 &amp; 0xFFF);</span><br><span class="line">   if ( (v7 &amp; 0xFFF) != 0 )</span><br><span class="line">     *(__int64 *)((char *)&amp;v9[-1] + (v7 &amp; 0xFFF)) = *(__int64 *)((char *)&amp;v9[-1] + (v7 &amp; 0xFFF));</span><br><span class="line">   v19 = v9;</span><br><span class="line">   for ( i = 0; i &lt; v15; ++i )</span><br><span class="line">     *((_BYTE *)v19 + i) = sub_13E1(*((unsigned __int8 *)v17 + i));</span><br><span class="line">   v11 = 1;</span><br><span class="line">   for ( j = 0; j &lt; v15; ++j )</span><br><span class="line">   &#123;</span><br><span class="line">     if ( *((_BYTE *)v19 + j) != byte_2120[j] )</span><br><span class="line">     &#123;</span><br><span class="line">       v11 = 0;</span><br><span class="line">       break;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   if ( v11 )</span><br><span class="line">     puts(&quot;right&quot;);</span><br><span class="line">   return 0LL;</span><br><span class="line"> &#125;</span><br><span class="line"> else</span><br><span class="line"> &#123;</span><br><span class="line">   puts(&quot;error&quot;);</span><br><span class="line">   return 1LL;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
 
 <p>只有两个函数有用：sub_1492和sub_13E1，其他的都是初始化之类的东西。</p>
-<img src="/posts/undefined/image-20250908170754516.png" class="" title="image-20250908170754516">
+<img src="/posts/8923/image-20250908170754516.png" class="" title="image-20250908170754516">
 
 <p>sub_1492函数对输入的每一个字符进行循环左移（左移(i&#x2F;7)+1位）。</p>
-<img src="/posts/undefined/image-20250908170941903.png" class="" title="image-20250908170941903">
+<img src="/posts/8923/image-20250908170941903.png" class="" title="image-20250908170941903">
 
 <p>sub_13E1对数据先进行循环左移，然后得到的值进行变换后放入sub_1313里面加密，然后在循环右移。看sub_1313函数逻辑：</p>
-<img src="/posts/undefined/image-20250908171139724.png" class="" title="image-20250908171139724">
+<img src="/posts/8923/image-20250908171139724.png" class="" title="image-20250908171139724">
 
 <p>这个函数实际上是使用快速幂算法实现在时间复杂度 O(log n)里求a1的255次方，并且引入了模运算。为什么要求255次方呢？</p>
 <p>根据费马小定理（当且仅当模数是质数时），</p>
@@ -1404,10 +1410,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-09-08 12:41:28 / 修改时间：19:31:17" itemprop="dateCreated datePublished" datetime="2025-09-08T12:41:28+08:00">2025-09-08</time>
+              <time title="创建时间：2025-09-08 12:41:28" itemprop="dateCreated datePublished" datetime="2025-09-08T12:41:28+08:00">2025-09-08</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-11-16 17:52:17" itemprop="dateModified" datetime="2025-11-16T17:52:17+08:00">2025-11-16</time>
+              </span>
 
           
 
@@ -1512,7 +1524,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-05 21:39:30" itemprop="dateModified" datetime="2025-09-05T21:39:30+08:00">2025-09-05</time>
+                <time title="修改时间：2025-11-16 17:52:17" itemprop="dateModified" datetime="2025-11-16T17:52:17+08:00">2025-11-16</time>
               </span>
 
           
@@ -1532,10 +1544,10 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HWND FindWindowA(</span><br><span class="line">  [in, optional] LPCSTR lpClassName,		// 窗口类名</span><br><span class="line">  [in, optional] LPCSTR lpWindowName		// 窗口名称（标题）</span><br><span class="line">);		// 返回值：返回窗口句柄</span><br></pre></td></tr></table></figure>
 
 <p>如果事先不知道目标窗口的窗口类名或窗口名，可使用工具Spy++来查看。打开方式：[VS2022-&gt;工具-&gt;Spy++(+)]。打开会显示所有打开的窗口。</p>
-<img src="/posts/undefined/image-20250904200606933.png" class="" title="image-20250904200606933">
+<img src="/posts/55909/image-20250904200606933.png" class="" title="image-20250904200606933">
 
 <p>点击[搜索-&gt;查找窗口]会打开如下窗口：</p>
-<img src="/posts/undefined/image-20250904201059685.png" class="" title="image-20250904201059685">
+<img src="/posts/55909/image-20250904201059685.png" class="" title="image-20250904201059685">
 
 <p>拖动中间那个靶子到目标窗口，可以查看该窗口的句柄、标题、类名（为空则代表没有）。</p>
 <p>注：窗口每次创建时句柄都不同，但是标题和类名是不变的，因此不要直接用Spy++提供的句柄，因为这样写出的程序在窗口下次打开时就会无效。应该在程序里面使用标题和类名动态获取句柄。</p>
@@ -1546,10 +1558,10 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	TCHAR szTitle[MAX_PATH] = &#123; 0 &#125;;</span><br><span class="line">	HWND hwnd = ::FindWindow(TEXT(&quot;#32770&quot;), TEXT(&quot;注册器&quot;));</span><br><span class="line">	if (hwnd != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		//修改窗口标题							</span><br><span class="line">		::SetWindowText(hwnd, L&quot;新的窗口标题&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		::MessageBox(NULL, TEXT(&quot;窗口没有找到&quot;), TEXT(&quot;[ERROR]&quot;), MB_OK);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>运行前：</p>
-<img src="/posts/undefined/image-20250904203031075.png" class="" title="image-20250904203031075">
+<img src="/posts/55909/image-20250904203031075.png" class="" title="image-20250904203031075">
 
 <p>运行后：</p>
-<img src="/posts/undefined/image-20250904203059095.png" class="" title="image-20250904203059095">
+<img src="/posts/55909/image-20250904203059095.png" class="" title="image-20250904203059095">
 
 <h1 id="窗口置顶"><a href="#窗口置顶" class="headerlink" title="窗口置顶"></a>窗口置顶</h1><p>使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-switchtothiswindow">SwitchToThisWindow</a>函数将目标窗口置于顶端。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void SwitchToThisWindow(</span><br><span class="line">  [in] HWND hwnd,			// 窗口句柄</span><br><span class="line">  [in] BOOL fUnknown		// 一般置false</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
@@ -1564,22 +1576,22 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Windows.h&gt;</span><br><span class="line">#include&lt;winuser.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	TCHAR szTitle[MAX_PATH] = &#123; 0 &#125;;</span><br><span class="line">	HWND hwnd = FindWindow(TEXT(&quot;#32770&quot;), TEXT(&quot;注册器&quot;));</span><br><span class="line">	if (hwnd != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		//查找子窗口						</span><br><span class="line">		HWND hEdit1 = FindWindowEx(hwnd, NULL, L&quot;Edit&quot;, NULL);</span><br><span class="line">		HWND hEdit2 = FindWindowEx(hwnd, hEdit1, L&quot;Edit&quot;, NULL);</span><br><span class="line">		//修改内容						</span><br><span class="line">		SendMessage(hEdit1, WM_SETTEXT, 0, (LPARAM)L&quot;新的内容1&quot;);</span><br><span class="line">		SendMessage(hEdit2, WM_SETTEXT, 0, (LPARAM)L&quot;新的内容2&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		MessageBox(NULL, TEXT(&quot;窗口没有找到&quot;), TEXT(&quot;[ERROR]&quot;), MB_OK);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>效果：</p>
-<img src="/posts/undefined/image-20250904211924914.png" class="" title="image-20250904211924914">
+<img src="/posts/55909/image-20250904211924914.png" class="" title="image-20250904211924914">
 
 <h3 id="法二：使用GetDlgItem函数"><a href="#法二：使用GetDlgItem函数" class="headerlink" title="法二：使用GetDlgItem函数"></a>法二：使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-getdlgitem">GetDlgItem</a>函数</h3><p>上面那种情况一旦控件多了，就容易冲突，因为标题和类名都可重复。但是，在一个对话框的所有控件里面，每一个控件的ID是唯一的，于是可以使用控件ID获取控件句柄。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HWND GetDlgItem(</span><br><span class="line">  [in, optional] HWND hDlg,				// 主窗口句柄</span><br><span class="line">  [in]           int  nIDDlgItem		// 控件ID</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 
 <p>如果不知道控件ID，可以使用Spy++的搜索。在获取主窗口的信息后，点击确定，Spy++的窗口里面的树形图就会定位到此窗口的位置。（如果显示搜索失败，则需要右键刷新再进行搜索）：</p>
-<img src="/posts/undefined/image-20250904212733547.png" class="" title="image-20250904212733547">
+<img src="/posts/55909/image-20250904212733547.png" class="" title="image-20250904212733547">
 
 <p>此窗口的子项就是其子窗口，【右键-&gt;属性】即可查看子窗口的ID：</p>
-<img src="/posts/undefined/image-20250904212946690.png" class="" title="image-20250904212946690">
+<img src="/posts/55909/image-20250904212946690.png" class="" title="image-20250904212946690">
 
 <p>然后可使用GetDlgItem函数：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//查找子窗口						</span><br><span class="line">HWND hEdit = GetDlgItem(hwnd, 0x3ED);</span><br><span class="line">//修改内容						</span><br><span class="line">SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)L&quot;新的内容&quot;);</span><br></pre></td></tr></table></figure>
 
 <p>效果：</p>
-<img src="/posts/undefined/image-20250904213121039.png" class="" title="image-20250904213121039">
+<img src="/posts/55909/image-20250904213121039.png" class="" title="image-20250904213121039">
 
 <h1 id="枚举子窗口"><a href="#枚举子窗口" class="headerlink" title="枚举子窗口"></a>枚举子窗口</h1><p>使用<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-enumchildwindows">EnumChildWindows</a>函数：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BOOL EnumChildWindows(</span><br><span class="line">  [in, optional] HWND        hWndParent,			// 父窗口句柄</span><br><span class="line">  [in]           WNDENUMPROC lpEnumFunc,			// 回调函数</span><br><span class="line">  [in]           LPARAM      lParam					// 传给回调函数的参数</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
@@ -1678,7 +1690,7 @@
 </ul>
 <p>那么，为什么还要有扫描码这样的中间码呢？键盘直接将键帽与虚拟键码对应，然后直接发送虚拟键码给操作系统不行吗？</p>
 <p>键盘的电路结构和按键矩阵基本是统一的，因此相同物理位置的按键会发出相同的扫描码，结构如下图所示(蓝色数字代表扫描码)：</p>
-<img src="/posts/undefined/Figure_1.png" class="" title="Figure_1">
+<img src="/posts/55909/Figure_1.png" class="" title="Figure_1">
 
 <p>但是，各个语言环境的<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/globalization/windows-keyboard-layouts">键盘布局</a>却不相同。举个例子，在美式或中文键盘里，扫描码为0x10对应的虚拟键码是0x51，代表”Q”键。而法语键盘中，扫描码为0x10对应的虚拟键码是0x41，代表”A”键。</p>
 <p>如果操作系统不做转换，那么键盘有两种方式维持功能：</p>
@@ -1866,7 +1878,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-08-27 18:42:53" itemprop="dateModified" datetime="2025-08-27T18:42:53+08:00">2025-08-27</time>
+                <time title="修改时间：2025-11-17 20:54:19" itemprop="dateModified" datetime="2025-11-17T20:54:19+08:00">2025-11-17</time>
               </span>
 
           
@@ -2091,7 +2103,7 @@
 <img src="/posts/18338/image-20250823145629415.png" class="" title="image-20250823145629415">
 
 <p>启动时停在了0x401014处，说明获取的入口点是正确的。也可以通过PE文件可选头里面的AddressOfEntryPoint（入口点的RVA）查看偏移：</p>
-
+<img src="/posts/18338/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE-2025-08-23-150116.png" class="" title="屏幕截图 2025-08-23 150116">
 
 <p>注：如果在编译时设置了ASLR功能，那么每一次运行的基址都会改变，入口点自然也会改变，但是入口点相对于基址的偏移一般不会改变。</p>
 <p>x64版：</p>

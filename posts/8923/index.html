@@ -29,17 +29,17 @@
 <meta property="og:site_name" content="Blog">
 <meta property="og:description" content="minigame这是一个微信小程序的编译产物，加上微信调试工具 (__debug__) 生成的 运行时符号表和调试数据，是一个.wxapkg文件。需要使用wxappUnpacker来进行解压的到源码。先去github上找工具项目（工具源码），下载后按项目里面readme完成包安装，然后用 node wuWxapkg.js &lt;wx_mini_progranm_file_path&gt;指令">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/posts/undefined/image-20250908163329055.png">
-<meta property="og:image" content="http://example.com/posts/undefined/image-20250908164437317.png">
-<meta property="og:image" content="http://example.com/posts/undefined/image-20250908170754516.png">
-<meta property="og:image" content="http://example.com/posts/undefined/image-20250908170941903.png">
-<meta property="og:image" content="http://example.com/posts/undefined/image-20250908171139724.png">
+<meta property="og:image" content="http://example.com/posts/8923/image-20250908163329055.png">
+<meta property="og:image" content="http://example.com/posts/8923/image-20250908164437317.png">
+<meta property="og:image" content="http://example.com/posts/8923/image-20250908170754516.png">
+<meta property="og:image" content="http://example.com/posts/8923/image-20250908170941903.png">
+<meta property="og:image" content="http://example.com/posts/8923/image-20250908171139724.png">
 <meta property="article:published_time" content="2025-09-08T08:25:59.000Z">
-<meta property="article:modified_time" content="2025-09-08T10:20:27.118Z">
+<meta property="article:modified_time" content="2025-11-16T09:52:17.326Z">
 <meta property="article:author" content="comhacker">
 <meta property="article:tag" content="wp">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/posts/undefined/image-20250908163329055.png">
+<meta name="twitter:image" content="http://example.com/posts/8923/image-20250908163329055.png">
 
 <link rel="canonical" href="http://example.com/posts/8923/">
 
@@ -219,10 +219,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-09-08 16:25:59 / 修改时间：18:20:27" itemprop="dateCreated datePublished" datetime="2025-09-08T16:25:59+08:00">2025-09-08</time>
+              <time title="创建时间：2025-09-08 16:25:59" itemprop="dateCreated datePublished" datetime="2025-09-08T16:25:59+08:00">2025-09-08</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-11-16 17:52:17" itemprop="dateModified" datetime="2025-11-16T17:52:17+08:00">2025-11-16</time>
+              </span>
 
           
 
@@ -239,7 +245,7 @@
 
 <h1 id="minigame"><a href="#minigame" class="headerlink" title="minigame"></a>minigame</h1><p>这是一个微信小程序的编译产物，加上微信调试工具 (<code>__debug__</code>) 生成的 运行时符号表和调试数据，是一个<code>.wxapkg</code>文件。需要使用<code>wxappUnpacker</code>来进行解压的到源码。先去github上找工具项目（<a target="_blank" rel="noopener" href="https://github.com/Fickley/wxappUnpacker">工具源码</a>），下载后按项目里面readme完成包安装，然后用</p>
 <p><code>node wuWxapkg.js &lt;wx_mini_progranm_file_path&gt;</code>指令来解压，生成同名解压文件夹。</p>
-<img src="/posts/undefined/image-20250908163329055.png" class="" title="image-20250908163329055">
+<img src="/posts/8923/image-20250908163329055.png" class="" title="image-20250908163329055">
 
 <p>分析发现，这个项目是一个微信小程序，主要功能是通过 WASM（WebAssembly）模块对字符串进行校验。验证流程如下：</p>
 <ol>
@@ -255,7 +261,7 @@
 <p>命令行运行这个exe文件反编译得到.wat文件：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\wasm2wat.exe validator.wasm -o example.wat</span><br></pre></td></tr></table></figure>
 
-<img src="/posts/undefined/image-20250908164437317.png" class="" title="image-20250908164437317">
+<img src="/posts/8923/image-20250908164437317.png" class="" title="image-20250908164437317">
 
 <p>打开.wat文件，直接让GPT分析，其实就是一个简单的异或，即数据与密钥异或后都等于0x99，写脚本解密：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const key = [</span><br><span class="line">  0xff, 0xf5, 0xf8, 0xfe, 0xe2, 0xff, 0xf8, 0xfc, 0xa9, 0xfb, 0xab, 0xae, 0xfa, 0xad, 0xac, 0xa8,</span><br><span class="line">  0xfa, 0xae, 0xab, 0xa1, 0xa1, 0xaf, 0xae, 0xf8, 0xac, 0xaf, 0xae, 0xfc, 0xa1, 0xfa, 0xa8, 0xfb,</span><br><span class="line">  0xfb, 0xad, 0xfc, 0xac, 0xaa, 0xe4</span><br><span class="line">];</span><br><span class="line">const result = key.map(b =&gt; b ^ 0x99);</span><br><span class="line">const str = String.fromCharCode(...result);</span><br><span class="line">console.log(&#x27;解密结果:&#x27;, str);</span><br></pre></td></tr></table></figure>
@@ -265,13 +271,13 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">setbuf(stdin, 0LL);</span><br><span class="line"> setbuf(stdout, 0LL);</span><br><span class="line"> setbuf(stderr, 0LL);</span><br><span class="line"> v3 = time(0LL);</span><br><span class="line"> srand(v3);</span><br><span class="line"> v12 = rand() % 255 + 1;</span><br><span class="line"> printf(&quot;input your number(1-255): &quot;);</span><br><span class="line"> if ( (unsigned int)__isoc99_scanf(&quot;%d&quot;, &amp;v10) == 1 &amp;&amp; v12 == v10 )</span><br><span class="line"> &#123;</span><br><span class="line">   while ( getchar() != 10 )</span><br><span class="line">     ;</span><br><span class="line">   printf(&quot;flag: &quot;);</span><br><span class="line">   fgets(s, 100, stdin);</span><br><span class="line">   s[strcspn(s, &quot;\n&quot;)] = 0;</span><br><span class="line">   v15 = strlen(s);</span><br><span class="line">   v16 = v15 - 1LL;</span><br><span class="line">   v9[2] = v15;</span><br><span class="line">   v9[3] = 0LL;</span><br><span class="line">   v9[0] = v15;</span><br><span class="line">   v9[1] = 0LL;</span><br><span class="line">   v5 = 16 * ((v15 + 15LL) / 0x10uLL);</span><br><span class="line">   while ( v9 != (__int64 *)((char *)v9 - (v5 &amp; 0xFFFFFFFFFFFFF000LL)) )</span><br><span class="line">     ;</span><br><span class="line">   v6 = alloca(v5 &amp; 0xFFF);</span><br><span class="line">   if ( (v5 &amp; 0xFFF) != 0 )</span><br><span class="line">     *(__int64 *)((char *)&amp;v9[-1] + (v5 &amp; 0xFFF)) = *(__int64 *)((char *)&amp;v9[-1] + (v5 &amp; 0xFFF));</span><br><span class="line">   v17 = v9;</span><br><span class="line">   sub_1492(s, v9);</span><br><span class="line">   v18 = v15 - 1LL;</span><br><span class="line">   v7 = 16 * ((v15 + 15LL) / 0x10uLL);</span><br><span class="line">   while ( v9 != (__int64 *)((char *)v9 - (v7 &amp; 0xFFFFFFFFFFFFF000LL)) )</span><br><span class="line">     ;</span><br><span class="line">   v8 = alloca(v7 &amp; 0xFFF);</span><br><span class="line">   if ( (v7 &amp; 0xFFF) != 0 )</span><br><span class="line">     *(__int64 *)((char *)&amp;v9[-1] + (v7 &amp; 0xFFF)) = *(__int64 *)((char *)&amp;v9[-1] + (v7 &amp; 0xFFF));</span><br><span class="line">   v19 = v9;</span><br><span class="line">   for ( i = 0; i &lt; v15; ++i )</span><br><span class="line">     *((_BYTE *)v19 + i) = sub_13E1(*((unsigned __int8 *)v17 + i));</span><br><span class="line">   v11 = 1;</span><br><span class="line">   for ( j = 0; j &lt; v15; ++j )</span><br><span class="line">   &#123;</span><br><span class="line">     if ( *((_BYTE *)v19 + j) != byte_2120[j] )</span><br><span class="line">     &#123;</span><br><span class="line">       v11 = 0;</span><br><span class="line">       break;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   if ( v11 )</span><br><span class="line">     puts(&quot;right&quot;);</span><br><span class="line">   return 0LL;</span><br><span class="line"> &#125;</span><br><span class="line"> else</span><br><span class="line"> &#123;</span><br><span class="line">   puts(&quot;error&quot;);</span><br><span class="line">   return 1LL;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
 
 <p>只有两个函数有用：sub_1492和sub_13E1，其他的都是初始化之类的东西。</p>
-<img src="/posts/undefined/image-20250908170754516.png" class="" title="image-20250908170754516">
+<img src="/posts/8923/image-20250908170754516.png" class="" title="image-20250908170754516">
 
 <p>sub_1492函数对输入的每一个字符进行循环左移（左移(i&#x2F;7)+1位）。</p>
-<img src="/posts/undefined/image-20250908170941903.png" class="" title="image-20250908170941903">
+<img src="/posts/8923/image-20250908170941903.png" class="" title="image-20250908170941903">
 
 <p>sub_13E1对数据先进行循环左移，然后得到的值进行变换后放入sub_1313里面加密，然后在循环右移。看sub_1313函数逻辑：</p>
-<img src="/posts/undefined/image-20250908171139724.png" class="" title="image-20250908171139724">
+<img src="/posts/8923/image-20250908171139724.png" class="" title="image-20250908171139724">
 
 <p>这个函数实际上是使用快速幂算法实现在时间复杂度 O(log n)里求a1的255次方，并且引入了模运算。为什么要求255次方呢？</p>
 <p>根据费马小定理（当且仅当模数是质数时），</p>
