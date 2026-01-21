@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="计算机内部并不像我们人类一样直接使用十进制和算术法则来计算，它的逻辑门只能完成与、或、非、异或、左移、右移这6个操作。因此加减乘除4则运算都需要通过这6个操作来完成。 加法加法是所有运算的基础，减法、乘法、除法最终都会转化为加法来实现。计算机用2个基本单元来完成加法：  半加器：处理两个单个二进制位的加法。 输入：A, B 输出：和， 进位 逻辑：和 &#x3D; A XOR B， 进位 &#x3D; A AND">
+<meta property="og:type" content="article">
+<meta property="og:title" content="位运算">
+<meta property="og:url" content="http://example.com/posts/60366/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="计算机内部并不像我们人类一样直接使用十进制和算术法则来计算，它的逻辑门只能完成与、或、非、异或、左移、右移这6个操作。因此加减乘除4则运算都需要通过这6个操作来完成。 加法加法是所有运算的基础，减法、乘法、除法最终都会转化为加法来实现。计算机用2个基本单元来完成加法：  半加器：处理两个单个二进制位的加法。 输入：A, B 输出：和， 进位 逻辑：和 &#x3D; A XOR B， 进位 &#x3D; A AND">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-17T13:31:02.000Z">
+<meta property="article:modified_time" content="2025-11-24T09:53:10.174Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/posts/60366/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>位运算 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/60366/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="你好，同志！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          位运算
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-17 21:31:02" itemprop="dateCreated datePublished" datetime="2025-11-17T21:31:02+08:00">2025-11-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-11-24 17:53:10" itemprop="dateModified" datetime="2025-11-24T17:53:10+08:00">2025-11-24</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<p>计算机内部并不像我们人类一样直接使用十进制和算术法则来计算，它的逻辑门只能完成与、或、非、异或、左移、右移这6个操作。因此加减乘除4则运算都需要通过这6个操作来完成。</p>
+<h1 id="加法"><a href="#加法" class="headerlink" title="加法"></a>加法</h1><p>加法是所有运算的基础，减法、乘法、除法最终都会转化为加法来实现。计算机用2个基本单元来完成加法：</p>
+<ul>
+<li><strong>半加器</strong>：处理两个<strong>单个</strong>二进制位的加法。<ul>
+<li>输入：A, B</li>
+<li>输出：<code>和</code>， <code>进位</code></li>
+<li>逻辑：<code>和 = A XOR B</code>， <code>进位 = A AND B</code></li>
+<li>例如：1 + 1 &#x3D; 0，进位1。</li>
+</ul>
+</li>
+<li><strong>全加器</strong>：处理三个<strong>单个</strong>二进制位的加法（包括来自低位的进位）。<ul>
+<li>输入：A, B, <code>进位输入</code></li>
+<li>输出：<code>和</code>， <code>进位输出</code></li>
+<li>逻辑：由两个半加器和一个或门组合而成。</li>
+</ul>
+</li>
+</ul>
+<p>计算机将两个二进制的加法转换为去进位加法+进位。去进位加法实际上等同于异或（1+1&#x3D;0 最高位溢出，1+0&#x3D;1，0+0&#x3D;0），进位可以由与操作和移位来完成（1+1进位1，等同于1&amp;1）。于是加法可以转换为：</p>
+<p><strong>a + b &#x3D; (a ^ b) + 2 * (a &amp; b)</strong></p>
+<p>递归实现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DWORD Plus(DWORD a,DWORD b)&#123;</span><br><span class="line">	DWORD x = a ^ b;</span><br><span class="line">	DWORD y = a &amp; b;</span><br><span class="line">	if(y == 0) return x;</span><br><span class="line">	return Plus(x,2*y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当进位为0时，递归结束。</p>
+<h1 id="减法"><a href="#减法" class="headerlink" title="减法"></a>减法</h1><p>计算机的减法通过加补码（<strong>加法和取反</strong>）来实现。在计算机中，相反数用补码来求得，即：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">补码 = 反码 +1</span><br><span class="line">a的补码 = ~a + 1 = a^0xffffffff +1</span><br></pre></td></tr></table></figure>
+
+<p>为什么一个数加他的补码会等于0？因为计算机里面的加法其实都是模运算:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a + ~a = 0xffffffff</span><br><span class="line">a + ~a +1 = 0xffffffff + 1 = 0x100000000 = 0，最高位溢出</span><br></pre></td></tr></table></figure>
+
+<h1 id="乘法"><a href="#乘法" class="headerlink" title="乘法"></a>乘法</h1><p>计算机的乘法由<strong>移位和加法</strong>来实现。其实二进制的乘法计算方法与十进制乘法计算方法是相同的，只不过变成了逢2进1。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">  101001	</span><br><span class="line">  x  101</span><br><span class="line">  ______</span><br><span class="line">  101001</span><br><span class="line"> 000000</span><br><span class="line">101001</span><br><span class="line">________</span><br><span class="line">11001101	</span><br></pre></td></tr></table></figure>
+
+<p>这个过程实际上就是不断地移位和加法，这个乘法实际上就遵循了这样的逻辑：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(101001 &lt;&lt; 0)*1 + (101001 &lt;&lt; 1)*0 + (101001 &lt;&lt; 2)*1</span><br></pre></td></tr></table></figure>
+
+<p>算法实现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ULONG64 Multiply(DWORD a, DWORD b)&#123;		// 计算乘法=移位和加法</span><br><span class="line">    ULONG64 result = 0;</span><br><span class="line">    ULONG64 multiplier = a;</span><br><span class="line">    </span><br><span class="line">    while(b)&#123;		// 每次循环取1位</span><br><span class="line">        if(b &amp; 1) &#123;</span><br><span class="line">            result += multiplier;</span><br><span class="line">        &#125;</span><br><span class="line">        b &gt;&gt;= 1;</span><br><span class="line">        multiplier &lt;&lt;= 1;</span><br><span class="line">    &#125;</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="除法"><a href="#除法" class="headerlink" title="除法"></a>除法</h1><p>计算机除法的实现稍微复杂，使用了<strong>移位和减法</strong>。先看正常计算除法时：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> 	 000011</span><br><span class="line"> 	_______</span><br><span class="line">1011|101001</span><br><span class="line">	 0</span><br><span class="line">	 _____</span><br><span class="line">	 10100</span><br><span class="line">	 01011</span><br><span class="line">	 _____</span><br><span class="line">	  10011</span><br><span class="line">	  01011</span><br><span class="line">	 ______</span><br><span class="line">	  01000</span><br></pre></td></tr></table></figure>
+
+<p>算法实现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DWORD Division(DWORD a,DWORD b)&#123;	// 除法等于移位和减法</span><br><span class="line">	DWORD result = 0;	// 商</span><br><span class="line">	DWORD remainder = 0;  // 余数</span><br><span class="line">	for(int i=0;i&lt;32;i++)&#123;</span><br><span class="line">		remainder ^= (a &gt;&gt; (31-i))&amp;1;		// 取被除数的一位加入到余数</span><br><span class="line">		result &lt;&lt;= 1;						// 为本次运算空出一位</span><br><span class="line">		if(remainder &gt;= b)&#123;</span><br><span class="line">			result ^= 1;					// 将新位置为1</span><br><span class="line">			remainder = remainder - b;</span><br><span class="line">		&#125;</span><br><span class="line">		remainder &lt;&lt;= 1;</span><br><span class="line">	&#125;</span><br><span class="line">	return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/53938/" rel="prev" title="羊城杯2025">
+      <i class="fa fa-chevron-left"></i> 羊城杯2025
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/32997/" rel="next" title="固件">
+      固件 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A0%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">加法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%8F%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">减法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B9%98%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">乘法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%A4%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">除法</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">你好，同志！</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

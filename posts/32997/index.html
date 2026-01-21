@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":"ture","style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":"ture"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="什么是固件固件是被写入设备内部的存储芯片里面的一种软件，用来控制设备最核心、最基础的功能。它是设备的大脑，与硬件紧密绑定，且通常不会发生改变，因此被称为固件。 固件有如下任务：  初始化硬件。 提供最基础的硬件功能。 与驱动程序进行交流  例如：  键盘的固件：决定按键逻辑、灯光效果 U盘的固件：负责读写管理、磨损均衡、坏块检测 路由器固件：控制 Wi-Fi、网络转发 手机固件：触摸响应、开机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="固件">
+<meta property="og:url" content="http://example.com/posts/32997/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="什么是固件固件是被写入设备内部的存储芯片里面的一种软件，用来控制设备最核心、最基础的功能。它是设备的大脑，与硬件紧密绑定，且通常不会发生改变，因此被称为固件。 固件有如下任务：  初始化硬件。 提供最基础的硬件功能。 与驱动程序进行交流  例如：  键盘的固件：决定按键逻辑、灯光效果 U盘的固件：负责读写管理、磨损均衡、坏块检测 路由器固件：控制 Wi-Fi、网络转发 手机固件：触摸响应、开机">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/posts/undefined/draw.drawio.png">
+<meta property="article:published_time" content="2025-11-23T12:23:58.000Z">
+<meta property="article:modified_time" content="2025-11-24T06:48:20.469Z">
+<meta property="article:author" content="comhacker">
+<meta property="article:tag" content="Reverse">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/posts/undefined/draw.drawio.png">
+
+<link rel="canonical" href="http://example.com/posts/32997/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>固件 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/posts/32997/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar_2.gif">
+      <meta itemprop="name" content="comhacker">
+      <meta itemprop="description" content="你好，同志！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          固件
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-23 20:23:58" itemprop="dateCreated datePublished" datetime="2025-11-23T20:23:58+08:00">2025-11-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-11-24 14:48:20" itemprop="dateModified" datetime="2025-11-24T14:48:20+08:00">2025-11-24</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="什么是固件"><a href="#什么是固件" class="headerlink" title="什么是固件"></a>什么是固件</h1><p>固件是被写入设备内部的存储芯片里面的一种软件，用来控制设备最核心、最基础的功能。它是设备的大脑，与硬件紧密绑定，且通常不会发生改变，因此被称为固件。</p>
+<p>固件有如下任务：</p>
+<ol>
+<li>初始化硬件。</li>
+<li>提供最基础的硬件功能。</li>
+<li>与驱动程序进行交流</li>
+</ol>
+<p>例如：</p>
+<ul>
+<li>键盘的固件：决定按键逻辑、灯光效果</li>
+<li>U盘的固件：负责读写管理、磨损均衡、坏块检测</li>
+<li>路由器固件：控制 Wi-Fi、网络转发</li>
+<li>手机固件：触摸响应、开机启动等</li>
+</ul>
+<h2 id="固件的定位"><a href="#固件的定位" class="headerlink" title="固件的定位"></a>固件的定位</h2><p>将整个设备的软件进行层级划分：</p>
+<p>   🏢 应用程序（App）：<br>   🏢 操作系统（Android &#x2F; Linux &#x2F; Windows）（包含了驱动程序）<br>   🏢 驱动程序（Drivers）<br>   🏢 固件（Firmware）<br>   🏢 硬件（CPU &#x2F; 存储 &#x2F; 外设）</p>
+<p>可以看到，固件是比操作系统还底层的软件，直接控制硬件的执行。</p>
+<p>驱动程序是位于<strong>操作系统内部</strong>的一段软件模块，它控制操作系统与固件之间的交互，完成以下任务：</p>
+<ul>
+<li>告诉操作系统，这个硬件怎么用</li>
+<li>为操作系统提供硬件的接口</li>
+</ul>
+<p>操作系统是硬件与软件资源的大管家，它完成以下工作：</p>
+<ul>
+<li>资源分配</li>
+<li>人机交互界面</li>
+<li>给应用提供统一接口，屏蔽硬件差异。例如微信不用为每个手机厂商提供版本，只需要提供一个针对操作系统的版本。为oppo、小米等厂商提供安卓版，为苹果提供IOS版，为华为提供鸿蒙版。</li>
+</ul>
+<p>当用户使用拍照软件进行拍照时，操作系统、驱动、固件是这样进行协调工作的：</p>
+<ol>
+<li>相机app调用摄像头api，告诉操作系统“我需要使用摄像头”</li>
+<li>操作系统找到空闲的设备，然后告诉驱动程序“让他使用摄像头”</li>
+<li>驱动程序根据请求，翻译为以下指令给固件：设置曝光参数-&gt;调整对焦-&gt;启动图形采集-&gt;让固件读取传感器数据</li>
+<li>固件收到指令，直接控制硬件完成上述操作，将结果返回给驱动</li>
+<li>驱动将结果交给操作系统，操作系统返回给app，app呈现给用户。</li>
+</ol>
+<p>或者，可以这么理解：</p>
+<ul>
+<li><strong>固件是硬件的“微型操作系统</strong>，只是不完全具备操作系统的功能</li>
+<li><strong>驱动是操作系统的硬件翻译官</strong>，负责硬件适配</li>
+</ul>
+<p>补：为什么显卡驱动出问题会蓝屏，而微信出问题只会自动关闭？</p>
+<p>显卡驱动崩溃会蓝屏，而微信崩溃只会退出，是因为驱动运行在内核态，权限极高，一旦出现错误可能破坏系统的内核。内核是操作系统中最核心、最不能损坏的部分。一旦出现严重错误，为了防止文件系统和数据被毁，操作系统会选择立即停止工作（蓝屏），以保全内核的完整性。</p>
+<h2 id="电脑启动流程"><a href="#电脑启动流程" class="headerlink" title="电脑启动流程"></a>电脑启动流程</h2><p>电脑开机时，各个软件的执行流程如下：</p>
+<ol>
+<li>CPU上电。按下电源键，电源开始向CPU和主板供电。</li>
+<li>找到系统固件。CPU通电后，从预设的地址处（如X86是0xFFFFFFF0）取裸指令（机器码）开始执行，这里就是系统固件（也称主板固件）的位置。</li>
+<li>执行系统固件。旧式电脑固件采用BIOS模式，现代电脑默认采用UEFI 模式。UEFI 会完成启动CPU、初始化设备、记载文件系统等功能。它最重要的功能是运行启动引导程序（Bootloader）。</li>
+<li>运行启动引导程序。在跳转到启动引导程序后，启动引导程序会找到操作系统内核文件位置（PE\ELF格式），对内核文件进行解析、加载，然后准备内存布局（页表），启用保护模式&#x2F;长模式（即切换到32位&#x2F;64位模式），跳转到内核入口函数。</li>
+<li>CPU执行内核操作码，操作系统正式启动！内核启动时，需要做很多初始化工作，包括初始化内存管理、初始化进程管理器、加载硬件驱动、启动第一个用户态进程。</li>
+<li>启动用户空间。此时操作系统启动用户态进程：如Windows的smss.exe（会话管理）、Winlogon.exe（登录界面）、explorer.exe（桌面）等，这是用户真正能感受到的进程。</li>
+</ol>
+<img src="/posts/undefined/draw.drawio.png" class="" title="draw.drawio">
+
+<p>注：启动引导程序与驱动程序不同，他们有以下区别：</p>
+<ul>
+<li>启动引导程序的工作是完成操作系统启动前的准备工作及引导操作系统的启动，驱动程序的工作是协助操作系统与硬件进行交互</li>
+<li>启动引导程序算一个独立的可执行程序，驱动程序属于操作系统内部</li>
+<li>启动引导程序工作在操作系统启动前，而驱动程序只在操作系统启动后由操作系统加载和管理</li>
+</ul>
+<h2 id="规范"><a href="#规范" class="headerlink" title="规范"></a>规范</h2><h4 id="UEFI-规范："><a href="#UEFI-规范：" class="headerlink" title="UEFI 规范："></a>UEFI 规范：</h4><p>UEFI规范是在电脑主板的固件需要遵守的规范，它由UEFI Forum 制定。UEFI Forum 是一个行业联盟组织，成员包括微软、intel、lenovo、ARM、AMD等。</p>
+<p>整个PC行业的主板商都需要严格按照这个规范写主板固件，并且，他们不需要关注上层操作系统的实现。</p>
+<ul>
+<li>UEFI 要求 Bootloader 是 EFI 格式</li>
+<li>UEFI 要求入口点是某个机器码标准（如0xFFFFFFF0）</li>
+</ul>
+<h4 id="CPU指令集规范："><a href="#CPU指令集规范：" class="headerlink" title="CPU指令集规范："></a>CPU指令集规范：</h4><p>这个规范是由CPU供应商制定。目前的主流是x86、x86-64和ARM指令集。</p>
+<ul>
+<li>x86由Intel开发</li>
+<li>AMD扩展了X86，制作了AMD64。intel采用了AMD64，形成行业统一的X86-64</li>
+<li>ARM由ARM公司开发，是一个精简指令集</li>
+</ul>
+<p>CPU的指令集是电脑最底层的东西，不同的指令集，意味着所有上层的实现细节不同，但是总体逻辑架构是相同的</p>
+<h4 id="CPU启动协议："><a href="#CPU启动协议：" class="headerlink" title="CPU启动协议："></a>CPU启动协议：</h4><p> 规定了CPU上电后从哪个固定地址（复位向量）开始取第一条指令，这是硬件到固件的唯一桥梁。这个协议是CPU架构本身的一部分，不同 CPU 架构（如 x86, ARM）有各自不同的复位向量地址。UEFI固件必须安置在该地址或该地址指向的位置。</p>
+<ul>
+<li><strong>可以得出以下结论：</strong></li>
+<li><strong>主板必须遵守UEFI规范</strong></li>
+<li><strong>UEFI固件必须安置在CPU启动协议规定的位置</strong></li>
+<li><strong>CPU必须遵守CPU架构（CPU指令集规范和CPU启动协议）</strong></li>
+<li><strong>操作系统必须兼容CPU架构和UEFI规范</strong></li>
+<li><strong>操作系统适配硬件，而不是硬件适配操作系统</strong></li>
+</ul>
+<h1 id="逆向固件"><a href="#逆向固件" class="headerlink" title="逆向固件"></a>逆向固件</h1><p>固件的逆向一般使用binwalk，这个工具在kali中自带，在linux中可通过命令安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install binwalk</span><br></pre></td></tr></table></figure>
+
+<p>Binwalk是一个分析二进制文件（尤其是固件）的工具，它可以</p>
+<ul>
+<li>自动识别文件系统、压缩包、图片等常见数据结构</li>
+<li>扫描固件并提取其中的文件</li>
+<li>分析固件的打包结构</li>
+<li>查看是否存在嵌套压缩、固件格式等</li>
+</ul>
+<p>执行指令时建议是以root身份来打开的虚拟机，规避权限问题。</p>
+<h2 id="文件提取"><a href="#文件提取" class="headerlink" title="文件提取"></a>文件提取</h2><p>扫描固件信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">binwalk firmware.bin</span><br></pre></td></tr></table></figure>
+
+<p>提取固件内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">binwalk -e firmware.bin				// 普通提取</span><br><span class="line">binwalk -Me firmware.bin			// 递归提取</span><br><span class="line">binwalk -Me firmware.bin --run-as=root		// 在root权限下递归提取（前提是终端得先为root）</span><br></pre></td></tr></table></figure>
+
+<h2 id="信息查找"><a href="#信息查找" class="headerlink" title="信息查找"></a>信息查找</h2><p>信息查找可用linux内置的grep工具，用法为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep [选项] 模式 [文件...]</span><br></pre></td></tr></table></figure>
+
+<p>如果要查找包含某个字符串的文件，可以这样用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">grep -r 正则表达式 文件（夹）名			// 递归搜索</span><br><span class="line">grep -rl 正则表达式 文件（夹）名			// 递归搜索但仅列出文件名</span><br><span class="line">若未指定文件（夹）名，则默认为终端当前工作区</span><br><span class="line">例如：</span><br><span class="line">grep -r &quot;crypto\|key&quot;				// &quot;\&quot;是转义字符，&quot;|&quot;是逻辑或</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Reverse/" rel="tag"><i class="fa fa-tag"></i> Reverse</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/60366/" rel="prev" title="位运算">
+      <i class="fa fa-chevron-left"></i> 位运算
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BA%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">什么是固件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BA%E4%BB%B6%E7%9A%84%E5%AE%9A%E4%BD%8D"><span class="nav-number">1.1.</span> <span class="nav-text">固件的定位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E8%84%91%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">电脑启动流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%84%E8%8C%83"><span class="nav-number">1.3.</span> <span class="nav-text">规范</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#UEFI-%E8%A7%84%E8%8C%83%EF%BC%9A"><span class="nav-number">1.3.0.1.</span> <span class="nav-text">UEFI 规范：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CPU%E6%8C%87%E4%BB%A4%E9%9B%86%E8%A7%84%E8%8C%83%EF%BC%9A"><span class="nav-number">1.3.0.2.</span> <span class="nav-text">CPU指令集规范：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CPU%E5%90%AF%E5%8A%A8%E5%8D%8F%E8%AE%AE%EF%BC%9A"><span class="nav-number">1.3.0.3.</span> <span class="nav-text">CPU启动协议：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%86%E5%90%91%E5%9B%BA%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">逆向固件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%8F%90%E5%8F%96"><span class="nav-number">2.1.</span> <span class="nav-text">文件提取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E6%9F%A5%E6%89%BE"><span class="nav-number">2.2.</span> <span class="nav-text">信息查找</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="comhacker"
+      src="/images/avatar_2.gif">
+  <p class="site-author-name" itemprop="name">comhacker</p>
+  <div class="site-description" itemprop="description">你好，同志！</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">comhacker</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : ,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
